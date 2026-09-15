@@ -1,0 +1,347 @@
+{
+  "timestamp": "2026-09-15T17:42:03.684254",
+  "duration_seconds": 1.539367,
+  "files_processed": {
+    "manifest.json": 10,
+    "standards.csv": 234,
+    "sample_standards.json": 78,
+    "relationships.json": 9,
+    "schem.csv": 711,
+    "certification.csv": 32,
+    "bis_standards.csv": 65,
+    "ReportExcel.csv": 1476,
+    "bis_standards.json": 77,
+    "productlicence.csv": 76,
+    "upcomming.csv": 28,
+    "query_dataset.json": 14
+  },
+  "entity_counts": {
+    "total_standards": 268,
+    "standards_created": 0,
+    "standards_updated": 312,
+    "departments_created": 0,
+    "explicit_relationships": 27,
+    "derived_relationships": 84,
+    "standard_versions": 0,
+    "qco_records": 710,
+    "qco_linked_to_standards": 66,
+    "certification_records": 1573,
+    "certification_linked_to_standards": 135,
+    "product_licence_categories": 0,
+    "ministry_product_mappings": 0,
+    "evaluation_queries": 0,
+    "source_documents": 0
+  },
+  "unresolved_relationships_count": 9,
+  "unresolved_relationships_sample": [
+    {
+      "source": "IS 12615:2018",
+      "target": "IS 15999 (Part 2/Sec 1)",
+      "normalized_target": "IS 15999 (Part 2/Sec 1)",
+      "relationship_type": "PERFORMANCE",
+      "reason": "Target standard 'IS 15999 (Part 2/Sec 1)' not found in database"
+    },
+    {
+      "source": "IS 12615:2018",
+      "target": "IS/IEC 60034-5",
+      "normalized_target": "IS/IEC 60034",
+      "relationship_type": "SAFETY",
+      "reason": "Target standard 'IS/IEC 60034-5' not found in database"
+    },
+    {
+      "source": "IS 1786:2008",
+      "target": "IS 1608 (Part 1)",
+      "normalized_target": "IS 1608 (Part 1)",
+      "relationship_type": "TESTING",
+      "reason": "Target standard 'IS 1608 (Part 1)' not found in database"
+    },
+    {
+      "source": "IS 1786:2008",
+      "target": "IS 1599",
+      "normalized_target": "IS 1599",
+      "relationship_type": "TESTING",
+      "reason": "Target standard 'IS 1599' not found in database"
+    },
+    {
+      "source": "IS 1786:2008",
+      "target": "IS 13920",
+      "normalized_target": "IS 13920",
+      "relationship_type": "SEISMIC_SAFETY",
+      "reason": "Target standard 'IS 13920' not found in database"
+    },
+    {
+      "source": "IS 269:2015",
+      "target": "IS 4032",
+      "normalized_target": "IS 4032",
+      "relationship_type": "TESTING",
+      "reason": "Target standard 'IS 4032' not found in database"
+    },
+    {
+      "source": "IS 4985:2021",
+      "target": "IS 12235 (Part 1 to 19)",
+      "normalized_target": "IS 12235 (Part 1)",
+      "relationship_type": "TESTING",
+      "reason": "Target standard 'IS 12235 (Part 1 to 19)' not found in database"
+    },
+    {
+      "source": "IS 4985:2021",
+      "target": "IS 10146",
+      "normalized_target": "IS 10146",
+      "relationship_type": "FOOD_CONTACT_SAFETY",
+      "reason": "Target standard 'IS 10146' not found in database"
+    },
+    {
+      "source": "IS 8034:2018",
+      "target": "IS 11346",
+      "normalized_target": "IS 11346",
+      "relationship_type": "TESTING",
+      "reason": "Target standard 'IS 11346' not found in database"
+    }
+  ],
+  "conflicts_identified_count": 80,
+  "conflicts_sample": [
+    {
+      "entity": "Standard:IS 8112:2013",
+      "field": "status",
+      "existing": "standards.csv=CURRENT",
+      "incoming": "sample_standards.json=SUPERSEDED",
+      "resolution": "Retained CURRENT; recorded sample_standards.json status as alternative"
+    },
+    {
+      "entity": "Standard:IS 12269:2013",
+      "field": "status",
+      "existing": "standards.csv=CURRENT",
+      "incoming": "sample_standards.json=SUPERSEDED",
+      "resolution": "Retained CURRENT; recorded sample_standards.json status as alternative"
+    },
+    {
+      "entity": "Standard:IS 13947 (Part 1):1993",
+      "field": "status",
+      "existing": "standards.csv=CURRENT",
+      "incoming": "sample_standards.json=SUPERSEDED",
+      "resolution": "Retained CURRENT; recorded sample_standards.json status as alternative"
+    },
+    {
+      "entity": "ProductLicence:Amplifiers With Input Power 2000w And Above",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=70",
+      "incoming": "productlicence.csv (subsequent row)=70",
+      "resolution": "Updated to latest row count 70 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Automatic Data Processing Machine",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=2638",
+      "incoming": "productlicence.csv (subsequent row)=2638",
+      "resolution": "Updated to latest row count 2638 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Electronic Clocks With Mains Power",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=2",
+      "incoming": "productlicence.csv (subsequent row)=2",
+      "resolution": "Updated to latest row count 2 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Electronic Games (Video)",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=28",
+      "incoming": "productlicence.csv (subsequent row)=28",
+      "resolution": "Updated to latest row count 28 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Electronic Musical Systems With Input Power 200w And Above",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=244",
+      "incoming": "productlicence.csv (subsequent row)=244",
+      "resolution": "Updated to latest row count 244 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Laptop/Notebook/Tablet",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=391",
+      "incoming": "productlicence.csv (subsequent row)=391",
+      "resolution": "Updated to latest row count 391 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Microwave Ovens",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=77",
+      "incoming": "productlicence.csv (subsequent row)=77",
+      "resolution": "Updated to latest row count 77 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Optical Disc Players With Built In Amplifiers Of Input Power 200w And Above",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=0",
+      "incoming": "productlicence.csv (subsequent row)=0",
+      "resolution": "Updated to latest row count 0 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Plasma/Lcd/Led Televisions",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=390",
+      "incoming": "productlicence.csv (subsequent row)=390",
+      "resolution": "Updated to latest row count 390 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Printers, Plotters",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=494",
+      "incoming": "productlicence.csv (subsequent row)=494",
+      "resolution": "Updated to latest row count 494 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Scanners",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=366",
+      "incoming": "productlicence.csv (subsequent row)=366",
+      "resolution": "Updated to latest row count 366 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Set Top Box",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=97",
+      "incoming": "productlicence.csv (subsequent row)=97",
+      "resolution": "Updated to latest row count 97 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Telephone Answering Machines",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=7",
+      "incoming": "productlicence.csv (subsequent row)=7",
+      "resolution": "Updated to latest row count 7 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Visual Display Units, Videos Monitors",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=1026",
+      "incoming": "productlicence.csv (subsequent row)=1026",
+      "resolution": "Updated to latest row count 1026 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Wireless Keyboards",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=196",
+      "incoming": "productlicence.csv (subsequent row)=196",
+      "resolution": "Updated to latest row count 196 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Cash Registers",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=6",
+      "incoming": "productlicence.csv (subsequent row)=6",
+      "resolution": "Updated to latest row count 6 and recorded duplicate in provenance"
+    },
+    {
+      "entity": "ProductLicence:Copying Machines/Duplicators",
+      "field": "licence_count",
+      "existing": "productlicence.csv (earlier row)=2",
+      "incoming": "productlicence.csv (subsequent row)=2",
+      "resolution": "Updated to latest row count 2 and recorded duplicate in provenance"
+    }
+  ],
+  "ambiguities_identified_count": 97,
+  "ambiguities_sample": [
+    {
+      "standard_number": "IS 21",
+      "title": "WROUGHT ALUMINIUM AND ALUMINIUM ALLOYS FOR MANUFACTURE OF UTENSILS - SPECIFICATION (FIFTH REVISION)",
+      "description": "Standard IS 21 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 26",
+      "title": "TIN INGOT - SPECIFICATION (FIFTH REVISION)",
+      "description": "Standard IS 26 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 27",
+      "title": "PRIMARY LEAD - SPECIFICATION (FIFTH REVISION).",
+      "description": "Standard IS 27 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 191",
+      "title": "COPPER",
+      "description": "Standard IS 191 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 209",
+      "title": "REFINED ZINC - SPECIFICATION (FIFTH REVISION)",
+      "description": "Standard IS 209 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 302 (Part 1)",
+      "title": "HOUSEHOLD AND SIMILAR ELECTRICAL APPLIANCES SAFETY PART 1 GENERAL REQUIREMENTS (SEVENTH REVISION)",
+      "description": "Standard IS 302 (Part 1) is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 517",
+      "title": "METHANOL (METHYL ALCOHOL)",
+      "description": "Standard IS 517 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 617",
+      "title": "ALUMINIUM AND ALUMINIUM ALLOYS INGOTS FOR REMELTING AND CASTINGS FOR GENERAL ENGINEERING PURPOSES \u00c3\u00c2\u00c3\u00c2\u00a2\u00c3\u00c2\u00a2\u00c3\u00c2\u00c3\u00c2\u00ac\u00c3\u00c2\u00a2\u00c3\u00c2\u00c3\u00c2 SPECIFICATION (FOURTH REVISION)",
+      "description": "Standard IS 617 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 695",
+      "title": "ACETIC ACID",
+      "description": "Standard IS 695 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 733",
+      "title": "WROUGHT ALUMINIUM AND ALUMINIUM ALLOY BARS, RODS, SECTIONS, EXTRUDED TUBE, HOLLOW SECTIONS AND PROFILES FOR GENERAL ENGINEERING PURPOSES \u00c3\u00a2\u00c2\u00c2 SPECIFICATION (FOURTH REVISION)",
+      "description": "Standard IS 733 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 736",
+      "title": "WROUGHT ALUMINIUM AND ALUMINIUM ALLOY PLATE FOR GENERAL ENGINEERING PURPOSES",
+      "description": "Standard IS 736 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 737",
+      "title": "WROUGHT ALUMINIUM AND ALUMINIUM ALLOY SHEET AND STRIP FOR GENERAL ENGINEERING PURPOSES SPECIFICATION (FIFTH REVISION)",
+      "description": "Standard IS 737 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 739",
+      "title": "WROUGHT ALUMINIUM AND ALUMINIUM ALLOY WIRE FOR GENERAL ENGINEERING PURPOSES",
+      "description": "Standard IS 739 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 740",
+      "title": "WROUGHT ALUMINIUM AND ALUMINIUM ALLOY RIVET STOCK FOR GENERAL ENGINEERING PURPOSES",
+      "description": "Standard IS 740 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 869",
+      "title": "SPECIFICATION FOR ETHYLENE DICHLORIDE ( THIRD REVISION )",
+      "description": "Standard IS 869 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 1165",
+      "title": "WHOLE MILK POWDER - SPECIFICATION (SIXTH REVISION OF IS 1165) AMENDMENT - 1",
+      "description": "Standard IS 1165 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 1166",
+      "title": "SWEETENED CONDENSED MILK, SWEETENED CONDENSED PARTLY SKIMMED MILK, SWEETENED CONDENSED SKIMMED MILK AND SWEETENED CONDENSD HIGH FAT MILK- SPECIFICATION (THIRD REVISION OF IS 1166)",
+      "description": "Standard IS 1166 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 1285",
+      "title": "WROUGHT ALUMINIUM AND ALUMINIUM ALLOYS EXTRUDED ROUND TUBE AND HOLLOW SECTIONS FOR GENERAL ENGINEERINGPURPOSES SPECIFICATION",
+      "description": "Standard IS 1285 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 1466",
+      "title": "FERROVANADIUM",
+      "description": "Standard IS 1466 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    },
+    {
+      "standard_number": "IS 1469",
+      "title": "FERROMOLYBDENUM",
+      "description": "Standard IS 1469 is classified as 'Voluntary' in ReportExcel.csv, yet appears under an active Quality Control Order in schem.csv."
+    }
+  ]
+}

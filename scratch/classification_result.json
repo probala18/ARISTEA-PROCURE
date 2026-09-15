@@ -1,0 +1,510 @@
+{
+  "A": [
+    {
+      "id": 7,
+      "source": "IS/IEC 60947 (Part 2):2019",
+      "target": "IS 13947 (Part 2)",
+      "type": "SUPERSEDES",
+      "dataset": "standards.csv",
+      "parts_in_db": [],
+      "found_in_files": [
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 28,
+      "source": "IS 14846:2000",
+      "target": "IS 780",
+      "type": "SUPERSEDES",
+      "dataset": "standards.csv",
+      "parts_in_db": [],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 86,
+      "source": "IS 12615:2018",
+      "target": "IS 15999 (Part 2/Sec 1)",
+      "type": "PERFORMANCE",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json"
+      ]
+    },
+    {
+      "id": 87,
+      "source": "IS 12615:2018",
+      "target": "IS/IEC 60034",
+      "type": "SAFETY",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json"
+      ]
+    },
+    {
+      "id": 100,
+      "source": "IS 1786:2008",
+      "target": "IS 1608 (Part 1)",
+      "type": "TESTING",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json"
+      ]
+    },
+    {
+      "id": 101,
+      "source": "IS 1786:2008",
+      "target": "IS 1599",
+      "type": "TESTING",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json",
+        "ReportExcel.csv",
+        "schem.csv"
+      ]
+    },
+    {
+      "id": 102,
+      "source": "IS 1786:2008",
+      "target": "IS 13920",
+      "type": "SEISMIC_SAFETY",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json"
+      ]
+    },
+    {
+      "id": 104,
+      "source": "IS 269:2015",
+      "target": "IS 4032",
+      "type": "TESTING",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json"
+      ]
+    },
+    {
+      "id": 106,
+      "source": "IS 4985:2021",
+      "target": "IS 12235 (Part 1)",
+      "type": "TESTING",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": []
+    },
+    {
+      "id": 107,
+      "source": "IS 4985:2021",
+      "target": "IS 10146",
+      "type": "FOOD_CONTACT_SAFETY",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json"
+      ]
+    },
+    {
+      "id": 108,
+      "source": "IS 8034:2018",
+      "target": "IS 11346",
+      "type": "TESTING",
+      "dataset": "relationships.json",
+      "parts_in_db": [],
+      "found_in_files": [
+        "relationships.json"
+      ]
+    }
+  ],
+  "B": [],
+  "C": [
+    {
+      "id": 2,
+      "source": "IS 1180 (Part 1):2014",
+      "target": "IS 1180",
+      "type": "SUPERSEDES",
+      "dataset": "standards.csv",
+      "parts_in_db": [
+        "IS 1180 (Part 1):2014"
+      ],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "sample_standards.json",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 3,
+      "source": "IS 2026 (Part 1):2011",
+      "target": "IS 2026",
+      "type": "SUPERSEDES",
+      "dataset": "standards.csv",
+      "parts_in_db": [
+        "IS 2026 (Part 1):2011"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 9,
+      "source": "IS 12640 (Part 1):2016",
+      "target": "IS 12640",
+      "type": "SUPERSEDES",
+      "dataset": "standards.csv",
+      "parts_in_db": [
+        "IS 12640 (Part 1):2016"
+      ],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 15,
+      "source": "IS 12933 (Part 1):2003",
+      "target": "IS 12933",
+      "type": "SUPERSEDES",
+      "dataset": "standards.csv",
+      "parts_in_db": [
+        "IS 12933 (Part 1):2003"
+      ],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 16,
+      "source": "IS 16046 (Part 2):2018",
+      "target": "IS 16046",
+      "type": "SUPERSEDES",
+      "dataset": "standards.csv",
+      "parts_in_db": [
+        "IS 16046 (Part 2):2018",
+        "IS 16046 (Part 1):2018"
+      ],
+      "found_in_files": [
+        "bis_standards.csv",
+        "relationships.json",
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 32,
+      "source": "IS 269:2015",
+      "target": "IS 4031",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 4031 (Part 1):1996"
+      ],
+      "found_in_files": [
+        "relationships.json",
+        "sample_standards.json"
+      ]
+    },
+    {
+      "id": 35,
+      "source": "IS 455:2015",
+      "target": "IS 4031",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 4031 (Part 1):1996"
+      ],
+      "found_in_files": [
+        "relationships.json",
+        "sample_standards.json"
+      ]
+    },
+    {
+      "id": 41,
+      "source": "IS 383:2016",
+      "target": "IS 2386",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 2386 (Part 1):1963",
+        "IS 2386 (Part 4):1963"
+      ],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 44,
+      "source": "IS 1489 (Part 1):2015",
+      "target": "IS 3812",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 3812 (Part 1):2013"
+      ],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "sample_standards.json"
+      ]
+    },
+    {
+      "id": 45,
+      "source": "IS 1489 (Part 1):2015",
+      "target": "IS 4031",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 4031 (Part 1):1996"
+      ],
+      "found_in_files": [
+        "relationships.json",
+        "sample_standards.json"
+      ]
+    },
+    {
+      "id": 54,
+      "source": "IS 277:2018",
+      "target": "IS 513",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 513 (Part 1):2016"
+      ],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "sample_standards.json",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 60,
+      "source": "IS 4985:2021",
+      "target": "IS 7834",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 7834 (Part 1):1987"
+      ],
+      "found_in_files": [
+        "ReportExcel.csv",
+        "sample_standards.json"
+      ]
+    },
+    {
+      "id": 66,
+      "source": "IS 10500:2012",
+      "target": "IS 3025",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 3025 (Part 1)"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 67,
+      "source": "IS 2296:1992",
+      "target": "IS 3025",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 3025 (Part 1)"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 68,
+      "source": "IS 11624:1986",
+      "target": "IS 3025",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 3025 (Part 1)"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 70,
+      "source": "IS 1180 (Part 1):2014",
+      "target": "IS 2026",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 2026 (Part 1):2011"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 71,
+      "source": "IS 11171:1985",
+      "target": "IS 2026",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 2026 (Part 1):2011"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 74,
+      "source": "IS 14255:1995",
+      "target": "IS 7098",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 7098 (Part 1):1988",
+        "IS 7098 (Part 2):2011"
+      ],
+      "found_in_files": [
+        "query_dataset.json",
+        "ReportExcel.csv",
+        "sample_standards.json",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 78,
+      "source": "IS 1363 (Part 1):2019",
+      "target": "IS 1367",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 1367 (Part 3):2017",
+        "IS 1367 (Part 1):2014"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 79,
+      "source": "IS 6610:1972",
+      "target": "IS 1367",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 1367 (Part 3):2017",
+        "IS 1367 (Part 1):2014"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 80,
+      "source": "IS 1364 (Part 1):2002",
+      "target": "IS 1367",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 1367 (Part 3):2017",
+        "IS 1367 (Part 1):2014"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 81,
+      "source": "IS 5624:1993",
+      "target": "IS 1367",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 1367 (Part 3):2017",
+        "IS 1367 (Part 1):2014"
+      ],
+      "found_in_files": [
+        "sample_standards.json",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 82,
+      "source": "IS 2395 (Part 1):1994",
+      "target": "IS 101",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 101 (Part 1/Sec 1):1986"
+      ],
+      "found_in_files": [
+        "relationships.json",
+        "ReportExcel.csv",
+        "sample_standards.json",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 83,
+      "source": "IS 5411 (Part 1):1974",
+      "target": "IS 101",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 101 (Part 1/Sec 1):1986"
+      ],
+      "found_in_files": [
+        "relationships.json",
+        "ReportExcel.csv",
+        "sample_standards.json",
+        "schem.csv",
+        "standards.csv"
+      ]
+    },
+    {
+      "id": 84,
+      "source": "IS 2932:2003",
+      "target": "IS 101",
+      "type": "NORMATIVE_REFERENCE",
+      "dataset": "sample_standards.json",
+      "parts_in_db": [
+        "IS 101 (Part 1/Sec 1):1986"
+      ],
+      "found_in_files": [
+        "relationships.json",
+        "ReportExcel.csv",
+        "sample_standards.json",
+        "schem.csv",
+        "standards.csv"
+      ]
+    }
+  ],
+  "D": [],
+  "E": []
+}

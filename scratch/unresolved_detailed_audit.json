@@ -1,0 +1,749 @@
+[
+  {
+    "id": 2,
+    "source": "IS 1180 (Part 1):2014",
+    "source_dataset": "standards.csv",
+    "relation_type": "SUPERSEDES",
+    "target_raw": "IS 1180",
+    "parsed": {
+      "prefix": "IS",
+      "number": "1180",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 1180",
+      "is_number": "IS 1180",
+      "raw": "IS 1180"
+    },
+    "matching_stds_in_db": [
+      "IS 1180 (Part 1):2014"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 3,
+    "source": "IS 2026 (Part 1):2011",
+    "source_dataset": "standards.csv",
+    "relation_type": "SUPERSEDES",
+    "target_raw": "IS 2026",
+    "parsed": {
+      "prefix": "IS",
+      "number": "2026",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 2026",
+      "is_number": "IS 2026",
+      "raw": "IS 2026"
+    },
+    "matching_stds_in_db": [
+      "IS 2026 (Part 1):2011"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 7,
+    "source": "IS/IEC 60947 (Part 2):2019",
+    "source_dataset": "standards.csv",
+    "relation_type": "SUPERSEDES",
+    "target_raw": "IS 13947 (Part 2)",
+    "parsed": {
+      "prefix": "IS",
+      "number": "13947",
+      "part": "2",
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 13947 (Part 2)",
+      "is_number": "IS 13947 (Part 2)",
+      "raw": "IS 13947 (Part 2)"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 9,
+    "source": "IS 12640 (Part 1):2016",
+    "source_dataset": "standards.csv",
+    "relation_type": "SUPERSEDES",
+    "target_raw": "IS 12640",
+    "parsed": {
+      "prefix": "IS",
+      "number": "12640",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 12640",
+      "is_number": "IS 12640",
+      "raw": "IS 12640"
+    },
+    "matching_stds_in_db": [
+      "IS 12640 (Part 1):2016"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 15,
+    "source": "IS 12933 (Part 1):2003",
+    "source_dataset": "standards.csv",
+    "relation_type": "SUPERSEDES",
+    "target_raw": "IS 12933",
+    "parsed": {
+      "prefix": "IS",
+      "number": "12933",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 12933",
+      "is_number": "IS 12933",
+      "raw": "IS 12933"
+    },
+    "matching_stds_in_db": [
+      "IS 12933 (Part 1):2003"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 16,
+    "source": "IS 16046 (Part 2):2018",
+    "source_dataset": "standards.csv",
+    "relation_type": "SUPERSEDES",
+    "target_raw": "IS 16046",
+    "parsed": {
+      "prefix": "IS",
+      "number": "16046",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 16046",
+      "is_number": "IS 16046",
+      "raw": "IS 16046"
+    },
+    "matching_stds_in_db": [
+      "IS 16046 (Part 2):2018",
+      "IS 16046 (Part 1):2018"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 28,
+    "source": "IS 14846:2000",
+    "source_dataset": "standards.csv",
+    "relation_type": "SUPERSEDES",
+    "target_raw": "IS 780",
+    "parsed": {
+      "prefix": "IS",
+      "number": "780",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 780",
+      "is_number": "IS 780",
+      "raw": "IS 780"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 32,
+    "source": "IS 269:2015",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 4031",
+    "parsed": {
+      "prefix": "IS",
+      "number": "4031",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 4031",
+      "is_number": "IS 4031",
+      "raw": "IS 4031"
+    },
+    "matching_stds_in_db": [
+      "IS 4031 (Part 1):1996"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 35,
+    "source": "IS 455:2015",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 4031",
+    "parsed": {
+      "prefix": "IS",
+      "number": "4031",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 4031",
+      "is_number": "IS 4031",
+      "raw": "IS 4031"
+    },
+    "matching_stds_in_db": [
+      "IS 4031 (Part 1):1996"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 41,
+    "source": "IS 383:2016",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 2386",
+    "parsed": {
+      "prefix": "IS",
+      "number": "2386",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 2386",
+      "is_number": "IS 2386",
+      "raw": "IS 2386"
+    },
+    "matching_stds_in_db": [
+      "IS 2386 (Part 1):1963",
+      "IS 2386 (Part 4):1963"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 44,
+    "source": "IS 1489 (Part 1):2015",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 3812",
+    "parsed": {
+      "prefix": "IS",
+      "number": "3812",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 3812",
+      "is_number": "IS 3812",
+      "raw": "IS 3812"
+    },
+    "matching_stds_in_db": [
+      "IS 3812 (Part 1):2013"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 45,
+    "source": "IS 1489 (Part 1):2015",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 4031",
+    "parsed": {
+      "prefix": "IS",
+      "number": "4031",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 4031",
+      "is_number": "IS 4031",
+      "raw": "IS 4031"
+    },
+    "matching_stds_in_db": [
+      "IS 4031 (Part 1):1996"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 54,
+    "source": "IS 277:2018",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 513",
+    "parsed": {
+      "prefix": "IS",
+      "number": "513",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 513",
+      "is_number": "IS 513",
+      "raw": "IS 513"
+    },
+    "matching_stds_in_db": [
+      "IS 513 (Part 1):2016"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 60,
+    "source": "IS 4985:2021",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 7834",
+    "parsed": {
+      "prefix": "IS",
+      "number": "7834",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 7834",
+      "is_number": "IS 7834",
+      "raw": "IS 7834"
+    },
+    "matching_stds_in_db": [
+      "IS 7834 (Part 1):1987"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 66,
+    "source": "IS 10500:2012",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 3025",
+    "parsed": {
+      "prefix": "IS",
+      "number": "3025",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 3025",
+      "is_number": "IS 3025",
+      "raw": "IS 3025"
+    },
+    "matching_stds_in_db": [
+      "IS 3025 (Part 1)"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 67,
+    "source": "IS 2296:1992",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 3025",
+    "parsed": {
+      "prefix": "IS",
+      "number": "3025",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 3025",
+      "is_number": "IS 3025",
+      "raw": "IS 3025"
+    },
+    "matching_stds_in_db": [
+      "IS 3025 (Part 1)"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 68,
+    "source": "IS 11624:1986",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 3025",
+    "parsed": {
+      "prefix": "IS",
+      "number": "3025",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 3025",
+      "is_number": "IS 3025",
+      "raw": "IS 3025"
+    },
+    "matching_stds_in_db": [
+      "IS 3025 (Part 1)"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 70,
+    "source": "IS 1180 (Part 1):2014",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 2026",
+    "parsed": {
+      "prefix": "IS",
+      "number": "2026",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 2026",
+      "is_number": "IS 2026",
+      "raw": "IS 2026"
+    },
+    "matching_stds_in_db": [
+      "IS 2026 (Part 1):2011"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 71,
+    "source": "IS 11171:1985",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 2026",
+    "parsed": {
+      "prefix": "IS",
+      "number": "2026",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 2026",
+      "is_number": "IS 2026",
+      "raw": "IS 2026"
+    },
+    "matching_stds_in_db": [
+      "IS 2026 (Part 1):2011"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 74,
+    "source": "IS 14255:1995",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 7098",
+    "parsed": {
+      "prefix": "IS",
+      "number": "7098",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 7098",
+      "is_number": "IS 7098",
+      "raw": "IS 7098"
+    },
+    "matching_stds_in_db": [
+      "IS 7098 (Part 1):1988",
+      "IS 7098 (Part 2):2011"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 78,
+    "source": "IS 1363 (Part 1):2019",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 1367",
+    "parsed": {
+      "prefix": "IS",
+      "number": "1367",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 1367",
+      "is_number": "IS 1367",
+      "raw": "IS 1367"
+    },
+    "matching_stds_in_db": [
+      "IS 1367 (Part 3):2017",
+      "IS 1367 (Part 1):2014"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 79,
+    "source": "IS 6610:1972",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 1367",
+    "parsed": {
+      "prefix": "IS",
+      "number": "1367",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 1367",
+      "is_number": "IS 1367",
+      "raw": "IS 1367"
+    },
+    "matching_stds_in_db": [
+      "IS 1367 (Part 3):2017",
+      "IS 1367 (Part 1):2014"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 80,
+    "source": "IS 1364 (Part 1):2002",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 1367",
+    "parsed": {
+      "prefix": "IS",
+      "number": "1367",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 1367",
+      "is_number": "IS 1367",
+      "raw": "IS 1367"
+    },
+    "matching_stds_in_db": [
+      "IS 1367 (Part 3):2017",
+      "IS 1367 (Part 1):2014"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 81,
+    "source": "IS 5624:1993",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 1367",
+    "parsed": {
+      "prefix": "IS",
+      "number": "1367",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 1367",
+      "is_number": "IS 1367",
+      "raw": "IS 1367"
+    },
+    "matching_stds_in_db": [
+      "IS 1367 (Part 3):2017",
+      "IS 1367 (Part 1):2014"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 82,
+    "source": "IS 2395 (Part 1):1994",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 101",
+    "parsed": {
+      "prefix": "IS",
+      "number": "101",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 101",
+      "is_number": "IS 101",
+      "raw": "IS 101"
+    },
+    "matching_stds_in_db": [
+      "IS 10116:2015",
+      "IS 1018:1982",
+      "IS 101 (Part 1/Sec 1):1986"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 83,
+    "source": "IS 5411 (Part 1):1974",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 101",
+    "parsed": {
+      "prefix": "IS",
+      "number": "101",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 101",
+      "is_number": "IS 101",
+      "raw": "IS 101"
+    },
+    "matching_stds_in_db": [
+      "IS 10116:2015",
+      "IS 1018:1982",
+      "IS 101 (Part 1/Sec 1):1986"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 84,
+    "source": "IS 2932:2003",
+    "source_dataset": "sample_standards.json",
+    "relation_type": "NORMATIVE_REFERENCE",
+    "target_raw": "IS 101",
+    "parsed": {
+      "prefix": "IS",
+      "number": "101",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 101",
+      "is_number": "IS 101",
+      "raw": "IS 101"
+    },
+    "matching_stds_in_db": [
+      "IS 10116:2015",
+      "IS 1018:1982",
+      "IS 101 (Part 1/Sec 1):1986"
+    ],
+    "files_found_in": []
+  },
+  {
+    "id": 86,
+    "source": "IS 12615:2018",
+    "source_dataset": "relationships.json",
+    "relation_type": "PERFORMANCE",
+    "target_raw": "IS 15999 (Part 2/Sec 1)",
+    "parsed": {
+      "prefix": "IS",
+      "number": "15999",
+      "part": "2",
+      "section": "1",
+      "year": null,
+      "canonical_id": "IS 15999 (Part 2/Sec 1)",
+      "is_number": "IS 15999 (Part 2/Sec 1)",
+      "raw": "IS 15999 (Part 2/Sec 1)"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 87,
+    "source": "IS 12615:2018",
+    "source_dataset": "relationships.json",
+    "relation_type": "SAFETY",
+    "target_raw": "IS/IEC 60034",
+    "parsed": {
+      "prefix": "IS/IEC",
+      "number": "60034",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS/IEC 60034",
+      "is_number": "IS/IEC 60034",
+      "raw": "IS/IEC 60034"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 100,
+    "source": "IS 1786:2008",
+    "source_dataset": "relationships.json",
+    "relation_type": "TESTING",
+    "target_raw": "IS 1608 (Part 1)",
+    "parsed": {
+      "prefix": "IS",
+      "number": "1608",
+      "part": "1",
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 1608 (Part 1)",
+      "is_number": "IS 1608 (Part 1)",
+      "raw": "IS 1608 (Part 1)"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 101,
+    "source": "IS 1786:2008",
+    "source_dataset": "relationships.json",
+    "relation_type": "TESTING",
+    "target_raw": "IS 1599",
+    "parsed": {
+      "prefix": "IS",
+      "number": "1599",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 1599",
+      "is_number": "IS 1599",
+      "raw": "IS 1599"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 102,
+    "source": "IS 1786:2008",
+    "source_dataset": "relationships.json",
+    "relation_type": "SEISMIC_SAFETY",
+    "target_raw": "IS 13920",
+    "parsed": {
+      "prefix": "IS",
+      "number": "13920",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 13920",
+      "is_number": "IS 13920",
+      "raw": "IS 13920"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 104,
+    "source": "IS 269:2015",
+    "source_dataset": "relationships.json",
+    "relation_type": "TESTING",
+    "target_raw": "IS 4032",
+    "parsed": {
+      "prefix": "IS",
+      "number": "4032",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 4032",
+      "is_number": "IS 4032",
+      "raw": "IS 4032"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 106,
+    "source": "IS 4985:2021",
+    "source_dataset": "relationships.json",
+    "relation_type": "TESTING",
+    "target_raw": "IS 12235 (Part 1)",
+    "parsed": {
+      "prefix": "IS",
+      "number": "12235",
+      "part": "1",
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 12235 (Part 1)",
+      "is_number": "IS 12235 (Part 1)",
+      "raw": "IS 12235 (Part 1)"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 107,
+    "source": "IS 4985:2021",
+    "source_dataset": "relationships.json",
+    "relation_type": "FOOD_CONTACT_SAFETY",
+    "target_raw": "IS 10146",
+    "parsed": {
+      "prefix": "IS",
+      "number": "10146",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 10146",
+      "is_number": "IS 10146",
+      "raw": "IS 10146"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  },
+  {
+    "id": 108,
+    "source": "IS 8034:2018",
+    "source_dataset": "relationships.json",
+    "relation_type": "TESTING",
+    "target_raw": "IS 11346",
+    "parsed": {
+      "prefix": "IS",
+      "number": "11346",
+      "part": null,
+      "section": null,
+      "year": null,
+      "canonical_id": "IS 11346",
+      "is_number": "IS 11346",
+      "raw": "IS 11346"
+    },
+    "matching_stds_in_db": [],
+    "files_found_in": []
+  }
+]
