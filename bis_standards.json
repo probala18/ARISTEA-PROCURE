@@ -1,0 +1,272 @@
+[
+    {
+        "sr_no":"SI. No.",
+        "is_number":"IS Number",
+        "product":"Product",
+        "notification":"Features",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"1.",
+        "is_number":"IS 269 : 2015",
+        "product":"Ordinary Portland Cement",
+        "notification":"It is commonly used in brick work, concreting, plastering, etc. Strength and durability are the essential requirements which are addressed in this standard apart from packing, best before date and retesting guidelines.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"2.",
+        "is_number":"IS 1489 (Part 1) : 1991",
+        "product":"Portland Pozzolana Cement",
+        "notification":"It   is   most   commonly   used   in   brick   work, concreting,    plastering,     etc.    Strength    and durability  are  the  essential  requirements  which are   addressed   in   this   standard   apart   from packing,    best    before    date    and    retesting guidelines.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"3.",
+        "is_number":"IS 8042 : 2015",
+        "product":"White cement",
+        "notification":"White    cement    having    special    applications requires necessary strength and provide needs to durability.    These  aspects  are  covered  in  the standard in addition to packing, best before date and retesting guidelines.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"4.",
+        "is_number":"IS 16415 : 2015",
+        "product":"Composite cement",
+        "notification":"It  is  a  sustainable  cement  option  which  can  be used in brickwork construction, plastering and the like.    Strength  and  durability  are  the  essential requirements   which   are   addressed   in   this standard  apart  from  packing,  best  before  date and retesting guidelines.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"5.",
+        "is_number":"IS 1786 : 2008",
+        "product":"Steel bar (for concrete)",
+        "notification":"This product is used in reinforced concrete such as in columns, beams, slabs, etc. The standard provides  quality  requirements  for  steel  bars  of various sizes (diameter).",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"6.",
+        "is_number":"IS 2062 : 2011",
+        "product":"Structural steel",
+        "notification":"Mild  Steel  plates,  sections  including  channels, beams,  angles  and  sheet  pilings   for  use  in construction.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"7.",
+        "is_number":"IS 1077 : 1992",
+        "product":"Red brick (clay)",
+        "notification":"The  highly  popular  building  brick  is  one  of  the oldest   and   most   extensively   used   building material.   The standard gives a requirements of the  clay  to  be  used  for  making  the  bricks,  the classification   of   these   bricks,   their   size   and quality requirements.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"8.",
+        "is_number":"IS 16720 : 2018",
+        "product":"Cement ash brick",
+        "notification":"Pulverized fuel ash-cement bricks are suitable for use  in  masonry  construction  just  like  common burnt clay brick, leading to conservation of natural resources   and   improvement   in   environment quality.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"9.",
+        "is_number":"IS 2572 : 2005",
+        "product":"Solid and Hollow block",
+        "notification":"Concrete masonry units (Solid and Hollow blocks) are used for both load-bearing and non-load bearing walls, partitions and-panel walls, as backing for other types of facing material, for piers, plasters and columns, for retaining walls, garden walls, chimneys and fire places, as fillers in concrete joist floor construction, and as shattering for beams, columns and lintels.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"10.",
+        "is_number":"IS 2185 (Part 1) : 2005",
+        "product":"Solid and Hollow block",
+        "notification":"Concrete masonry units (Solid and Hollow blocks) are used for both load-bearing and non-load bearing walls, partitions and-panel walls, as backing for other types of facing material, for piers, plasters and columns, for retaining walls, garden walls, chimneys and fire places, as fillers in concrete joist floor construction, and as shattering for beams, columns and lintels.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"11.",
+        "is_number":"IS 2185 (Part 3) : 1984",
+        "product":"AAC block",
+        "notification":"This specification is intended for cellular (aerated) concrete blocks and its manufacture using the method of generation of gas by chemical action.  Concrete masonry, already extensively used in building construction abroad, is likely to make very consider & e- headway in this country because of the many advantages, such as durability, strength and structural stability, fire resistance, insulation, and sound absorption it possesses.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"12.",
+        "is_number":"IS 383 : 2016",
+        "product":"Sand and Stone",
+        "notification":"Stone  and  sand  (river  sand  and  sand  from industrial    waste    including    Construction    & Demolition waste) are used in making concrete. Their size and quality require specific attention to ensure good concrete. This standard addresses the above.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"13.",
+        "is_number":"IS 1237 : 2012",
+        "product":"Mosaic tile",
+        "notification":"Commonly used cement concrete tiles (plain or coloured)  whose terial  of  manufacture,  the manufacturing     process     and     the     quality requirements of the final tile are covered in the standard.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"14.",
+        "is_number":"IS 15622 : 2017",
+        "product":"Ceramic tile",
+        "notification":"Design, colour and variety of flooring options are possible  using  ceramic  tiles.    Thus,  sizes  and mechanical   requirements   of   these   commonly used tiles help in deciding on the right type for use.  The standard classifies tiles based on water absorption characteristic in particular.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"15.",
+        "is_number":"IS 15477 : 2004",
+        "product":"Tile adhesive",
+        "notification":"A  good  tile  can  perform  its  intended  purpose when  jointed  properly;  and  tile  adhesive  helps achieve   the   same.      The   requirements   for adhesives   used   for   fixing   tiles   including   the detailed instructions regarding the applications of the   types   of   adhesives   are   covered   in   the standard.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"16.",
+        "is_number":"IS 1130 : 1969",
+        "product":"Marble",
+        "notification":"Marble   stone  slabs  are  used  for  mainly  for flooring,  stairs,  facing,  table  tops,  dados  and skirtings,  etc. The  standard  sizes  of  marble (slabs   and   tiles)   including   thickness,   basic properties  and  the  required  workmanship  are essential and hence covered in this standard.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"17.",
+        "is_number":"IS 14223 (Part 1) : 1995",
+        "product":"Granite",
+        "notification":"Granite  stone  can  be  used  in  flooring,  stairs, facing table tops, floors, etc.  The size, thickness, quality and types of granites and other their basic properties are covered in the standard.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"18.",
+        "is_number":"IS 15658 : 2021",
+        "product":"Paving block",
+        "notification":"Paving blocks are effective alternates to concrete flooring having easy repair\/relaying options. The quality requirements and test methods of cement concrete blocks used for paving applications are covered in the standard apart from manufacturing guidance.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"19.",
+        "is_number":"IS 2095 (Part 1) : 2011",
+        "product":"Gypsum board",
+        "notification":"This    product    is    used    to    achieve    faster construction of infill walls\/partition walls which not only provide strength but also give a uniform and neat finish.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"20.",
+        "is_number":"IS 17545 : 2021",
+        "product":"Cement based polymeric putty",
+        "notification":"Used to obtain a smooth even surface suitable for application   of   internal   or   external   decorative paints.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"21.",
+        "is_number":"IS 428 : 2013",
+        "product":"Washable Distemper",
+        "notification":"Used  for  giving  decorative  finish  on  the  inner surfaces of the building.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"22.",
+        "is_number":"IS 5410 : 2013",
+        "product":"Cement Paint",
+        "notification":"For use  on  walls, ceilings, and as an interior or exterior decorative and protective finish",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"23.",
+        "is_number":"IS 2932 : 2013",
+        "product":"Enamel Paint",
+        "notification":"Used   in   painting   system   for   protection   and household\/decorative purposes.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"24.",
+        "is_number":"IS 164 : 2015",
+        "product":"Road marking Paint",
+        "notification":"Widely used as part of traffic control and provide visual guidance for road users.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"25.",
+        "is_number":"IS 15489 : 2013",
+        "product":"Plastic Emulsion Paint",
+        "notification":"Used  for  interior  and  exterior  protection  and decoration                                                          of building  surfaces  after  surface  preparation  and priming.  It  has  property  of  quick  drying,  non- objectionable odor and good wash ability.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"26.",
+        "is_number":"IS 17072 : 2019",
+        "product":"Fire retardant paint (water based)",
+        "notification":"Used  in  internal  areas  of  different  structures requiring fire protection. Provides heat insulation and   also   acts   as   an   oxygen   barrier   thus preventing   ignition   of   combustible   substrate materials",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"27.",
+        "is_number":"IS 459 : 1992",
+        "product":"Cement asbestos sheet",
+        "notification":"This   standard   covers   corrugated   and   semi- corrugated asbestos cement sheets. designed to provide  structural  weather  exposed  surfaces  of roofs and building walls of industrial, residential, agricultural, commercial and institutional types of buildings and for decorative and other purposes.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"28.",
+        "is_number":"IS 12866 : 2021",
+        "product":"Plastic translucent sheet",
+        "notification":"This standard deals with the quality, performance and overall dimensions of glass fibre reinforced corrugated   translucent   sheeting   for   building purposes.   It   includes   plain   and   corrugated galvanized  steel  sheets,  corrugated  and  semi corrugated    asbestos    cement    sheets,    and corrugated aluminium sheets.",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"29.",
+        "is_number":"IS 277 : 2018",
+        "product":"Galvanized steel strips and sheets",
+        "notification":"GI sheets intended to be used for purposes such as  paneling,  roofing,  applications  requiring  lock forming, etc",
+        "notification_links":[
+
+        ]
+    }
+]

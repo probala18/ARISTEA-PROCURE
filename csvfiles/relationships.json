@@ -1,0 +1,211 @@
+{
+  "IS 12615:2018": {
+    "testing_standards": [
+      {
+        "id": "IS 12802",
+        "title": "Methods of test for three-phase induction motors",
+        "relationship": "requires_testing"
+      },
+      {
+        "id": "IS 15999 (Part 2/Sec 1)",
+        "title": "Standard methods for determining losses and efficiency from tests",
+        "relationship": "efficiency_verification"
+      }
+    ],
+    "safety_standards": [
+      {
+        "id": "IS/IEC 60034-5",
+        "title": "Degrees of protection provided by the integral design of rotating electrical machines (IP code)",
+        "relationship": "requires_safety"
+      },
+      {
+        "id": "IS 900",
+        "title": "Code of Practice for Installation and Maintenance of Induction Motors",
+        "relationship": "installation_safety"
+      }
+    ],
+    "performance_standards": [
+      {
+        "id": "IS 8789",
+        "title": "Values of Performance Characteristics for Three-Phase Induction Motors",
+        "relationship": "performance_rating"
+      },
+      {
+        "id": "IS 12824",
+        "title": "Three Phase Induction Motors for Inverter Duty / VFD",
+        "relationship": "vfd_application"
+      }
+    ],
+    "supersedes": [
+      {
+        "id": "IS 325",
+        "title": "Three-phase induction motors (OBSOLETE)",
+        "relationship": "superseded_by_current"
+      }
+    ],
+    "certification_scheme": "Scheme-I / ISI Mark",
+    "qco_id": "QCO-ELEC-2024-01"
+  },
+  "IS 325:1996": {
+    "superseded_by": "IS 12615:2018",
+    "warning": "CRITICAL RISK: IS 325 is obsolete and withdrawn. State and Central procurement guidelines strictly mandate IS 12615:2018 for all three-phase induction motors."
+  },
+  "IS 14286:2010": {
+    "testing_standards": [
+      {
+        "id": "IS 14286",
+        "title": "Design Qualification and Type Approval",
+        "relationship": "requires_testing"
+      }
+    ],
+    "safety_standards": [
+      {
+        "id": "IS/IEC 61730 (Part 1)",
+        "title": "Requirements for Construction of PV Modules",
+        "relationship": "requires_safety"
+      },
+      {
+        "id": "IS/IEC 61730 (Part 2)",
+        "title": "Requirements for Testing of PV Modules",
+        "relationship": "requires_safety"
+      }
+    ],
+    "allied_systems": [
+      {
+        "id": "IS 16221 (Part 2)",
+        "title": "Safety of Power Inverters for PV Systems",
+        "relationship": "inverter_system"
+      },
+      {
+        "id": "IS 16046 (Part 2)",
+        "title": "Safety Requirements for Portable Lithium Systems",
+        "relationship": "battery_storage"
+      }
+    ],
+    "certification_scheme": "Scheme-I / ISI Mark",
+    "qco_id": "QCO-SOLAR-2023-01"
+  },
+  "IS 13252 (Part 1):2010": {
+    "safety_standards": [
+      {
+        "id": "IS 13252 (Part 1)",
+        "title": "IT Equipment Safety - General Requirements",
+        "relationship": "requires_safety"
+      }
+    ],
+    "subcomponent_standards": [
+      {
+        "id": "IS 16046 (Part 2)",
+        "title": "Secondary Lithium Cells and Batteries Safety",
+        "relationship": "battery_safety"
+      },
+      {
+        "id": "IS 13252 (Part 1) / POW-ADAPT:2010",
+        "title": "Power Adaptors for IT Equipment",
+        "relationship": "adaptor_safety"
+      }
+    ],
+    "certification_scheme": "Scheme-II / CRS",
+    "qco_id": "QCO-MEITY-2021-01"
+  },
+  "IS 1786:2008": {
+    "testing_standards": [
+      {
+        "id": "IS 1608 (Part 1)",
+        "title": "Metallic materials - Tensile testing",
+        "relationship": "requires_testing"
+      },
+      {
+        "id": "IS 1599",
+        "title": "Metallic materials - Bend test",
+        "relationship": "requires_testing"
+      }
+    ],
+    "safety_standards": [
+      {
+        "id": "IS 13920",
+        "title": "Ductile Design and Detailing of Reinforced Concrete Structures Subject to Seismic Forces",
+        "relationship": "seismic_safety"
+      }
+    ],
+    "certification_scheme": "Scheme-I / ISI Mark",
+    "qco_id": "QCO-STEEL-2020-01"
+  },
+  "IS 269:2015": {
+    "testing_standards": [
+      {
+        "id": "IS 4031 (Part 1 to 15)",
+        "title": "Methods of Physical Tests for Hydraulic Cement",
+        "relationship": "requires_testing"
+      },
+      {
+        "id": "IS 4032",
+        "title": "Method of Chemical Analysis of Hydraulic Cement",
+        "relationship": "requires_testing"
+      }
+    ],
+    "safety_standards": [
+      {
+        "id": "IS 456",
+        "title": "Plain and Reinforced Concrete - Code of Practice",
+        "relationship": "application_code"
+      }
+    ],
+    "certification_scheme": "Scheme-I / ISI Mark",
+    "qco_id": "QCO-CEMENT-2024-01"
+  },
+  "IS 4985:2021": {
+    "testing_standards": [
+      {
+        "id": "IS 12235 (Part 1 to 19)",
+        "title": "Methods of Test for UPVC Pipes for Potable Water Supplies",
+        "relationship": "requires_testing"
+      }
+    ],
+    "safety_standards": [
+      {
+        "id": "IS 10146",
+        "title": "Polyethylene for Safe Use in Contact with Foodstuffs and Drinking Water",
+        "relationship": "food_contact_safety"
+      }
+    ],
+    "certification_scheme": "Scheme-I / ISI Mark",
+    "qco_id": "QCO-PIPE-2023-01"
+  },
+  "IS 8034:2018": {
+    "testing_standards": [
+      {
+        "id": "IS 11346",
+        "title": "Code of Acceptance Tests for Submersible Pumpsets",
+        "relationship": "requires_testing"
+      }
+    ],
+    "safety_standards": [
+      {
+        "id": "IS 9283",
+        "title": "Motors for Submersible Pumpsets",
+        "relationship": "submersible_motor_safety"
+      }
+    ],
+    "certification_scheme": "Scheme-I / ISI Mark",
+    "qco_id": "QCO-PUMP-2024-02"
+  },
+  "IS 15683:2018": {
+    "testing_standards": [
+      {
+        "id": "IS 15683",
+        "title": "Fire Rating and Hydrostatic Pressure Tests",
+        "relationship": "requires_testing"
+      }
+    ],
+    "safety_standards": [
+      {
+        "id": "IS 2190",
+        "title": "Selection, Installation and Maintenance of Fire Extinguishers",
+        "relationship": "maintenance_code"
+      }
+    ],
+    "certification_scheme": "Scheme-I / ISI Mark",
+    "qco_id": "QCO-FIRE-2023-01"
+  }
+}
