@@ -1,0 +1,695 @@
+[
+    {
+        "sr_no":"S.No.",
+        "is_number":"Products Category",
+        "product":"Total License(s)",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"1",
+        "is_number":"Amplifiers With Input Power 2000w And Above",
+        "product":"70",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"2",
+        "is_number":"Automatic Data Processing Machine",
+        "product":"2638",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"3",
+        "is_number":"Electronic Clocks With Mains Power",
+        "product":"2",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"4",
+        "is_number":"Electronic Games (Video)",
+        "product":"28",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"5",
+        "is_number":"Electronic Musical Systems With Input Power 200w And Above",
+        "product":"244",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"6",
+        "is_number":"Laptop\/Notebook\/Tablet",
+        "product":"391",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"7",
+        "is_number":"Microwave Ovens",
+        "product":"77",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"8",
+        "is_number":"Optical Disc Players With Built In Amplifiers Of Input Power 200w And Above",
+        "product":"0",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"9",
+        "is_number":"Plasma\/Lcd\/Led Televisions",
+        "product":"390",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"10",
+        "is_number":"Printers, Plotters",
+        "product":"494",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"11",
+        "is_number":"Scanners",
+        "product":"366",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"12",
+        "is_number":"Set Top Box",
+        "product":"97",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"13",
+        "is_number":"Telephone Answering Machines",
+        "product":"7",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"14",
+        "is_number":"Visual Display Units, Videos Monitors",
+        "product":"1026",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"15",
+        "is_number":"Wireless Keyboards",
+        "product":"196",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"16",
+        "is_number":"Cash Registers",
+        "product":"6",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"17",
+        "is_number":"Copying Machines\/Duplicators",
+        "product":"2",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"18",
+        "is_number":"Passport Reader",
+        "product":"8",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"19",
+        "is_number":"Point Of Sale Terminals",
+        "product":"189",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"20",
+        "is_number":"Mail Processing Machines\/Postage Machines\/Franking Machines",
+        "product":"3",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"21",
+        "is_number":"Power Banks For Use In Portable Applications",
+        "product":"846",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"22",
+        "is_number":"Smart Card Reader",
+        "product":"101",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"23",
+        "is_number":"Mobile Phones",
+        "product":"202",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"24",
+        "is_number":"Self-Ballasted Led Lamps For General Lighting Services",
+        "product":"596",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"25",
+        "is_number":"Dc Or Ac Supplied Electronic Controlgear For Led Modules",
+        "product":"1396",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"26",
+        "is_number":"Power Adaptors For Audio,Video And Similar Electronic Apparatus",
+        "product":"146",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"27",
+        "is_number":"Power Adaptors For It Equipments",
+        "product":"2163",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"28",
+        "is_number":"Fixed General Purpose Led Luminaires",
+        "product":"1853",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"29",
+        "is_number":"Ups\/Invertors",
+        "product":"308",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"30",
+        "is_number":"Sealed Secondary Cells\/Batteries Containing Alkaline Or Other Non-Acid Electrolytes For Use In Portable Applications",
+        "product":"3029",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"31",
+        "is_number":"Indian Language Support For Mobile Phone Handsets",
+        "product":"Licence is granted under the product category 'Mobile Phone'",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"32",
+        "is_number":"Recessed Led Luminaries",
+        "product":"1337",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"33",
+        "is_number":"Led Luminaires For Road And Street Lighting",
+        "product":"1097",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"34",
+        "is_number":"Led Hand Lamps",
+        "product":"37",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"35",
+        "is_number":"Led Flood Lights",
+        "product":"1099",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"36",
+        "is_number":"Led Lighting Chains",
+        "product":"589",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"37",
+        "is_number":"Led Luminaires For Emergency Lighting",
+        "product":"46",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"38",
+        "is_number":"Visual Display Units, Video Monitors Of Screen Size Upto 32",
+        "product":"Visual Display Units, Video Monitors of screen size upto 32",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"39",
+        "is_number":"Ups\/Inverters Of Rating <= 10kva",
+        "product":"Licence is granted under the product category 'UPS\/Inverters'",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"40",
+        "is_number":"Usb Driven Barcode Readers, Barcode Scanners, Iris Scanners, Optical Fingerprint Scanners",
+        "product":"Licence is granted under the product category 'Scanners'",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"41",
+        "is_number":"Cctv Cameras\/Cctv Recorders",
+        "product":"523",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"42",
+        "is_number":"Adapters For Household And Similar Electrical Appliances",
+        "product":"143",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"43",
+        "is_number":"Plasma\/ Lcd\/Led Television Of Screen Size Up-To 32",
+        "product":"Licence is granted under the product category 'Plasma\/ LCD\/LED Television'",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"44",
+        "is_number":"Smart Watches",
+        "product":"271",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"45",
+        "is_number":"Independent Led Modules For General Lighting",
+        "product":"92",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"46",
+        "is_number":"Lighting Chain (Rope Lights)",
+        "product":"266",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"47",
+        "is_number":"Keyboard",
+        "product":"268",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"48",
+        "is_number":"Induction Stove",
+        "product":"256",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"49",
+        "is_number":"Automatic Teller Cash Dispensing Machines",
+        "product":"16",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"50",
+        "is_number":"Usb Type External Hard Disk Drive",
+        "product":"23",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"51",
+        "is_number":"Wireless Headphone And Earphone",
+        "product":"898",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"52",
+        "is_number":"Usb Type  External  Solid-State Storage Devices (Above 256 Gb Capacity)",
+        "product":"44",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"53",
+        "is_number":"Electronic Musical System With Input Power Below 200 Watts",
+        "product":"328",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"54",
+        "is_number":"Standalone Switch Mode Power Supplies (Smps)",
+        "product":"358",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"55",
+        "is_number":"Television Other Than Plasma\/ Lcd\/Led Tvs",
+        "product":"0",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"56",
+        "is_number":"Rice Cooker",
+        "product":"166",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"57",
+        "is_number":"Wireless Microphone",
+        "product":"200",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"58",
+        "is_number":"Digital Camera",
+        "product":"111",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"59",
+        "is_number":"Video Camera",
+        "product":"338",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"60",
+        "is_number":"Webcam (Finished Product)",
+        "product":"169",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"61",
+        "is_number":"Smart Speakers (With And Without Display)",
+        "product":"58",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"62",
+        "is_number":"Dimmers For Led Products",
+        "product":"17",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"63",
+        "is_number":"Bluetooth Speakers",
+        "product":"411",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"64",
+        "is_number":"Crystalline Silicon Terrestrial Photovoltaic (Pv) Modules (Si Wafer Based)",
+        "product":"498",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"65",
+        "is_number":"Thin-Film Terrestrial Photovoltaic (Pv) Modules (A-Si, Cigs And Cdte)",
+        "product":"3",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"66",
+        "is_number":"Power Invertors For Use In Photovoltaic Power System",
+        "product":"59",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"67",
+        "is_number":"Utility-Interconnected Photovoltaic Inverters",
+        "product":"335",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"68",
+        "is_number":"Storage Battery",
+        "product":"16",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"69",
+        "is_number":"Orthophosphoric Acid",
+        "product":"30",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"70",
+        "is_number":"Trimethyl Phosphite  Technical Grade",
+        "product":"1",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"71",
+        "is_number":"Polyphosphoric Acid",
+        "product":"10",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"72",
+        "is_number":"Television Sets",
+        "product":"0",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"73",
+        "is_number":"Thin-Film Terrestrial Photovoltaic (Pv) Modules [Cdte, A-Si, Cu(In, Ga)(S,Se)2]",
+        "product":"0",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"74",
+        "is_number":"Storage Battery",
+        "product":"51",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"75",
+        "is_number":"Extended Reality Products (Augmented Reality, Virtual Reality, Mixed Reality Etc.)",
+        "product":"4",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    },
+    {
+        "sr_no":"",
+        "is_number":"Total",
+        "product":"",
+        "notification":"",
+        "notification_links":[
+
+        ]
+    }
+]
