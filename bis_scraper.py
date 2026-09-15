@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 # BIS PAGE URL
 # --------------------------------------------------
 
-URL = "https://www.bis.gov.in/know-your-standard/?utm_source=chatgpt.com&lang=en"
+URL = "https://www.services.bis.gov.in/php/BIS_2.0/bisconnect/get_is_list_by_category_id/1"
 
 # --------------------------------------------------
 # DOWNLOAD PAGE
