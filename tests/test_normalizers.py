@@ -1,6 +1,10 @@
 """
 Unit tests for standard ID normalization and conversion utilities (Module 3).
 """
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import pytest
 from backend.app.core.normalizers import (
     parse_standard_id,

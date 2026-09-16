@@ -9,6 +9,10 @@ Tests all requirements:
 6. Path Explanations: structured audit trail with provenance
 7. Edge cases: empty/malformed IDs, uncataloged standards
 """
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import pytest
 from sqlalchemy.orm import sessionmaker
 

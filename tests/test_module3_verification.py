@@ -1,7 +1,7 @@
-"""
-Module 3 Verification Tests: Standard Count & Relationship FK Resolution Audit.
-Validates the exact resolutions and classifications requested before approving Module 4.
-"""
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import pytest
 from sqlalchemy.orm import sessionmaker
 from backend.app.core.database import get_engine
