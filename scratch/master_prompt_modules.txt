@@ -1,0 +1,450 @@
+[2950] I must explicitly approve the next module.
+[2951] 
+[2952] ============================================================
+[2953] 99. MODULE ORDER
+[2954] ============================================================
+[2955] 
+[2956] MODULE 1
+[2957] 
+[2958] Dataset inspection and data dictionary
+[2959] 
+[2960] Deliver:
+[2961] 
+[2962] - actual file inventory
+[2963] - schema inventory
+[2964] - record counts
+[2965] - field mapping
+[2966] - source precedence
+[2967] - conflicts
+[2968] - limitations
+[2969] 
+[2970] STOP AND ASK PERMISSION.
+[2971] 
+[2972] MODULE 2
+[2973] 
+[2974] Database schema and migrations
+[2975] 
+[2976] Deliver:
+[2977] 
+[2978] - PostgreSQL schema
+[2979] - pgvector
+[2980] - migrations
+[2981] - indexes
+[2982] - constraints
+[2983] 
+[2984] STOP AND ASK PERMISSION.
+[2985] 
+[2986] MODULE 3
+[2987] 
+[2988] Dataset ingestion and validation
+[2989] 
+[2990] Deliver:
+[2991] 
+[2992] - importer
+[2993] - normalization
+[2994] - provenance
+[2995] - validation
+[2996] - conflict report
+[2997] - seed database
+[2998] 
+[2999] STOP AND ASK PERMISSION.
+[3000] 
+[3001] MODULE 4
+[3002] 
+[3003] Procurement NLP
+[3004] 
+[3005] Deliver:
+[3006] 
+[3007] - language detection
+[3008] - normalization
+[3009] - intent classification
+[3010] - requirement extraction
+[3011] - ontology mapping
+[3012] - ambiguity handling
+[3013] 
+[3014] STOP AND ASK PERMISSION.
+[3015] 
+[3016] MODULE 5
+[3017] 
+[3018] Semantic retrieval
+[3019] 
+[3020] Deliver:
+[3021] 
+[3022] - embedding provider
+[3023] - vector indexing
+[3024] - lexical retrieval
+[3025] - hybrid retrieval
+[3026] - ranking
+[3027] 
+[3028] STOP AND ASK PERMISSION.
+[3029] 
+[3030] MODULE 6
+[3031] 
+[3032] Recommendation engine
+[3033] 
+[3034] Deliver:
+[3035] 
+[3036] - primary standard selection
+[3037] - relevance scoring
+[3038] - confidence
+[3039] - evidence
+[3040] - explanations
+[3041] 
+[3042] STOP AND ASK PERMISSION.
+[3043] 
+[3044] MODULE 7
+[3045] 
+[3046] Relationship engine
+[3047] 
+[3048] Deliver:
+[3049] 
+[3050] - allied standards
+[3051] - normative standards
+[3052] - testing
+[3053] - performance
+[3054] - safety
+[3055] - installation
+[3056] - related products
+[3057] - superseded connections
+[3058] - graph API
+[3059] 
+[3060] STOP AND ASK PERMISSION.
+[3061] 
+[3062] MODULE 8
+[3063] 
+[3064] Version and amendment intelligence
+[3065] 
+[3066] Deliver:
+[3067] 
+[3068] - version checks
+[3069] - amendment checks
+[3070] - supersession
+[3071] - warnings
+[3072] - evidence
+[3073] 
+[3074] STOP AND ASK PERMISSION.
+[3075] 
+[3076] MODULE 9
+[3077] 
+[3078] Compliance intelligence
+[3079] 
+[3080] Deliver:
+[3081] 
+[3082] - certification
+[3083] - BIS/ISI
+[3084] - CRS
+[3085] - Hallmarking where supported
+[3086] - QCO
+[3087] - product licence context
+[3088] - mandatory/voluntary/conditional/unknown logic
+[3089] 
+[3090] STOP AND ASK PERMISSION.
+[3091] 
+[3092] MODULE 10
+[3093] 
+[3094] Speech AI
+[3095] 
+[3096] Deliver:
+[3097] 
+[3098] - STT
+[3099] - multilingual speech input
+[3100] - TTS
+[3101] - shared analysis pipeline
+[3102] - voice error handling
+[3103] 
+[3104] STOP AND ASK PERMISSION.
+[3105] 
+[3106] MODULE 11
+[3107] 
+[3108] Tender document engine
+[3109] 
+[3110] Deliver:
+[3111] 
+[3112] - PDF
+[3113] - DOCX
+[3114] - TXT
+[3115] - page/section extraction
+[3116] - clause detection
+[3117] - standard extraction
+[3118] 
+[3119] STOP AND ASK PERMISSION.
+[3120] 
+[3121] MODULE 12
+[3122] 
+[3123] Tender Gap Detection and Audit
+[3124] 
+[3125] Deliver:
+[3126] 
+[3127] - expected-vs-present
+[3128] - missing standards
+[3129] - outdated standards
+[3130] - testing gaps
+[3131] - safety gaps
+[3132] - certification gaps
+[3133] - ambiguity
+[3134] - coverage score
+[3135] 
+[3136] STOP AND ASK PERMISSION.
+[3137] 
+[3138] MODULE 13
+[3139] 
+[3140] Specification Generator
+[3141] 
+[3142] Deliver:
+[3143] 
+[3144] - tender clause
+[3145] - technical specification
+[3146] - compliance checklist
+[3147] - corrective clause
+[3148] - evidence-grounded generation
+[3149] 
+[3150] STOP AND ASK PERMISSION.
+[3151] 
+[3152] MODULE 14
+[3153] 
+[3154] FastAPI integration
+[3155] 
+[3156] Deliver:
+[3157] 
+[3158] - all APIs
+[3159] - validation
+[3160] - error handling
+[3161] - health
+[3162] - async jobs
+[3163] 
+[3164] STOP AND ASK PERMISSION.
+[3165] 
+[3166] MODULE 15
+[3167] 
+[3168] Frontend integration
+[3169] 
+[3170] Let the UI agent determine the exact design.
+[3171] 
+[3172] Connect frontend to all real backend APIs.
+[3173] 
+[3174] No mock data.
+[3175] 
+[3176] STOP AND ASK PERMISSION.
+[3177] 
+[3178] MODULE 16
+[3179] 
+[3180] Evaluation and metrics
+[3181] 
+[3182] Deliver:
+[3183] 
+[3184] - retrieval metrics
+[3185] - intent metrics
+[3186] - multilingual metrics
+[3187] - tender audit metrics
+[3188] - latency
+[3189] - evaluation reports
+[3190] 
+[3191] STOP AND ASK PERMISSION.
+[3192] 
+[3193] MODULE 17
+[3194] 
+[3195] Testing and security
+[3196] 
+[3197] Deliver:
+[3198] 
+[3199] - unit tests
+[3200] - integration tests
+[3201] - API tests
+[3202] - E2E tests
+[3203] - security tests
+[3204] - prompt injection tests
+[3205] - file upload tests
+[3206] 
+[3207] STOP AND ASK PERMISSION.
+[3208] 
+[3209] MODULE 18
+[3210] 
+[3211] Deployment and documentation
+[3212] 
+[3213] Deliver:
+[3214] 
+[3215] - Docker
+[3216] - environment configuration
+[3217] - deployment instructions
+[3218] - README
+[3219] - architecture documentation
+[3220] - model documentation
+[3221] - limitations
+[3222] 
+[3223] STOP AND ASK PERMISSION.
+[3224] 
+[3225] ============================================================
+[3226] 100. MODULE COMPLETION RULE
+[3227] ============================================================
+[3228] 
+[3229] A module is NOT considered complete just because files exist.
+[3230] 
+[3231] A module is complete only when:
+[3232] 
+[3233] - implementation exists
+[3234] - code runs
+[3235] - tests run
+[3236] - expected behavior is demonstrated
+[3237] - no known blocking errors remain
+[3238] 
+[3239] At the end of each module report:
+[3240] 
+[3241] MODULE:
+[3242] STATUS:
+[3243] IMPLEMENTED:
+[3244] TESTS:
+[3245] RESULT:
+[3246] KNOWN LIMITATIONS:
+[3247] 
+[3248] Then ask exactly:
+[3249] 
+[3250] "Module completed. May I continue to the next module?"
+[3251] 
+[3252] Wait for my permission.
+[3253] 
+[3254] ============================================================
+[3255] 101. METRICS REPORTING
+[3256] ============================================================
+[3257] 
+[3258] Do not simply say:
+[3259] 
+[3260] "accuracy is good."
+[3261] 
+[3262] Instead report:
+[3263] 
+[3264] Dataset:
+[3265] query_dataset.json
+[3266] 
+[3267] Sample count:
+[3268] actual count
+[3269] 
+[3270] Precision@1:
+[3271] actual result
+[3272] 
+[3273] Precision@3:
+[3274] actual result
+[3275] 
+[3276] Recall@5:
+[3277] actual result
+[3278] 
+[3279] MRR:
+[3280] actual result
+[3281] 
+[3282] Intent accuracy:
+[3283] actual result
+[3284] 
+[3285] Clarification accuracy:
+[3286] actual result
+[3287] 
+[3288] Multilingual retrieval success:
+[3289] actual result
+[3290] 
+[3291] Average latency:
+[3292] actual result
+[3293] 
+[3294] Tender audit:
+[3295] actual measurable result where labels are available
+[3296] 
+[3297] ============================================================
+[3298] 102. MODEL REPORTING
+[3299] ============================================================
+[3300] 
+[3301] Document exactly which components are pretrained and which are custom.
+[3302] 
+[3303] Expected initial architecture:
+[3304] 
+[3305] PRETRAINED EMBEDDING MODEL
+[3306] 
+[3307] PRETRAINED STT
+[3308] 
+[3309] PRETRAINED TTS
+[3310] 
+[3311] OPTIONAL PRETRAINED RERANKER
+[3312] 
+[3313] LLM
+[3314] 
+[3315] CUSTOM:
+[3316] 
+[3317] NLP orchestration
+[3318] 
+[3319] retrieval pipeline
+[3320] 
+[3321] ontology mapping
+[3322] 
+[3323] ranking formula
+[3324] 
+[3325] relationship engine
+[3326] 
+[3327] version engine
+[3328] 
+[3329] compliance engine
+[3330] 
+[3331] audit engine
+[3332] 
+[3333] evidence engine
+[3334] 
+[3335] Do not claim model training unless it actually occurs.
+[3336] 
+[3337] ============================================================
+[3338] 103. FUTURE TRAINING
+[3339] ============================================================
+[3340] 
+[3341] Document a future training plan.
+[3342] 
+[3343] Potential future data collection:
+[3344] 
+[3345] query
+[3346] → correct standard
+[3347] → incorrect standard
+[3348] → relevant relationships
+[3349] → certification result
+[3350] → tender issue label
+[3351] 
+[3352] Then possible future fine-tuning:
+[3353] 
+[3354] - reranker
+[3355] - intent classifier
+[3356] - domain embedding adaptation
+[3357] 
+[3358] But this is FUTURE WORK.
+[3359] 
+[3360] Do not implement as required MVP unless sufficient labeled data becomes available.
+[3361] 
+[3362] ============================================================
+[3363] 104. ARCHITECTURAL PRINCIPLE
+[3364] ============================================================
+[3365] 
+[3366] Keep:
+[3367] 
+[3368] AI UNDERSTANDING
+[3369] 
+[3370] separate from
+[3371] 
+[3372] AUTHORITATIVE KNOWLEDGE
+[3373] 
+[3374] separate from
+[3375] 
+[3376] REGULATORY RULES
+[3377] 
+[3378] separate from
+[3379] 
+[3380] USER-FACING EXPLANATION
+[3381] 
+[3382] Meaning:
+[3383] 
+[3384] LLM/NLP:
+[3385] "What does the user mean?"
+[3386] 
+[3387] Retriever:
+[3388] "Which supplied records match?"
+[3389] 
+[3390] Knowledge base:
+[3391] "What facts do we have?"
+[3392] 
+[3393] Rule engine:
+[3394] "What can we determine from those facts?"
+[3395] 
+[3396] LLM:
+[3397] "How should this be explained?"
+[3398] 
+[3399] ============================================================

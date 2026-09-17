@@ -1,0 +1,40 @@
+[2405] docs/model-strategy.md
+[2406] 
+[2407] ============================================================
+[2408] 80. RECOMMENDED INITIAL MODEL STRATEGY
+[2409] ============================================================
+[2410] 
+[2411] Implement interfaces so the actual model can be changed easily.
+[2412] 
+[2413] Embedding:
+[2414] 
+[2415] multilingual embedding model
+[2416] 
+[2417] STT:
+[2418] 
+[2419] multilingual speech recognition model/service
+[2420] 
+[2421] TTS:
+[2422] 
+[2423] multilingual TTS model/service
+[2424] 
+[2425] LLM:
+[2426] 
+[2427] provider abstraction
+[2428] 
+[2429] Reranker:
+[2430] 
+[2431] optional abstraction
+[2432] 
+[2433] Do not hard-code the whole application to one vendor.
+[2434] 
+[2435] ============================================================
+[2436] 81. DATABASE SEARCH + VECTOR SEARCH
+[2437] ============================================================
+[2438] 
+[2439] The exact query flow should be:
+[2440] 
+[2441] if user enters exact standard number:
+[2442] 
+[2443] exact database lookup first
+[2444] 

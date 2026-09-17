@@ -1,0 +1,1105 @@
+Found 27 matching line locations.
+--- Line 21 ---
+[16] Pretrained AI models and AI APIs ARE ALLOWED as computational
+[17] models for:
+[18] 
+[19] - LLM conversation and reasoning
+[20] - NLP
+[21] - multilingual embeddings
+[22] - semantic retrieval
+[23] - optional reranking
+[24] - speech-to-text
+[25] - text-to-speech
+[26] 
+[27] These models provide language/speech capability only.
+[28] 
+[29] They must NOT be treated as authoritative sources of Indian
+[30] Standards or regulatory facts.
+[31] 
+[32] All domain facts must ultimately be grounded in the supplied
+[33] dataset.
+[34] 
+[35] BUILD THE COMPLETE END-TO-END SOFTWARE SOLUTION FOR SMART INDIA HACKATHON 2026 PROBLEM STATEMENT 26108 USING ONLY THE DATA FILES PROVIDED TO YOU.
+[36] 
+[37] DO NOT BUILD ONLY A DEMO UI.
+[38] DO NOT ONLY EXPLAIN THE ARCHITECTURE.
+[39] ACTUALLY IMPLEMENT THE PROJECT MODULE BY MODULE.
+[40] 
+[41] You are acting as the complete engineering team:
+[42] 
+[43] - senior software architect
+[44] - backend engineer
+[45] - frontend engineer
+[46] - AI/ML engineer
+[47] - NLP engineer
+[48] - RAG engineer
+[49] - data engineer
+[50] - database engineer
+[51] - document-processing engineer
+[52] - speech AI engineer
+[53] - QA engineer
+[54] - DevOps engineer
+[55] - security engineer
+--- Line 22 ---
+[17] models for:
+[18] 
+[19] - LLM conversation and reasoning
+[20] - NLP
+[21] - multilingual embeddings
+[22] - semantic retrieval
+[23] - optional reranking
+[24] - speech-to-text
+[25] - text-to-speech
+[26] 
+[27] These models provide language/speech capability only.
+[28] 
+[29] They must NOT be treated as authoritative sources of Indian
+[30] Standards or regulatory facts.
+[31] 
+[32] All domain facts must ultimately be grounded in the supplied
+[33] dataset.
+[34] 
+[35] BUILD THE COMPLETE END-TO-END SOFTWARE SOLUTION FOR SMART INDIA HACKATHON 2026 PROBLEM STATEMENT 26108 USING ONLY THE DATA FILES PROVIDED TO YOU.
+[36] 
+[37] DO NOT BUILD ONLY A DEMO UI.
+[38] DO NOT ONLY EXPLAIN THE ARCHITECTURE.
+[39] ACTUALLY IMPLEMENT THE PROJECT MODULE BY MODULE.
+[40] 
+[41] You are acting as the complete engineering team:
+[42] 
+[43] - senior software architect
+[44] - backend engineer
+[45] - frontend engineer
+[46] - AI/ML engineer
+[47] - NLP engineer
+[48] - RAG engineer
+[49] - data engineer
+[50] - database engineer
+[51] - document-processing engineer
+[52] - speech AI engineer
+[53] - QA engineer
+[54] - DevOps engineer
+[55] - security engineer
+[56] 
+--- Line 155 ---
+[150] → LANGUAGE DETECTION
+[151] → NLP NORMALIZATION
+[152] → REQUIREMENT EXTRACTION
+[153] → PROCUREMENT ONTOLOGY MAPPING
+[154] → SEMANTIC REPRESENTATION
+[155] → HYBRID RETRIEVAL
+[156] → RERANKING
+[157] → PRIMARY STANDARD IDENTIFICATION
+[158] → RELATIONSHIP EXPANSION
+[159] → VERSION/AMENDMENT CHECK
+[160] → CERTIFICATION/QCO CHECK
+[161] → TENDER GAP DETECTION
+[162] → CONFIDENCE + EVIDENCE
+[163] → EXPLANATION
+[164] → SPECIFICATION GENERATION
+[165] → OPTIONAL TEXT-TO-SPEECH OUTPUT
+[166] 
+[167] ============================================================
+[168] 4. FIVE CORE INNOVATIONS
+[169] ============================================================
+[170] 
+[171] The project must clearly implement and expose these five innovation areas:
+[172] 
+[173] 1. TENDER GAP DETECTION
+[174] 
+[175] Identify important technical or standards-related requirements that may be missing from a tender.
+[176] 
+[177] 2. SMART STANDARD RELATIONSHIP MAPPING
+[178] 
+[179] Connect the primary standard with:
+[180] 
+[181] - allied standards
+[182] - normative references
+[183] - testing standards
+[184] - safety standards
+[185] - performance standards
+[186] - installation standards
+[187] - terminology standards
+[188] - related product standards
+[189] - superseded standards
+--- Line 238 ---
+[233] 
+[234] The uploaded dataset is the project's knowledge base.
+[235] 
+[236] External pretrained AI models are allowed only as computational/model infrastructure for:
+[237] 
+[238] - embeddings
+[239] - language understanding
+[240] - STT
+[241] - TTS
+[242] - optional reranking
+[243] - optional LLM reasoning
+[244] 
+[245] These models must not be treated as authoritative sources of Indian Standards facts.
+[246] 
+[247] All domain facts must come from the supplied data.
+[248] 
+[249] ============================================================
+[250] 6. AVAILABLE DATA FILES
+[251] ============================================================
+[252] 
+[253] The provided data files include:
+[254] 
+[255] - bis_standards.csv
+[256] - bis_standards.json
+[257] - certification.csv
+[258] - manifest.json
+[259] - productlicence.csv
+[260] - query_dataset.json
+[261] - relationships(1).json
+[262] - ReportExcel.csv
+[263] - sample_standards.json
+[264] - schem.csv
+[265] - standards(1).csv
+[266] - upcomming.csv
+[267] 
+[268] Inspect every file before implementation.
+[269] 
+[270] Do not assume the schemas.
+[271] 
+[272] Determine the real structure and relationships.
+--- Line 421 ---
+[416] 
+[417] - ingestion
+[418] - normalization
+[419] - NLP
+[420] - ontology
+[421] - embeddings
+[422] - retrieval
+[423] - reranking
+[424] - relationships
+[425] - version intelligence
+[426] - certification intelligence
+[427] - QCO intelligence
+[428] - tender analysis
+[429] - gap detection
+[430] - evidence
+[431] - generation
+[432] - speech
+[433] 
+[434] ============================================================
+[435] 11. DATABASE
+[436] ============================================================
+[437] 
+[438] Use:
+[439] 
+[440] PostgreSQL
+[441] +
+[442] pgvector
+[443] 
+[444] Implement tables for:
+[445] 
+[446] standards
+[447] 
+[448] standard_relationships
+[449] 
+[450] standard_versions
+[451] 
+[452] certification_records
+[453] 
+[454] qco_records
+[455] 
+--- Line 922 ---
+[917] 
+[918] "flexible wires for domestic home wiring"
+[919] 
+[920] should be able to retrieve a semantically related cable standard even if the exact wording is not identical.
+[921] 
+[922] Use multilingual embeddings.
+[923] 
+[924] Possible model strategy:
+[925] 
+[926] - use a pretrained multilingual embedding model
+[927] - store embeddings for standards
+[928] - embed user queries
+[929] - perform vector retrieval
+[930] - combine with lexical retrieval
+[931] 
+[932] The model itself is not trained by us on BIS data initially.
+[933] 
+[934] ============================================================
+[935] 26. EMBEDDING STRATEGY
+[936] ============================================================
+[937] 
+[938] Create an embedding provider abstraction.
+[939] 
+[940] Functions:
+[941] 
+[942] embed_query()
+[943] 
+[944] embed_standard()
+[945] 
+[946] embed_document()
+[947] 
+[948] embed_batch()
+[949] 
+[950] For each standard create an embedding text from:
+[951] 
+[952] standard number
+[953] 
+[954] title
+[955] 
+[956] scope
+--- Line 927 ---
+[922] Use multilingual embeddings.
+[923] 
+[924] Possible model strategy:
+[925] 
+[926] - use a pretrained multilingual embedding model
+[927] - store embeddings for standards
+[928] - embed user queries
+[929] - perform vector retrieval
+[930] - combine with lexical retrieval
+[931] 
+[932] The model itself is not trained by us on BIS data initially.
+[933] 
+[934] ============================================================
+[935] 26. EMBEDDING STRATEGY
+[936] ============================================================
+[937] 
+[938] Create an embedding provider abstraction.
+[939] 
+[940] Functions:
+[941] 
+[942] embed_query()
+[943] 
+[944] embed_standard()
+[945] 
+[946] embed_document()
+[947] 
+[948] embed_batch()
+[949] 
+[950] For each standard create an embedding text from:
+[951] 
+[952] standard number
+[953] 
+[954] title
+[955] 
+[956] scope
+[957] 
+[958] description
+[959] 
+[960] category
+[961] 
+--- Line 930 ---
+[925] 
+[926] - use a pretrained multilingual embedding model
+[927] - store embeddings for standards
+[928] - embed user queries
+[929] - perform vector retrieval
+[930] - combine with lexical retrieval
+[931] 
+[932] The model itself is not trained by us on BIS data initially.
+[933] 
+[934] ============================================================
+[935] 26. EMBEDDING STRATEGY
+[936] ============================================================
+[937] 
+[938] Create an embedding provider abstraction.
+[939] 
+[940] Functions:
+[941] 
+[942] embed_query()
+[943] 
+[944] embed_standard()
+[945] 
+[946] embed_document()
+[947] 
+[948] embed_batch()
+[949] 
+[950] For each standard create an embedding text from:
+[951] 
+[952] standard number
+[953] 
+[954] title
+[955] 
+[956] scope
+[957] 
+[958] description
+[959] 
+[960] category
+[961] 
+[962] subject area
+[963] 
+[964] keywords
+--- Line 938 ---
+[933] 
+[934] ============================================================
+[935] 26. EMBEDDING STRATEGY
+[936] ============================================================
+[937] 
+[938] Create an embedding provider abstraction.
+[939] 
+[940] Functions:
+[941] 
+[942] embed_query()
+[943] 
+[944] embed_standard()
+[945] 
+[946] embed_document()
+[947] 
+[948] embed_batch()
+[949] 
+[950] For each standard create an embedding text from:
+[951] 
+[952] standard number
+[953] 
+[954] title
+[955] 
+[956] scope
+[957] 
+[958] description
+[959] 
+[960] category
+[961] 
+[962] subject area
+[963] 
+[964] keywords
+[965] 
+[966] normative references
+[967] 
+[968] testing
+[969] 
+[970] safety
+[971] 
+[972] performance
+--- Line 979 ---
+[974] other supplied relationship text
+[975] 
+[976] Do not include fabricated information.
+[977] 
+[978] ============================================================
+[979] 27. HYBRID RETRIEVAL
+[980] ============================================================
+[981] 
+[982] Use:
+[983] 
+[984] VECTOR RETRIEVAL
+[985] 
+[986] +
+[987] 
+[988] KEYWORD/FULL TEXT SEARCH
+[989] 
+[990] +
+[991] 
+[992] METADATA FILTERING
+[993] 
+[994] +
+[995] 
+[996] ONTOLOGY MATCHING
+[997] 
+[998] Then:
+[999] 
+[1000] merge
+[1001] → deduplicate
+[1002] → rerank
+[1003] 
+[1004] This solves both semantic wording differences and exact standard-number lookups.
+[1005] 
+[1006] ============================================================
+[1007] 28. RETRIEVAL FLOW
+[1008] ============================================================
+[1009] 
+[1010] USER QUERY
+[1011] 
+[1012] → language detection
+[1013] 
+--- Line 1026 ---
+[1021] 
+[1022] → query embedding
+[1023] 
+[1024] → vector retrieval
+[1025] 
+[1026] → lexical retrieval
+[1027] 
+[1028] → metadata filtering
+[1029] 
+[1030] → candidate merge
+[1031] 
+[1032] → reranking
+[1033] 
+[1034] → top recommendations
+[1035] 
+[1036] ============================================================
+[1037] 29. RERANKING
+[1038] ============================================================
+[1039] 
+[1040] Use a transparent scoring system.
+[1041] 
+[1042] Signals:
+[1043] 
+[1044] semantic_similarity
+[1045] 
+[1046] product_match
+[1047] 
+[1048] category_match
+[1049] 
+[1050] application_match
+[1051] 
+[1052] parameter_match
+[1053] 
+[1054] ontology_match
+[1055] 
+[1056] relationship_support
+[1057] 
+[1058] current_status_support
+[1059] 
+[1060] source_quality
+--- Line 2246 ---
+[2241] 74. EMBEDDING SCRIPT
+[2242] ============================================================
+[2243] 
+[2244] Create:
+[2245] 
+[2246] scripts/generate_embeddings.py
+[2247] 
+[2248] It should:
+[2249] 
+[2250] - load standards
+[2251] - construct embedding text
+[2252] - batch embed
+[2253] - store vectors
+[2254] - record model name
+[2255] - support re-running
+[2256] 
+[2257] ============================================================
+[2258] 75. RETRIEVAL EVALUATION SCRIPT
+[2259] ============================================================
+[2260] 
+[2261] Create:
+[2262] 
+[2263] scripts/evaluate_retrieval.py
+[2264] 
+[2265] Use query_dataset.json.
+[2266] 
+[2267] Run each query.
+[2268] 
+[2269] Record:
+[2270] 
+[2271] query
+[2272] 
+[2273] intent
+[2274] 
+[2275] retrieved standards
+[2276] 
+[2277] expected evidence
+[2278] 
+[2279] top1
+[2280] 
+--- Line 2449 ---
+[2444] 
+[2445] then semantic enrichment
+[2446] 
+[2447] if user asks natural-language product question:
+[2448] 
+[2449] semantic retrieval
+[2450] 
+[2451] plus lexical search
+[2452] 
+[2453] plus ontology
+[2454] 
+[2455] then reranking
+[2456] 
+[2457] if user uploads a tender:
+[2458] 
+[2459] extract explicit references
+[2460] 
+[2461] plus semantic recommendation
+[2462] 
+[2463] plus graph expansion
+[2464] 
+[2465] ============================================================
+[2466] 82. NO HALLUCINATION POLICY
+[2467] ============================================================
+[2468] 
+[2469] If no relevant standard exists in the supplied dataset:
+[2470] 
+[2471] return:
+[2472] 
+[2473] "No sufficiently relevant standard was found in the current knowledge base."
+[2474] 
+[2475] If certification evidence is absent:
+[2476] 
+[2477] return:
+[2478] 
+[2479] "Certification status could not be verified from the current dataset."
+[2480] 
+[2481] If version evidence is absent:
+[2482] 
+[2483] return:
+--- Line 2505 ---
+[2500] 
+[2501] Known:
+[2502] Tender explicitly mentions IS 694.
+[2503] 
+[2504] Inferred:
+[2505] Semantic retrieval suggests another related standard.
+[2506] 
+[2507] Unknown:
+[2508] Certification is not established by available evidence.
+[2509] 
+[2510] Do not turn inferred information into an official legal requirement.
+[2511] 
+[2512] ============================================================
+[2513] 84. SOURCE DISPLAY
+[2514] ============================================================
+[2515] 
+[2516] For every important result display:
+[2517] 
+[2518] source type
+[2519] 
+[2520] source title
+[2521] 
+[2522] source URL if present
+[2523] 
+[2524] evidence
+[2525] 
+[2526] retrieved/record metadata
+[2527] 
+[2528] ============================================================
+[2529] 85. SECURITY
+[2530] ============================================================
+[2531] 
+[2532] Implement:
+[2533] 
+[2534] file validation
+[2535] 
+[2536] size limits
+[2537] 
+[2538] safe names
+[2539] 
+--- Line 2696 ---
+[2691] TEST 6:
+[2692] 
+[2693] "flexible wires for domestic home wiring"
+[2694] 
+[2695] Expected:
+[2696] semantic retrieval
+[2697] 
+[2698] TEST 7:
+[2699] 
+[2700] Hindi certification query
+[2701] 
+[2702] Expected:
+[2703] localized processing
+[2704] 
+[2705] TEST 8:
+[2706] 
+[2707] Out-of-domain weather query
+[2708] 
+[2709] Expected:
+[2710] out-of-scope response
+[2711] 
+[2712] ============================================================
+[2713] 91. TENDER TEST
+[2714] ============================================================
+[2715] 
+[2716] Create end-to-end tests for:
+[2717] 
+[2718] tender upload
+[2719] 
+[2720] text extraction
+[2721] 
+[2722] explicit standard extraction
+[2723] 
+[2724] recommended standard retrieval
+[2725] 
+[2726] relationship expansion
+[2727] 
+[2728] version checking
+[2729] 
+[2730] certification checking
+--- Line 2752 ---
+[2747] 
+[2748] The services must use the real database.
+[2749] 
+[2750] The database must contain the supplied dataset.
+[2751] 
+[2752] The retrieval engine must use the actual embeddings generated from the supplied data.
+[2753] 
+[2754] ============================================================
+[2755] 93. PROJECT DOCUMENTATION
+[2756] ============================================================
+[2757] 
+[2758] Create:
+[2759] 
+[2760] README.md
+[2761] 
+[2762] docs/problem-statement.md
+[2763] 
+[2764] docs/solution.md
+[2765] 
+[2766] docs/architecture.md
+[2767] 
+[2768] docs/data-inventory.md
+[2769] 
+[2770] docs/data-model.md
+[2771] 
+[2772] docs/nlp-pipeline.md
+[2773] 
+[2774] docs/retrieval.md
+[2775] 
+[2776] docs/relationship-engine.md
+[2777] 
+[2778] docs/version-engine.md
+[2779] 
+[2780] docs/compliance-engine.md
+[2781] 
+[2782] docs/tender-audit.md
+[2783] 
+[2784] docs/voice-ai.md
+[2785] 
+[2786] docs/model-strategy.md
+--- Line 2820 ---
+[2815] 
+[2816] How NLP extracts procurement intent.
+[2817] 
+[2818] RECOMMEND
+[2819] 
+[2820] How semantic retrieval identifies standards.
+[2821] 
+[2822] CONNECT
+[2823] 
+[2824] How related standards are discovered.
+[2825] 
+[2826] VERIFY
+[2827] 
+[2828] How versions and compliance are checked.
+[2829] 
+[2830] AUDIT
+[2831] 
+[2832] How tender gaps are found.
+[2833] 
+[2834] GENERATE
+[2835] 
+[2836] How procurement text is generated.
+[2837] 
+[2838] VOICE
+[2839] 
+[2840] How STT and TTS fit into the same workflow.
+[2841] 
+[2842] ============================================================
+[2843] 95. SIH FEATURE TRACEABILITY
+[2844] ============================================================
+[2845] 
+[2846] Create a traceability matrix.
+[2847] 
+[2848] Problem statement requirement
+[2849] 
+[2850] → implementation module
+[2851] 
+[2852] → API
+[2853] 
+[2854] → data source
+--- Line 3018 ---
+[3013] 
+[3014] STOP AND ASK PERMISSION.
+[3015] 
+[3016] MODULE 5
+[3017] 
+[3018] Semantic retrieval
+[3019] 
+[3020] Deliver:
+[3021] 
+[3022] - embedding provider
+[3023] - vector indexing
+[3024] - lexical retrieval
+[3025] - hybrid retrieval
+[3026] - ranking
+[3027] 
+[3028] STOP AND ASK PERMISSION.
+[3029] 
+[3030] MODULE 6
+[3031] 
+[3032] Recommendation engine
+[3033] 
+[3034] Deliver:
+[3035] 
+[3036] - primary standard selection
+[3037] - relevance scoring
+[3038] - confidence
+[3039] - evidence
+[3040] - explanations
+[3041] 
+[3042] STOP AND ASK PERMISSION.
+[3043] 
+[3044] MODULE 7
+[3045] 
+[3046] Relationship engine
+[3047] 
+[3048] Deliver:
+[3049] 
+[3050] - allied standards
+[3051] - normative standards
+[3052] - testing
+--- Line 3022 ---
+[3017] 
+[3018] Semantic retrieval
+[3019] 
+[3020] Deliver:
+[3021] 
+[3022] - embedding provider
+[3023] - vector indexing
+[3024] - lexical retrieval
+[3025] - hybrid retrieval
+[3026] - ranking
+[3027] 
+[3028] STOP AND ASK PERMISSION.
+[3029] 
+[3030] MODULE 6
+[3031] 
+[3032] Recommendation engine
+[3033] 
+[3034] Deliver:
+[3035] 
+[3036] - primary standard selection
+[3037] - relevance scoring
+[3038] - confidence
+[3039] - evidence
+[3040] - explanations
+[3041] 
+[3042] STOP AND ASK PERMISSION.
+[3043] 
+[3044] MODULE 7
+[3045] 
+[3046] Relationship engine
+[3047] 
+[3048] Deliver:
+[3049] 
+[3050] - allied standards
+[3051] - normative standards
+[3052] - testing
+[3053] - performance
+[3054] - safety
+[3055] - installation
+[3056] - related products
+--- Line 3023 ---
+[3018] Semantic retrieval
+[3019] 
+[3020] Deliver:
+[3021] 
+[3022] - embedding provider
+[3023] - vector indexing
+[3024] - lexical retrieval
+[3025] - hybrid retrieval
+[3026] - ranking
+[3027] 
+[3028] STOP AND ASK PERMISSION.
+[3029] 
+[3030] MODULE 6
+[3031] 
+[3032] Recommendation engine
+[3033] 
+[3034] Deliver:
+[3035] 
+[3036] - primary standard selection
+[3037] - relevance scoring
+[3038] - confidence
+[3039] - evidence
+[3040] - explanations
+[3041] 
+[3042] STOP AND ASK PERMISSION.
+[3043] 
+[3044] MODULE 7
+[3045] 
+[3046] Relationship engine
+[3047] 
+[3048] Deliver:
+[3049] 
+[3050] - allied standards
+[3051] - normative standards
+[3052] - testing
+[3053] - performance
+[3054] - safety
+[3055] - installation
+[3056] - related products
+[3057] - superseded connections
+--- Line 3024 ---
+[3019] 
+[3020] Deliver:
+[3021] 
+[3022] - embedding provider
+[3023] - vector indexing
+[3024] - lexical retrieval
+[3025] - hybrid retrieval
+[3026] - ranking
+[3027] 
+[3028] STOP AND ASK PERMISSION.
+[3029] 
+[3030] MODULE 6
+[3031] 
+[3032] Recommendation engine
+[3033] 
+[3034] Deliver:
+[3035] 
+[3036] - primary standard selection
+[3037] - relevance scoring
+[3038] - confidence
+[3039] - evidence
+[3040] - explanations
+[3041] 
+[3042] STOP AND ASK PERMISSION.
+[3043] 
+[3044] MODULE 7
+[3045] 
+[3046] Relationship engine
+[3047] 
+[3048] Deliver:
+[3049] 
+[3050] - allied standards
+[3051] - normative standards
+[3052] - testing
+[3053] - performance
+[3054] - safety
+[3055] - installation
+[3056] - related products
+[3057] - superseded connections
+[3058] - graph API
+--- Line 3025 ---
+[3020] Deliver:
+[3021] 
+[3022] - embedding provider
+[3023] - vector indexing
+[3024] - lexical retrieval
+[3025] - hybrid retrieval
+[3026] - ranking
+[3027] 
+[3028] STOP AND ASK PERMISSION.
+[3029] 
+[3030] MODULE 6
+[3031] 
+[3032] Recommendation engine
+[3033] 
+[3034] Deliver:
+[3035] 
+[3036] - primary standard selection
+[3037] - relevance scoring
+[3038] - confidence
+[3039] - evidence
+[3040] - explanations
+[3041] 
+[3042] STOP AND ASK PERMISSION.
+[3043] 
+[3044] MODULE 7
+[3045] 
+[3046] Relationship engine
+[3047] 
+[3048] Deliver:
+[3049] 
+[3050] - allied standards
+[3051] - normative standards
+[3052] - testing
+[3053] - performance
+[3054] - safety
+[3055] - installation
+[3056] - related products
+[3057] - superseded connections
+[3058] - graph API
+[3059] 
+--- Line 3417 ---
+[3412] 
+[3413] → ontology
+[3414] 
+[3415] → embedding
+[3416] 
+[3417] → hybrid retrieval
+[3418] 
+[3419] → reranking
+[3420] 
+[3421] → standards
+[3422] 
+[3423] → relationships
+[3424] 
+[3425] → version
+[3426] 
+[3427] → compliance
+[3428] 
+[3429] → evidence
+[3430] 
+[3431] → explanation
+[3432] 
+[3433] → answer
+[3434] 
+[3435] VOICE FLOW:
+[3436] 
+[3437] User speech
+[3438] 
+[3439] → STT
+[3440] 
+[3441] → same NLP pipeline
+[3442] 
+[3443] → same retrieval
+[3444] 
+[3445] → same answer
+[3446] 
+[3447] → TTS
+[3448] 
+[3449] TENDER FLOW:
+[3450] 
+[3451] Tender
+--- Line 3598 ---
+[3593]                        ↓
+[3594]               REQUIREMENT EXTRACTION
+[3595]                        ↓
+[3596]                ONTOLOGY MAPPING
+[3597]                        ↓
+[3598]               SEMANTIC RETRIEVAL
+[3599]                        ↓
+[3600]                   RERANKING
+[3601]                        ↓
+[3602]              PRIMARY STANDARD
+[3603]                        ↓
+[3604]             RELATIONSHIP ENGINE
+[3605]                        ↓
+[3606]           ┌────────────┼────────────┐
+[3607]           ↓            ↓            ↓
+[3608]        TESTING       SAFETY      PERFORMANCE
+[3609]           │            │            │
+[3610]           └────────────┼────────────┘
+[3611]                        ↓
+[3612]              VERSION / AMENDMENT
+[3613]                        ↓
+[3614]              CERTIFICATION / QCO
+[3615]                        ↓
+[3616]                  EVIDENCE
+[3617]                        ↓
+[3618]               EXPLANATION ENGINE
+[3619]                        ↓
+[3620]              TENDER GAP AUDIT
+[3621]                        ↓
+[3622]                 GENERATION
+[3623]                        ↓
+[3624]                      TTS
+[3625]                        ↓
+[3626]                     USER
+[3627] 
+[3628] What hybrid search means here
+[3629] 
+[3630] Do this:
+[3631] 
+[3632] User Query
+--- Line 3656 ---
+[3651]                       │
+[3652]                       ▼
+[3653]             FINAL STANDARD RESULTS
+[3654] 
+[3655] ============================================================
+[3656] HYBRID RETRIEVAL PRINCIPLE
+[3657] ============================================================
+[3658] 
+[3659] SEMANTIC SEARCH IS THE PRIMARY RECOMMENDATION MECHANISM.
+[3660] 
+[3661] The problem statement explicitly requires semantic understanding
+[3662] rather than keyword matching.
+[3663] 
+[3664] Therefore:
+[3665] 
+[3666] 1. Semantic/vector retrieval MUST be the primary mechanism for
+[3667]    discovering applicable standards.
+[3668] 
+[3669] 2. Exact identifier lookup is used when the user explicitly
+[3670]    provides a standard number.
+[3671] 
+[3672] 3. Lexical/full-text search is a supporting retrieval channel,
+[3673]    not the sole recommendation mechanism.
+[3674] 
+[3675] 4. Metadata and ontology matching are supporting signals.
+[3676] 
+[3677] 5. All candidate results are merged and reranked.
+[3678] 
+[3679] The final recommendation must be based primarily on semantic
+[3680] relevance plus structured evidence.
+[3681] 
+[3682] Do NOT implement the system as a keyword search engine with
+[3683] embeddings added only superficially.
+[3684] 
+[3685] ============================================================
+[3686] LLM CHAT + TOOL CALLING
+[3687] ============================================================
+[3688] 
+[3689] The application MUST contain an LLM-powered multi-turn chat
+[3690] assistant.
+--- Line 3683 ---
+[3678] 
+[3679] The final recommendation must be based primarily on semantic
+[3680] relevance plus structured evidence.
+[3681] 
+[3682] Do NOT implement the system as a keyword search engine with
+[3683] embeddings added only superficially.
+[3684] 
+[3685] ============================================================
+[3686] LLM CHAT + TOOL CALLING
+[3687] ============================================================
+[3688] 
+[3689] The application MUST contain an LLM-powered multi-turn chat
+[3690] assistant.
+[3691] 
+[3692] The LLM is the conversational/orchestration layer.
+[3693] 
+[3694] The assistant must be capable of deciding when it needs
+[3695] backend tools.
+[3696] 
+[3697] Implement controlled tools/functions such as:
+[3698] 
+[3699] search_standards(query)
+[3700] 
+[3701] get_standard(standard_id)
+[3702] 
+[3703] find_related_standards(standard_id, relationship_type)
+[3704] 
+[3705] get_version_information(standard_id)
+[3706] 
+[3707] get_amendments(standard_id)
+[3708] 
+[3709] get_certification_requirement(product, standard_id)
+[3710] 
+[3711] get_qco_information(product, standard_id)
+[3712] 
+[3713] get_product_licence(product)
+[3714] 
+[3715] search_source_evidence(query)
+[3716] 
+[3717] analyze_requirements(text)
+--- Line 3774 ---
+[3769] DO NOT train an LLM from scratch.
+[3770] 
+[3771] The initial system will use pretrained models for:
+[3772] 
+[3773] - LLM chat/reasoning
+[3774] - multilingual embeddings
+[3775] - STT
+[3776] - TTS
+[3777] - optional reranking
+[3778] 
+[3779] The supplied query dataset is primarily an evaluation/
+[3780] behavior-validation dataset.
+[3781] 
+[3782] DO NOT claim that the current dataset is sufficient for
+[3783] training a high-quality custom recommendation model.
+[3784] 
+[3785] The system MAY expose an experimental fine-tuning path in
+[3786] future documentation, but custom training is NOT required
+[3787] for the MVP.
+[3788] 
+[3789] The system must report actual evaluation results rather than
+[3790] claiming accuracy without measurement.
+[3791] 
+[3792] 
+[3793] </USER_REQUEST>
+[3794] <ADDITIONAL_METADATA>
+[3795] The current local time is: 2026-09-15T21:28:50+05:30.
+[3796] 
+[3797] The user's current state is as follows:
+[3798] Active Document: c:\Users\BALASUNDAR M\Documents\SIH 2026\Skill-Connect\csvfiles\sample_standards.json (LANGUAGE_JSON)
+[3799] Cursor is on line: 21
+[3800] Other open documents:
+[3801] - c:\Users\BALASUNDAR M\Documents\SIH 2026\Skill-Connect\csvfiles\sample_standards.json (LANGUAGE_JSON)
+[3802] </ADDITIONAL_METADATA>
+[3803] <USER_SETTINGS_CHANGE>
+[3804] The user changed setting `Model Selection` from None to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+[3805] </USER_SETTINGS_CHANGE>

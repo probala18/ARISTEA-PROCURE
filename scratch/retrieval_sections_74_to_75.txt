@@ -1,0 +1,55 @@
+[2235] - preserve provenance
+[2236] - deduplicate carefully
+[2237] - report conflicts
+[2238] - never silently discard records
+[2239] 
+[2240] ============================================================
+[2241] 74. EMBEDDING SCRIPT
+[2242] ============================================================
+[2243] 
+[2244] Create:
+[2245] 
+[2246] scripts/generate_embeddings.py
+[2247] 
+[2248] It should:
+[2249] 
+[2250] - load standards
+[2251] - construct embedding text
+[2252] - batch embed
+[2253] - store vectors
+[2254] - record model name
+[2255] - support re-running
+[2256] 
+[2257] ============================================================
+[2258] 75. RETRIEVAL EVALUATION SCRIPT
+[2259] ============================================================
+[2260] 
+[2261] Create:
+[2262] 
+[2263] scripts/evaluate_retrieval.py
+[2264] 
+[2265] Use query_dataset.json.
+[2266] 
+[2267] Run each query.
+[2268] 
+[2269] Record:
+[2270] 
+[2271] query
+[2272] 
+[2273] intent
+[2274] 
+[2275] retrieved standards
+[2276] 
+[2277] expected evidence
+[2278] 
+[2279] top1
+[2280] 
+[2281] top3
+[2282] 
+[2283] top5
+[2284] 
+[2285] MRR
+[2286] 
+[2287] latency
+[2288] 
+[2289] success/failure

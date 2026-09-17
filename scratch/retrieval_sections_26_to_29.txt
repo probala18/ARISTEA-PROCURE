@@ -1,0 +1,140 @@
+[930] - combine with lexical retrieval
+[931] 
+[932] The model itself is not trained by us on BIS data initially.
+[933] 
+[934] ============================================================
+[935] 26. EMBEDDING STRATEGY
+[936] ============================================================
+[937] 
+[938] Create an embedding provider abstraction.
+[939] 
+[940] Functions:
+[941] 
+[942] embed_query()
+[943] 
+[944] embed_standard()
+[945] 
+[946] embed_document()
+[947] 
+[948] embed_batch()
+[949] 
+[950] For each standard create an embedding text from:
+[951] 
+[952] standard number
+[953] 
+[954] title
+[955] 
+[956] scope
+[957] 
+[958] description
+[959] 
+[960] category
+[961] 
+[962] subject area
+[963] 
+[964] keywords
+[965] 
+[966] normative references
+[967] 
+[968] testing
+[969] 
+[970] safety
+[971] 
+[972] performance
+[973] 
+[974] other supplied relationship text
+[975] 
+[976] Do not include fabricated information.
+[977] 
+[978] ============================================================
+[979] 27. HYBRID RETRIEVAL
+[980] ============================================================
+[981] 
+[982] Use:
+[983] 
+[984] VECTOR RETRIEVAL
+[985] 
+[986] +
+[987] 
+[988] KEYWORD/FULL TEXT SEARCH
+[989] 
+[990] +
+[991] 
+[992] METADATA FILTERING
+[993] 
+[994] +
+[995] 
+[996] ONTOLOGY MATCHING
+[997] 
+[998] Then:
+[999] 
+[1000] merge
+[1001] → deduplicate
+[1002] → rerank
+[1003] 
+[1004] This solves both semantic wording differences and exact standard-number lookups.
+[1005] 
+[1006] ============================================================
+[1007] 28. RETRIEVAL FLOW
+[1008] ============================================================
+[1009] 
+[1010] USER QUERY
+[1011] 
+[1012] → language detection
+[1013] 
+[1014] → normalization
+[1015] 
+[1016] → intent classification
+[1017] 
+[1018] → requirement extraction
+[1019] 
+[1020] → ontology mapping
+[1021] 
+[1022] → query embedding
+[1023] 
+[1024] → vector retrieval
+[1025] 
+[1026] → lexical retrieval
+[1027] 
+[1028] → metadata filtering
+[1029] 
+[1030] → candidate merge
+[1031] 
+[1032] → reranking
+[1033] 
+[1034] → top recommendations
+[1035] 
+[1036] ============================================================
+[1037] 29. RERANKING
+[1038] ============================================================
+[1039] 
+[1040] Use a transparent scoring system.
+[1041] 
+[1042] Signals:
+[1043] 
+[1044] semantic_similarity
+[1045] 
+[1046] product_match
+[1047] 
+[1048] category_match
+[1049] 
+[1050] application_match
+[1051] 
+[1052] parameter_match
+[1053] 
+[1054] ontology_match
+[1055] 
+[1056] relationship_support
+[1057] 
+[1058] current_status_support
+[1059] 
+[1060] source_quality
+[1061] 
+[1062] Make weights configurable.
+[1063] 
+[1064] Name the resulting metric:
+[1065] 
+[1066] RELEVANCE SCORE
+[1067] 
+[1068] It is an internal ranking score.
+[1069] 
