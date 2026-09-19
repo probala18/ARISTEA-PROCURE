@@ -23,6 +23,7 @@ class TenderDocument(Base):
     sections = relationship("TenderSection", back_populates="tender", cascade="all, delete-orphan")
     requirements = relationship("TenderRequirement", back_populates="tender", cascade="all, delete-orphan")
     audit_result = relationship("TenderAuditResult", back_populates="tender", uselist=False, cascade="all, delete-orphan")
+    specifications = relationship("GeneratedSpecification", back_populates="tender", cascade="all, delete-orphan")
 
 
 class TenderSection(Base):
@@ -107,3 +108,4 @@ class TenderAuditResult(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     tender = relationship("TenderDocument", back_populates="audit_result")
+

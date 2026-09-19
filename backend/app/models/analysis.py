@@ -69,14 +69,20 @@ class GeneratedSpecification(Base):
     id = Column(Integer, primary_key=True, index=True)
     session_id = Column(Integer, ForeignKey("analysis_sessions.id", ondelete="SET NULL"), index=True, nullable=True)
     tender_id = Column(Integer, ForeignKey("tender_documents.id", ondelete="SET NULL"), index=True, nullable=True)
+    analysis_id = Column(String(100), index=True, nullable=True)
     standard_id = Column(Integer, ForeignKey("standards.id", ondelete="SET NULL"), index=True, nullable=True)
-    spec_type = Column(String(100), index=True, nullable=False)  # TENDER_CLAUSE, TECHNICAL_SPECIFICATION, COMPLIANCE_CHECKLIST, CORRECTIVE_CLAUSE
+    spec_type = Column(String(100), index=True, nullable=False)  # technical_specification, tender_clause, compliance_checklist, corrective_clause, audit_correction
+    title = Column(String(255), nullable=True)
     content = Column(Text, nullable=False)
     grounding_evidence = Column(JSON, nullable=True)
+    structured_content = Column(JSON, nullable=True)
+    is_edited = Column(Boolean, default=False)
+    version = Column(Integer, default=1)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     session = relationship("AnalysisSession")
-    tender = relationship("TenderDocument")
+    tender = relationship("TenderDocument", back_populates="specifications")
     standard = relationship("Standard", foreign_keys=[standard_id])
+

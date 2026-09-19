@@ -241,3 +241,48 @@ def get_tender_audit(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Tender audit execution failed: {str(e)}")
 
+
+@router.post("/{id}/generate")
+def generate_tender_specification(
+    id: int = Path(..., description="Unique Tender Document ID"),
+    generation_type: str = Query("technical_specification", description="Type: technical_specification, tender_clause, compliance_checklist, audit_correction"),
+    title: Optional[str] = Query(None, description="Optional custom title"),
+    db: Session = Depends(get_db),
+):
+    """
+    Generates a standards-aligned specification, corrective clause, or compliance checklist
+    derived from tender analysis and audit findings (Module 13).
+    """
+    from backend.app.services.specification_generator import (
+        SpecificationService,
+        SpecificationGenerationRequest,
+        SpecificationType,
+    )
+    service = SpecificationService(db)
+    try:
+        g_type = SpecificationType(generation_type)
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid generation_type '{generation_type}'. Supported: technical_specification, tender_clause, compliance_checklist, audit_correction."
+        )
+
+    req = SpecificationGenerationRequest(
+        tender_id=id,
+        generation_type=g_type,
+        title=title,
+    )
+    return service.generate_specification(req)
+
+
+@router.get("/{id}/specifications")
+def list_tender_specifications(
+    id: int = Path(..., description="Unique Tender Document ID"),
+    db: Session = Depends(get_db),
+):
+    """Lists all specifications generated for a tender."""
+    from backend.app.services.specification_generator import SpecificationService
+    service = SpecificationService(db)
+    return service.list_specifications_for_tender(id)
+
+

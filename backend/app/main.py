@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.api.standards import standards_router, graph_router
 from backend.app.api.speech import speech_router
 from backend.app.api.tenders import tenders_router
+from backend.app.api.specifications import specifications_router
 
 app = FastAPI(
     title="ARISTEA-PROCURE: Indian Standards Intelligence API",
@@ -29,6 +30,7 @@ app.include_router(standards_router, prefix="/api")
 app.include_router(graph_router, prefix="/api")
 app.include_router(speech_router, prefix="/api")
 app.include_router(tenders_router, prefix="/api")
+app.include_router(specifications_router, prefix="/api")
 
 
 @app.get("/")
@@ -46,6 +48,6 @@ def health_check():
     return {
         "status": "ok",
         "version": "1.0.0",
-        "module": "Module 7, Module 8, Module 9, Module 10 — Speech AI, Module 11 — Tender Document Engine & Module 12 — Tender Audit",
+        "module": "Module 7, Module 8, Module 9, Module 10 — Speech AI, Module 11 — Tender Document Engine, Module 12 — Tender Audit & Module 13 — Specification Generator",
     }
 
