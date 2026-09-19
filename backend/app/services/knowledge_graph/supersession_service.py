@@ -124,14 +124,19 @@ class SupersessionChainService:
                 .all()
             )
 
+            seen_sources_for_curr = set()
             for r in succ_rels:
+                if r.source_standard_id in seen_sources_for_curr:
+                    continue
+                seen_sources_for_curr.add(r.source_standard_id)
+
                 node_key = f"std:{r.source_standard_id}"
                 if node_key in visited_forward:
                     has_cycle = True
                     continue
                 visited_forward.add(node_key)
 
-                succ_std = self.session.query(Standard).get(r.source_standard_id)
+                succ_std = self.session.get(Standard, r.source_standard_id)
                 superseded_by_list.append({
                     "standard_id": r.source_standard_id,
                     "canonical_id": succ_std.standard_id if succ_std else r.source_standard_number,

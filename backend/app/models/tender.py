@@ -82,6 +82,7 @@ class TenderStandardReference(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     tender = relationship("TenderDocument")
+    section = relationship("TenderSection", foreign_keys=[section_id])
     detected_standard = relationship("Standard", foreign_keys=[detected_standard_id])
     superseded_by_standard = relationship("Standard", foreign_keys=[superseded_by_standard_id])
 
