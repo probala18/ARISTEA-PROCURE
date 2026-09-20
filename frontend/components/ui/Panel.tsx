@@ -42,7 +42,7 @@ export const Panel: React.FC<PanelProps> = ({
             alignItems: 'flex-start',
             justifyContent: 'space-between',
             marginBottom: '20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            borderBottom: '1px solid var(--border-subtle)',
             paddingBottom: '14px',
           }}
         >

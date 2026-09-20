@@ -8,7 +8,7 @@ Strictly adheres to:
 """
 from enum import Enum
 from typing import List, Dict, Any, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from backend.app.services.knowledge_graph.graph_models import RelationType
 from backend.app.services.retrieval.hybrid_retriever import RetrievalFilter
@@ -114,7 +114,8 @@ class ClarificationPrompt(BaseModel):
 
 class RecommendationRequest(BaseModel):
     """Input payload for the recommendation engine."""
-    query_text: str
+    query_text: Optional[str] = None
+    requirement_text: Optional[str] = None
     language: Optional[str] = "en"
     category_hint: Optional[str] = None
     department_hint: Optional[int] = None
@@ -122,6 +123,20 @@ class RecommendationRequest(BaseModel):
     session_id: Optional[str] = None
     max_primary: int = 3
     include_allied: bool = True
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_query_text(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if not data.get("query_text") and data.get("requirement_text"):
+                data["query_text"] = data["requirement_text"]
+        return data
+
+    @model_validator(mode="after")
+    def validate_query_present(self) -> "RecommendationRequest":
+        if not self.query_text:
+            raise ValueError("query_text or requirement_text is required.")
+        return self
 
 
 class RecommendationResponse(BaseModel):

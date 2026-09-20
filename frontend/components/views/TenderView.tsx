@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   uploadTenderDocument,
   getTenderAudit,
@@ -144,12 +144,12 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           style={{
-            border: '2px dashed rgba(20, 184, 166, 0.4)',
+            border: '2px dashed rgba(13, 148, 136, 0.4)',
             borderRadius: 'var(--radius-lg)',
             padding: '36px 20px',
             textAlign: 'center',
             cursor: 'pointer',
-            background: 'rgba(15, 23, 42, 0.4)',
+            background: 'rgba(241, 245, 249, 0.6)',
             transition: 'all 0.2s ease',
             marginBottom: '20px',
           }}
@@ -167,7 +167,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
           />
 
           <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📄</div>
-          <h4 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#ffffff' }}>
+          <h4 style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--text-primary)' }}>
             {selectedFile ? selectedFile.name : 'Drag & drop tender document here, or click to browse'}
           </h4>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
@@ -237,7 +237,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                 <span className="badge badge-teal" style={{ marginBottom: '6px' }}>
                   TENDER ID #{uploadResult.tender_id}
                 </span>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff' }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {uploadResult.filename}
                 </h3>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
@@ -248,13 +248,13 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
               <div style={{ display: 'flex', gap: '20px' }}>
                 <div style={{ textAlign: 'center' }}>
                   <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>CLAUSES</span>
-                  <span style={{ fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-mono)' }}>
+                  <span style={{ fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
                     {uploadResult.total_clauses}
                   </span>
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>STANDARDS CITED</span>
-                  <span style={{ fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-teal)' }}>
+                  <span style={{ fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-teal-dark)' }}>
                     {uploadResult.total_standards_detected}
                   </span>
                 </div>
@@ -281,13 +281,13 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
                 gap: '16px',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                borderBottom: '1px solid var(--border-subtle)',
                 paddingBottom: '16px',
                 marginBottom: '20px',
               }}
             >
               <div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#ffffff' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Tender Compliance & Standards Audit
                 </h3>
                 <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '4px' }}>
@@ -301,10 +301,11 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '14px',
-                  background: 'rgba(15, 23, 42, 0.8)',
+                  background: '#ffffff',
                   padding: '10px 18px',
                   borderRadius: 'var(--radius-md)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  border: '1px solid var(--border-subtle)',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
                 }}
               >
                 <div>
@@ -339,27 +340,27 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                 marginBottom: '22px',
               }}
             >
-              <div style={{ padding: '12px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: 'var(--radius-sm)' }}>
+              <div style={{ padding: '12px', background: 'rgba(15, 23, 42, 0.04)', borderRadius: 'var(--radius-sm)' }}>
                 <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>TOTAL GAPS</span>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#ffffff', marginTop: '2px' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
                   {auditReport.total_gaps_count}
                 </div>
               </div>
-              <div style={{ padding: '12px', background: 'rgba(239, 68, 68, 0.08)', borderRadius: 'var(--radius-sm)' }}>
+              <div style={{ padding: '12px', background: 'rgba(220, 38, 38, 0.08)', borderRadius: 'var(--radius-sm)' }}>
                 <span style={{ fontSize: '0.7rem', color: 'var(--status-danger)' }}>OUTDATED CITATIONS</span>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--status-danger)', marginTop: '2px' }}>
                   {auditReport.outdated_references_count}
                 </div>
               </div>
-              <div style={{ padding: '12px', background: 'rgba(245, 158, 11, 0.08)', borderRadius: 'var(--radius-sm)' }}>
+              <div style={{ padding: '12px', background: 'rgba(217, 119, 6, 0.08)', borderRadius: 'var(--radius-sm)' }}>
                 <span style={{ fontSize: '0.7rem', color: 'var(--status-warning)' }}>MISSING PRIMARY</span>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--status-warning)', marginTop: '2px' }}>
                   {auditReport.missing_primary_references_count}
                 </div>
               </div>
-              <div style={{ padding: '12px', background: 'rgba(56, 189, 248, 0.08)', borderRadius: 'var(--radius-sm)' }}>
-                <span style={{ fontSize: '0.7rem', color: '#38bdf8' }}>ALLIED / SAFETY GAPS</span>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#38bdf8', marginTop: '2px' }}>
+              <div style={{ padding: '12px', background: 'rgba(2, 132, 199, 0.08)', borderRadius: 'var(--radius-sm)' }}>
+                <span style={{ fontSize: '0.7rem', color: '#0284c7' }}>ALLIED / SAFETY GAPS</span>
+                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0284c7', marginTop: '2px' }}>
                   {auditReport.missing_testing_safety_count}
                 </div>
               </div>
@@ -384,9 +385,9 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
               style={{
                 marginTop: '28px',
                 padding: '18px 20px',
-                background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, rgba(13, 148, 136, 0.25) 100%)',
+                background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(241, 245, 249, 0.95) 100%)',
                 borderRadius: 'var(--radius-md)',
-                border: '1px solid rgba(20, 184, 166, 0.3)',
+                border: '1px solid rgba(13, 148, 136, 0.22)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -395,7 +396,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
               }}
             >
               <div>
-                <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff' }}>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Generate Grounded Procurement Specification
                 </h4>
                 <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
@@ -406,8 +407,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
               <button
                 onClick={handleGenerateSpec}
                 disabled={isGeneratingSpec}
-                className="btn-primary"
-                style={{ background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)', boxShadow: '0 4px 14px rgba(249, 115, 22, 0.35)' }}
+                className="btn-accent"
               >
                 {isGeneratingSpec ? 'Generating Spec...' : 'Generate Specification 📝'}
               </button>
@@ -431,17 +431,18 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
           >
             <div
               style={{
-                background: 'rgba(10, 15, 26, 0.9)',
+                background: '#ffffff',
                 borderRadius: 'var(--radius-md)',
                 padding: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1px solid var(--border-subtle)',
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.86rem',
                 lineHeight: 1.6,
-                color: '#e2e8f0',
+                color: 'var(--text-primary)',
                 whiteSpace: 'pre-wrap',
                 maxHeight: '480px',
                 overflowY: 'auto',
+                boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.03)',
               }}
             >
               {generatedSpec.specification_text}

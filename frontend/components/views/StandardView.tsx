@@ -42,8 +42,8 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
   const [compliance, setCompliance] = useState<ComplianceReport | null>(null);
   const [graph, setGraph] = useState<DependencyGraph | null>(null);
 
-  const fetchAllData = async (stdId: string) => {
-    if (!stdId.trim()) return;
+  const fetchAllData = async (stdId?: string) => {
+    if (!stdId || typeof stdId !== 'string' || !stdId.trim()) return;
     setIsLoading(true);
     try {
       const [detailRes, versionRes, relsRes, compRes, graphRes] = await Promise.allSettled([
@@ -95,7 +95,8 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
     fetchAllData(standardInput);
   };
 
-  const handleSelectQuick = (stdId: string) => {
+  const handleSelectQuick = (stdId?: string) => {
+    if (!stdId || typeof stdId !== 'string' || !stdId.trim()) return;
     setStandardInput(stdId);
     setSelectedStandard(stdId);
     fetchAllData(stdId);
@@ -111,8 +112,8 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
         <form onSubmit={handleSearch} style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
           <input
             type="text"
-            value={standardInput}
-            onChange={(e) => setStandardInput(e.target.value)}
+            value={standardInput ?? ''}
+            onChange={(e) => setStandardInput(e.target.value ?? '')}
             placeholder="Enter standard ID (e.g. IS 12615:2018, IS 694)..."
             style={{ flex: 1 }}
             required
@@ -133,9 +134,10 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
               style={{
                 padding: '4px 10px',
                 borderRadius: 'var(--radius-full)',
-                background: selectedStandard === std ? 'rgba(20, 184, 166, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                border: selectedStandard === std ? '1px solid var(--accent-teal)' : '1px solid rgba(255, 255, 255, 0.08)',
-                color: selectedStandard === std ? '#ffffff' : 'var(--text-secondary)',
+                background: selectedStandard === std ? 'rgba(13, 148, 136, 0.12)' : 'rgba(15, 23, 42, 0.04)',
+                border: selectedStandard === std ? '1px solid var(--accent-teal)' : '1px solid var(--border-subtle)',
+                color: selectedStandard === std ? 'var(--accent-teal-dark)' : 'var(--text-secondary)',
+                fontWeight: selectedStandard === std ? 600 : 500,
                 fontSize: '0.78rem',
                 fontFamily: 'var(--font-mono)',
                 cursor: 'pointer',
@@ -174,7 +176,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                       fontFamily: 'var(--font-mono)',
                       fontSize: '1.4rem',
                       fontWeight: 800,
-                      color: '#ffffff',
+                      color: 'var(--text-primary)',
                     }}
                   >
                     {detail.standard_id}
@@ -198,7 +200,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                 {detail.publication_year && (
                   <div>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>YEAR</span>
-                    <span style={{ fontSize: '1.1rem', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
                       {detail.publication_year}
                     </span>
                   </div>
@@ -206,7 +208,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                 {detail.category && (
                   <div>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>CATEGORY</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent-teal)' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent-teal-dark)' }}>
                       {detail.category}
                     </span>
                   </div>
@@ -228,7 +230,9 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
             <div className="glass-panel" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                 <span style={{ fontSize: '1.1rem' }}>🔄</span>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700 }}>Version & Supersession Intelligence</h4>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                  Version & Supersession Intelligence
+                </h4>
               </div>
 
               {versions ? (
@@ -240,14 +244,14 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                       gap: '10px',
                       padding: '10px 14px',
                       borderRadius: 'var(--radius-sm)',
-                      background: versions.is_current ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-                      border: `1px solid ${versions.is_current ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
+                      background: versions.is_current ? 'rgba(5, 150, 105, 0.08)' : 'rgba(217, 119, 6, 0.08)',
+                      border: `1px solid ${versions.is_current ? 'rgba(5, 150, 105, 0.25)' : 'rgba(217, 119, 6, 0.25)'}`,
                       marginBottom: '14px',
                     }}
                   >
                     <span style={{ fontSize: '1.2rem' }}>{versions.is_current ? '✅' : '⚠️'}</span>
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>
+                      <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
                         {versions.is_current ? 'Current & Valid Version' : 'Superseded / Outdated Version'}
                       </div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
@@ -297,7 +301,9 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
             <div className="glass-panel" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                 <span style={{ fontSize: '1.1rem' }}>🛡️</span>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700 }}>Regulatory Compliance & QCO Mandates</h4>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                  Regulatory Compliance & QCO Mandates
+                </h4>
               </div>
 
               {compliance ? (
@@ -329,13 +335,14 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                           key={idx}
                           style={{
                             padding: '8px 12px',
-                            background: 'rgba(255, 255, 255, 0.04)',
+                            background: 'rgba(15, 23, 42, 0.04)',
                             borderRadius: 'var(--radius-sm)',
+                            border: '1px solid var(--border-subtle)',
                             marginBottom: '6px',
                             fontSize: '0.8rem',
                           }}
                         >
-                          <div style={{ fontWeight: 600, color: '#ffffff' }}>{qco.order_number}</div>
+                          <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{qco.order_number}</div>
                           <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{qco.title}</div>
                         </div>
                       ))}
@@ -352,8 +359,8 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                         marginTop: '12px',
                         padding: '8px 12px',
                         borderRadius: 'var(--radius-sm)',
-                        background: 'rgba(239, 68, 68, 0.1)',
-                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        background: 'rgba(220, 38, 38, 0.08)',
+                        border: '1px solid rgba(220, 38, 38, 0.25)',
                         fontSize: '0.78rem',
                         color: 'var(--status-danger)',
                       }}
@@ -373,7 +380,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '1.1rem' }}>🕸️</span>
-                <h4 style={{ fontSize: '1.05rem', fontWeight: 700 }}>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Ontology Relationships ({relationships.length})
                 </h4>
               </div>
@@ -384,31 +391,57 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
 
             {relationships.length > 0 ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '10px' }}>
-                {relationships.map((rel, idx) => (
-                  <div
-                    key={idx}
-                    className="glass-panel-interactive"
-                    onClick={() => handleSelectQuick(rel.target)}
-                    style={{
-                      padding: '12px 14px',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'rgba(15, 23, 42, 0.6)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div>
-                      <span className="badge badge-blue" style={{ fontSize: '0.68rem', marginBottom: '4px' }}>
-                        {rel.relationship_type}
-                      </span>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.9rem', color: '#ffffff' }}>
-                        {rel.target}
+                {relationships.map((rel, idx) => {
+                  const targetIdentifier =
+                    rel.target ||
+                    rel.target_standard_id ||
+                    rel.target_id ||
+                    (rel.target_standard_number ? `IS ${rel.target_standard_number}` : '');
+                  const isClickable = Boolean(
+                    targetIdentifier &&
+                    typeof targetIdentifier === 'string' &&
+                    !targetIdentifier.startsWith('unresolved:')
+                  );
+                  return (
+                    <div
+                      key={idx}
+                      className={isClickable ? 'glass-panel-interactive' : 'glass-panel'}
+                      onClick={() => isClickable && handleSelectQuick(targetIdentifier)}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: 'var(--radius-sm)',
+                        background: 'rgba(241, 245, 249, 0.95)',
+                        border: '1px solid var(--border-subtle)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: isClickable ? 'pointer' : 'default',
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
+                          <span className="badge badge-blue" style={{ fontSize: '0.68rem' }}>
+                            {rel.relationship_type}
+                          </span>
+                          {rel.is_unresolved && (
+                            <span className="badge badge-orange" style={{ fontSize: '0.65rem' }}>
+                              Unresolved
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                          {targetIdentifier || 'IS Standard'}
+                        </div>
+                        {rel.target_title && (
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                            {rel.target_title}
+                          </div>
+                        )}
                       </div>
+                      {isClickable && <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>↗</span>}
                     </div>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>↗</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No direct ontology links recorded for this standard.</p>

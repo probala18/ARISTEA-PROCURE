@@ -65,7 +65,6 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
   const handleCreateSampleAudio = async () => {
     setIsProcessing(true);
     try {
-      // Synthesize audio for a standard query
       const sampleText =
         language === 'hi'
           ? 'औद्योगिक पंप के लिए मोटर मानक'
@@ -146,11 +145,11 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
                 style={{
                   padding: '6px 14px',
                   borderRadius: 'var(--radius-full)',
-                  border: language === lang.code ? '1px solid var(--accent-teal)' : '1px solid rgba(255, 255, 255, 0.08)',
-                  background: language === lang.code ? 'rgba(20, 184, 166, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                  color: language === lang.code ? '#ffffff' : 'var(--text-secondary)',
+                  border: language === lang.code ? '1px solid var(--accent-teal)' : '1px solid var(--border-subtle)',
+                  background: language === lang.code ? 'rgba(13, 148, 136, 0.12)' : 'rgba(15, 23, 42, 0.04)',
+                  color: language === lang.code ? 'var(--accent-teal-dark)' : 'var(--text-secondary)',
                   fontSize: '0.85rem',
-                  fontWeight: language === lang.code ? 600 : 400,
+                  fontWeight: language === lang.code ? 600 : 500,
                   cursor: 'pointer',
                 }}
               >
@@ -163,10 +162,10 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
         {/* Audio Input Controls */}
         <div
           style={{
-            background: 'rgba(15, 23, 42, 0.6)',
+            background: 'rgba(241, 245, 249, 0.7)',
             borderRadius: 'var(--radius-lg)',
             padding: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: '1px solid var(--border-subtle)',
             marginBottom: '20px',
             textAlign: 'center',
           }}
@@ -257,7 +256,7 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent-teal)' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent-teal-dark)' }}>
                 TRANSCRIPTION (Confidence: {Math.round(voiceResult.transcription.confidence * 100)}%)
               </span>
               <span className="badge badge-blue">
@@ -265,7 +264,7 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
               </span>
             </div>
 
-            <p style={{ fontSize: '1.1rem', fontWeight: 500, color: '#ffffff', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.5 }}>
               "{voiceResult.transcription.transcription}"
             </p>
 
@@ -274,8 +273,8 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
                 style={{
                   marginTop: '10px',
                   padding: '8px 12px',
-                  background: 'rgba(239, 68, 68, 0.15)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  background: 'rgba(220, 38, 38, 0.08)',
+                  border: '1px solid rgba(220, 38, 38, 0.25)',
                   borderRadius: 'var(--radius-sm)',
                   fontSize: '0.8rem',
                   color: 'var(--status-danger)',
@@ -293,17 +292,17 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
               style={{
                 padding: '20px 24px',
                 marginBottom: '20px',
-                background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(241, 245, 249, 0.95) 100%)',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ fontSize: '1.2rem' }}>🔊</span>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-teal)' }}>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-teal-dark)' }}>
                   Spoken Response Summary
                 </h4>
               </div>
 
-              <p style={{ fontSize: '0.95rem', color: '#e2e8f0', marginBottom: '14px' }}>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '14px', lineHeight: 1.5 }}>
                 {voiceResult.spoken_summary}
               </p>
 
@@ -318,7 +317,7 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
           {/* Recommended Standards from Voice Query */}
           {voiceResult.recommendation?.recommendations && (
             <div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '20px 0 14px', color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '20px 0 14px', color: 'var(--text-primary)' }}>
                 Mapped Standards ({voiceResult.recommendation.recommendations.length})
               </h3>
               {voiceResult.recommendation.recommendations.map((cand, idx) => (

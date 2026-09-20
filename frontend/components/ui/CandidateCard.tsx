@@ -51,7 +51,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
                   width: '24px',
                   height: '24px',
                   borderRadius: '6px',
-                  background: 'rgba(255, 255, 255, 0.08)',
+                  background: 'rgba(15, 23, 42, 0.06)',
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   color: 'var(--text-secondary)',
@@ -65,7 +65,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
                 fontFamily: 'var(--font-mono)',
                 fontSize: '1.05rem',
                 fontWeight: 700,
-                color: '#ffffff',
+                color: 'var(--text-primary)',
                 letterSpacing: '0.02em',
               }}
             >
@@ -79,6 +79,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
                   color: candidate.status.toLowerCase().includes('active') || candidate.status.toLowerCase().includes('valid')
                     ? 'var(--status-success)'
                     : 'var(--status-warning)',
+                  fontWeight: 500,
                 }}
               >
                 ● {candidate.status}
@@ -89,7 +90,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
           <h4
             style={{
               fontSize: '0.98rem',
-              fontWeight: 500,
+              fontWeight: 600,
               color: 'var(--text-primary)',
               marginTop: '6px',
               lineHeight: 1.45,
@@ -107,8 +108,9 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
                     fontSize: '0.72rem',
                     padding: '2px 8px',
                     borderRadius: '4px',
-                    background: 'rgba(255, 255, 255, 0.05)',
+                    background: 'rgba(15, 23, 42, 0.05)',
                     color: 'var(--text-secondary)',
+                    fontWeight: 500,
                   }}
                 >
                   {term}
@@ -126,12 +128,12 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
                 fontSize: '1.15rem',
                 fontWeight: 800,
                 fontFamily: 'var(--font-mono)',
-                color: scorePercent >= 70 ? 'var(--accent-teal)' : scorePercent >= 50 ? '#38bdf8' : 'var(--text-secondary)',
+                color: scorePercent >= 70 ? 'var(--accent-teal)' : scorePercent >= 50 ? '#0284c7' : 'var(--text-secondary)',
               }}
             >
               {scorePercent}%
             </span>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', display: 'block' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>
               Confidence
             </span>
           </div>
@@ -169,20 +171,20 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
             style={{
               marginTop: '16px',
               paddingTop: '14px',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              borderTop: '1px solid var(--border-subtle)',
               overflow: 'hidden',
             }}
           >
             <div
               style={{
-                background: 'rgba(10, 15, 26, 0.7)',
+                background: 'rgba(241, 245, 249, 0.95)',
                 padding: '12px 16px',
                 borderRadius: 'var(--radius-sm)',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
+                border: '1px solid var(--border-subtle)',
                 fontSize: '0.82rem',
               }}
             >
-              <div style={{ fontWeight: 600, color: 'var(--accent-teal)', marginBottom: '6px' }}>
+              <div style={{ fontWeight: 600, color: 'var(--accent-teal-dark)', marginBottom: '6px' }}>
                 Provenance & Evidence Grounding:
               </div>
               {candidate.match_reasons && candidate.match_reasons.length > 0 ? (
@@ -203,7 +205,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
                   style={{
                     marginTop: '8px',
                     fontStyle: 'italic',
-                    color: 'var(--text-dim)',
+                    color: 'var(--text-secondary)',
                     borderLeft: '2px solid var(--accent-teal)',
                     paddingLeft: '8px',
                   }}

@@ -72,12 +72,12 @@ export default function Home() {
               gap: '8px',
               padding: '4px 14px',
               borderRadius: 'var(--radius-full)',
-              background: 'rgba(20, 184, 166, 0.1)',
-              border: '1px solid rgba(20, 184, 166, 0.3)',
+              background: 'rgba(13, 148, 136, 0.1)',
+              border: '1px solid rgba(13, 148, 136, 0.25)',
               marginBottom: '16px',
             }}
           >
-            <span style={{ fontSize: '0.8rem', color: 'var(--accent-teal)', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--accent-teal-dark)', fontWeight: 600 }}>
               ⚡ PS 26108 Grounded Architecture
             </span>
           </div>
@@ -90,7 +90,7 @@ export default function Home() {
               letterSpacing: '-0.03em',
               lineHeight: 1.15,
               marginBottom: '16px',
-              background: 'linear-gradient(135deg, #ffffff 30%, #94a3b8 100%)',
+              background: 'linear-gradient(135deg, #0f172a 30%, #334155 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
@@ -120,19 +120,20 @@ export default function Home() {
               flexWrap: 'wrap',
               fontSize: '0.82rem',
               color: 'var(--text-muted)',
+              fontWeight: 500,
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: 'var(--accent-teal)' }}>✓</span> 100% Grounded BIS Citations
+              <span style={{ color: 'var(--accent-teal-dark)' }}>✓</span> 100% Grounded BIS Citations
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: 'var(--accent-teal)' }}>✓</span> Zero Spec Hallucinations
+              <span style={{ color: 'var(--accent-teal-dark)' }}>✓</span> Zero Spec Hallucinations
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: 'var(--accent-teal)' }}>✓</span> QCO & Regulatory Tracking
+              <span style={{ color: 'var(--accent-teal-dark)' }}>✓</span> QCO & Regulatory Tracking
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: 'var(--accent-teal)' }}>✓</span> Multilingual Speech AI
+              <span style={{ color: 'var(--accent-teal-dark)' }}>✓</span> Multilingual Speech AI
             </div>
           </div>
         </section>
@@ -195,16 +196,17 @@ export default function Home() {
       {/* Footer */}
       <footer
         style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+          borderTop: '1px solid var(--border-subtle)',
           padding: '28px 0',
-          background: 'rgba(7, 9, 14, 0.95)',
+          background: 'rgba(255, 255, 255, 0.95)',
           fontSize: '0.82rem',
-          color: 'var(--text-dim)',
+          color: 'var(--text-secondary)',
           textAlign: 'center',
+          boxShadow: '0 -1px 3px rgba(0, 0, 0, 0.02)',
         }}
       >
         <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <div>
+          <div style={{ fontWeight: 600 }}>
             ARISTEA-PROCURE • Problem Statement 26108 • Built for Smart India Hackathon
           </div>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem' }}>

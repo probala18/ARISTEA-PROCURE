@@ -33,12 +33,12 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
   const getSeverityBorder = () => {
     switch (gap.severity) {
       case 'CRITICAL':
-        return 'rgba(239, 68, 68, 0.4)';
+        return 'rgba(220, 38, 38, 0.4)';
       case 'WARNING':
-        return 'rgba(245, 158, 11, 0.35)';
+        return 'rgba(217, 119, 6, 0.4)';
       case 'INFO':
       default:
-        return 'rgba(56, 189, 248, 0.25)';
+        return 'rgba(2, 132, 199, 0.35)';
     }
   };
 
@@ -50,7 +50,7 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
         padding: '18px 20px',
         marginBottom: '14px',
         borderRadius: 'var(--radius-md)',
-        borderLeft: `4px solid ${gap.severity === 'CRITICAL' ? '#ef4444' : gap.severity === 'WARNING' ? '#f59e0b' : '#38bdf8'}`,
+        borderLeft: `4px solid ${gap.severity === 'CRITICAL' ? '#dc2626' : gap.severity === 'WARNING' ? '#d97706' : '#0284c7'}`,
         borderColor: getSeverityBorder(),
       }}
     >
@@ -83,8 +83,9 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
             gap: '16px',
             margin: '10px 0',
             padding: '10px 14px',
-            background: 'rgba(15, 23, 42, 0.6)',
+            background: 'rgba(241, 245, 249, 0.95)',
             borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border-subtle)',
             fontSize: '0.85rem',
           }}
         >
@@ -114,7 +115,7 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
             fontSize: '0.86rem',
             color: 'var(--text-secondary)',
             fontStyle: 'italic',
-            borderLeft: '2px solid rgba(255, 255, 255, 0.1)',
+            borderLeft: '2px solid var(--border-subtle)',
             paddingLeft: '10px',
             margin: '10px 0',
           }}
@@ -128,14 +129,14 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
         style={{
           marginTop: '10px',
           padding: '8px 12px',
-          background: 'rgba(20, 184, 166, 0.08)',
+          background: 'rgba(13, 148, 136, 0.08)',
           borderRadius: 'var(--radius-sm)',
-          border: '1px solid rgba(20, 184, 166, 0.2)',
+          border: '1px solid rgba(13, 148, 136, 0.22)',
           fontSize: '0.83rem',
           color: 'var(--text-primary)',
         }}
       >
-        <strong style={{ color: 'var(--accent-teal)' }}>Grounding Advice: </strong>
+        <strong style={{ color: 'var(--accent-teal-dark)' }}>Grounding Advice: </strong>
         {gap.recommendation_notes}
       </div>
     </div>

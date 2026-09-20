@@ -38,11 +38,12 @@ export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
         style={{
           display: 'flex',
           gap: '4px',
-          background: 'rgba(15, 23, 42, 0.8)',
+          background: 'rgba(241, 245, 249, 0.9)',
           backdropFilter: 'blur(12px)',
           padding: '6px',
           borderRadius: 'var(--radius-full)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
           overflowX: 'auto',
           maxWidth: '100%',
         }}
@@ -79,9 +80,8 @@ export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
                     position: 'absolute',
                     inset: 0,
                     borderRadius: 'var(--radius-full)',
-                    background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.3) 0%, rgba(13, 148, 136, 0.5) 100%)',
-                    border: '1px solid rgba(20, 184, 166, 0.6)',
-                    boxShadow: '0 0 15px rgba(20, 184, 166, 0.3)',
+                    background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
+                    boxShadow: '0 4px 12px rgba(13, 148, 136, 0.3)',
                     zIndex: -1,
                   }}
                 />
@@ -94,8 +94,8 @@ export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
                     fontSize: '0.65rem',
                     padding: '2px 7px',
                     borderRadius: '999px',
-                    background: isActive ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                    color: isActive ? '#ffffff' : 'var(--text-dim)',
+                    background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'rgba(15, 23, 42, 0.06)',
+                    color: isActive ? '#ffffff' : 'var(--text-muted)',
                   }}
                 >
                   {tab.badge}
