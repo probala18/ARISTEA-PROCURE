@@ -149,7 +149,6 @@ class GraphEnricher:
                 confidence_level=ConfidenceLevel.HIGH if edge.is_explicit_source else ConfidenceLevel.MEDIUM,
                 score_breakdown=ExplainableScoreBreakdown(
                     semantic_similarity=0.0,
-                    bm25_score=0.0,
                     id_token_match=1.0,
                     category_match=1.0,
                     status_support=1.0 if (std_obj and std_obj.status == "CURRENT") else 0.5,

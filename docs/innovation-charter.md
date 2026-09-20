@@ -15,7 +15,7 @@ The following differentiators and architectural capabilities are **fully impleme
 | # | Implemented Capability | Architectural Mechanism | Verification Artifacts |
 |---|------------------------|-------------------------|------------------------|
 | 1 | **Semantic Procurement Requirement Understanding** | Pretrained Sentence Transformers embedding model (`paraphrase-multilingual-MiniLM-L12-v2`) supporting multilingual vector similarity. | `backend/app/services/recommendation/` |
-| 2 | **Hybrid Semantic + Lexical Retrieval** | Reciprocal Rank Fusion (RRF) combining dense semantic search with BM25 lexical token matching over 268 verified standards. | `tests/test_module5_hybrid_retrieval.py` |
+| 2 | **Dense Semantic Vector Retrieval** | 384-dimensional dense vector similarity search via Sentence Transformers with deterministic exact standard identifier fast-path. | `tests/test_module5_retrieval.py` |
 | 3 | **Knowledge-Graph Relationship Expansion** | Deterministic traversal of 111 verified relationships (allied test methods, safety standards, normative references). | `backend/app/services/knowledge_graph/` |
 | 4 | **Verified Supersession & Version Intelligence** | Temporal and lifecycle tracking across 275 standard versions (`CURRENT`, `SUPERSEDED`, `AMENDMENT_AVAILABLE`). | `backend/app/services/version_intelligence/` |
 | 5 | **Deterministic Compliance & QCO Reasoning** | Rule-based GFR 2017 & DPIIT Quality Control Order (QCO) evaluation across 710 statutory orders. | `backend/app/services/compliance/` |

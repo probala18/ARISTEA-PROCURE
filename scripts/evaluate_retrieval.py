@@ -49,10 +49,13 @@ def evaluate_retrieval_benchmark(db_url: str = "sqlite:///./sih_bis.db", json_pa
     try:
         retriever = SemanticRetrievalEngine(session)
         print("\n" + "=" * 70)
-        print("     PS 26108 — RETRIEVAL EVALUATION ON BENCHMARK DATASET")
+        print("  PS 26108 — DIAGNOSTIC RETRIEVAL REGRESSION AUDIT (SEMANTIC-ONLY)")
+        print("  NOTE: Expectations below are Legacy Diagnostic Regression Expectations,")
+        print("  NOT Official Ground Truth. The benchmark dataset query_dataset.json")
+        print("  does not supply structured retrieval relevance rankings.")
         print("=" * 70 + "\n")
 
-        # Ground truth standard mapping defined strictly from query_dataset.json evidence and intent
+        # Legacy Diagnostic Regression Expectations (Development Fixture Only, NOT Official Ground Truth)
         # For non-standard queries (general info, out of scope, unclarified), expected_standards is empty
         query_targets = {
             "Q01": ["IS 694"],
@@ -150,24 +153,37 @@ def evaluate_retrieval_benchmark(db_url: str = "sqlite:///./sih_bis.db", json_pa
         avg_latency = sum(latencies_ms) / total_queries if total_queries > 0 else 0.0
 
         print("\n" + "=" * 70)
-        print("                RETRIEVAL BENCHMARK SUMMARY")
+        print("          OFFICIAL BENCHMARK RETRIEVAL STATUS (MODULE 16)")
         print("=" * 70)
-        print(f"  Total Queries In Dataset     : {total_queries}")
-        print(f"  Standard-Seeking Queries     : {standard_queries}")
-        print(f"  Top-1 Accuracy (Std Queries) : {top1_hits}/{standard_queries} ({top1_hits/standard_queries*100:.1f}%)")
-        print(f"  Top-3 Accuracy (Std Queries) : {top3_hits}/{standard_queries} ({top3_hits/standard_queries*100:.1f}%)")
-        print(f"  Top-5 Accuracy (Std Queries) : {top5_hits}/{standard_queries} ({top5_hits/standard_queries*100:.1f}%)")
-        print(f"  Mean Reciprocal Rank (MRR)   : {mrr:.4f}")
-        print(f"  Average Latency              : {avg_latency:.2f} ms")
+        print("  NOTE: query_dataset.json does not provide formal structured relevance")
+        print("  labels for ranked retrieval. Official metrics are preserved as:")
+        print("  Official Precision@1 : UNKNOWN")
+        print("  Official Precision@3 : UNKNOWN")
+        print("  Official Recall@5    : UNKNOWN")
+        print("  Official MRR         : UNKNOWN")
+        print("=" * 70)
+        print("     DIAGNOSTIC DEVELOPMENT REGRESSION SUMMARY (FIXTURES ONLY)")
+        print("=" * 70)
+        print(f"  Total Queries In Dataset         : {total_queries}")
+        print(f"  Standard-Seeking Queries         : {standard_queries}")
+        print(f"  Diagnostic Top-1 Match Rate      : {top1_hits}/{standard_queries} ({top1_hits/standard_queries*100:.1f}%)")
+        print(f"  Diagnostic Top-3 Match Rate      : {top3_hits}/{standard_queries} ({top3_hits/standard_queries*100:.1f}%)")
+        print(f"  Diagnostic Top-5 Match Rate      : {top5_hits}/{standard_queries} ({top5_hits/standard_queries*100:.1f}%)")
+        print(f"  Diagnostic Reciprocal Rank (MRR) : {mrr:.4f}")
+        print(f"  Average Retrieval Latency        : {avg_latency:.2f} ms")
         print("=" * 70 + "\n")
 
         return {
             "total_queries": total_queries,
             "standard_queries": standard_queries,
-            "top1_accuracy": round(top1_hits / standard_queries, 4) if standard_queries else 0.0,
-            "top3_accuracy": round(top3_hits / standard_queries, 4) if standard_queries else 0.0,
-            "top5_accuracy": round(top5_hits / standard_queries, 4) if standard_queries else 0.0,
-            "mrr": round(mrr, 4),
+            "official_precision_at_1": "UNKNOWN",
+            "official_precision_at_3": "UNKNOWN",
+            "official_recall_at_5": "UNKNOWN",
+            "official_mrr": "UNKNOWN",
+            "diagnostic_top1_match_rate": round(top1_hits / standard_queries, 4) if standard_queries else 0.0,
+            "diagnostic_top3_match_rate": round(top3_hits / standard_queries, 4) if standard_queries else 0.0,
+            "diagnostic_top5_match_rate": round(top5_hits / standard_queries, 4) if standard_queries else 0.0,
+            "diagnostic_mrr": round(mrr, 4),
             "avg_latency_ms": round(avg_latency, 2),
             "category_breakdown": category_results,
             "results": results_log,

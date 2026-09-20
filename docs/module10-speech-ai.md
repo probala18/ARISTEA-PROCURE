@@ -171,7 +171,7 @@ End-to-end voice query pipeline invoking `RecommendationEngine` and returning st
   - Module 2: Relational Database Schema
   - Module 3: Ingestion & Provenance Audit
   - Module 4: Knowledge Graph Architecture
-  - Module 5: Hybrid Retrieval Engine
+  - Module 5: Semantic Retrieval Engine
   - Module 6: Recommendation Engine & NLP
   - Module 7: Relationship Engine & Graph API
   - Module 8: Version & Amendment Intelligence

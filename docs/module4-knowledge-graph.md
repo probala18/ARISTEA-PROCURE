@@ -11,7 +11,7 @@ User Tender / Query
         ↓
 NLP / Requirement Extraction (Module 5)
         ↓
-Semantic & Hybrid Retrieval (Module 6)
+Semantic Vector Retrieval (Module 5)
         ↓
 Recommendation Engine (Module 7)
         ↓

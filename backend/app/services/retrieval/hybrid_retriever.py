@@ -1,5 +1,7 @@
 """
-Backward-compatibility adapter for HybridRetrievalEngine.
+Deprecated compatibility layer
+Not used by production recommendation flow
+
 Delegates directly to SemanticRetrievalEngine to ensure pure semantic vector retrieval.
 """
 from backend.app.services.retrieval.semantic_retriever import (

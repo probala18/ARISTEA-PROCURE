@@ -118,7 +118,6 @@ class RecommendationEngine:
                     confidence_level=ConfidenceLevel.LOW,
                     score_breakdown=ExplainableScoreBreakdown(
                         semantic_similarity=r.signals.get("semantic_similarity", r.relevance_score),
-                        bm25_score=0.0,
                         id_token_match=r.signals.get("id_match", 0.0),
                         category_match=r.signals.get("category_match", 0.0),
                         status_support=r.signals.get("status_support", 0.0),
@@ -222,7 +221,6 @@ class RecommendationEngine:
                     confidence_level=ConfidenceLevel.MEDIUM,
                     score_breakdown=ExplainableScoreBreakdown(
                         semantic_similarity=top_rec.signals.get("semantic_similarity", top_rec.relevance_score),
-                        bm25_score=0.0,
                         id_token_match=top_rec.signals.get("id_match", 0.0),
                         category_match=top_rec.signals.get("category_match", 0.0),
                         status_support=0.3,
@@ -252,7 +250,6 @@ class RecommendationEngine:
         confidence = self.confidence_scorer.compute_confidence(
             top_relevance=top_rel,
             runner_up_relevance=runner_up_rel,
-            retriever_agreement=False,
             is_exact_lookup=is_exact,
             is_ambiguous=False,
             is_out_of_scope=False,
@@ -272,7 +269,6 @@ class RecommendationEngine:
             confidence_level=conf_level,
             score_breakdown=ExplainableScoreBreakdown(
                 semantic_similarity=top_rec.signals.get("semantic_similarity", top_rel),
-                bm25_score=0.0,
                 id_token_match=top_rec.signals.get("id_match", 0.0),
                 category_match=top_rec.signals.get("category_match", 0.0),
                 status_support=top_rec.signals.get("status_support", 1.0),
@@ -313,7 +309,6 @@ class RecommendationEngine:
                 confidence_level=self.confidence_scorer.get_confidence_level(r.relevance_score * 0.75),
                 score_breakdown=ExplainableScoreBreakdown(
                     semantic_similarity=r.signals.get("semantic_similarity", r.relevance_score),
-                    bm25_score=0.0,
                     id_token_match=r.signals.get("id_match", 0.0),
                     category_match=r.signals.get("category_match", 0.0),
                     status_support=r.signals.get("status_support", 1.0),

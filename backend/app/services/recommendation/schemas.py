@@ -11,7 +11,7 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field, model_validator
 
 from backend.app.services.knowledge_graph.graph_models import RelationType
-from backend.app.services.retrieval.hybrid_retriever import RetrievalFilter
+from backend.app.services.retrieval.semantic_retriever import RetrievalFilter
 
 
 class StandardRole(str, Enum):
@@ -66,7 +66,6 @@ class EvidenceRecord(BaseModel):
 class ExplainableScoreBreakdown(BaseModel):
     """Transparent breakdown of signals composing the internal RELEVANCE SCORE."""
     semantic_similarity: float = 0.0
-    bm25_score: float = 0.0
     id_token_match: float = 0.0
     category_match: float = 0.0
     status_support: float = 0.0
