@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { TabKey } from './TabNav';
 
 interface SidebarProps {
@@ -33,23 +32,49 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       key: 'standard',
-      label: 'Standards Explorer',
-      sublabel: 'Lifecycle, Graph & Compliance',
+      label: 'Standards Directory',
+      sublabel: 'Official BIS Catalog & Meta',
       icon: '🏛️',
     },
     {
+      key: 'graph',
+      label: 'Knowledge Graph',
+      sublabel: 'Topology & Linked Testing',
+      icon: '🕸️',
+      badge: 'Graph',
+    },
+    {
+      key: 'compliance',
+      label: 'Compliance & QCO',
+      sublabel: 'Statutory Orders & Schemes',
+      icon: '🛡️',
+      badge: 'GFR',
+    },
+    {
       key: 'tender',
-      label: 'Tender Auditor',
-      sublabel: 'RFP Parsing & Spec Generator',
+      label: 'Document Auditor',
+      sublabel: 'RFP Parsing & Gap Audit',
       icon: '📋',
       badge: 'Audit',
     },
     {
+      key: 'spec',
+      label: 'Spec Workspace',
+      sublabel: 'Grounded Clause Drafting',
+      icon: '📝',
+    },
+    {
       key: 'voice',
       label: 'Voice Assistant',
-      sublabel: 'Indic Speech Procurement',
+      sublabel: 'Indic Speech AI (Whisper)',
       icon: '🎙️',
       badge: 'AI',
+    },
+    {
+      key: 'history',
+      label: 'Session History',
+      sublabel: 'Recent Queries & Audits',
+      icon: '🕒',
     },
   ];
 
@@ -58,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header */}
       <div
         style={{
-          padding: '24px 24px 20px',
+          padding: '22px 20px 18px',
           borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
@@ -67,8 +92,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div
           style={{
-            width: '40px',
-            height: '40px',
+            width: '38px',
+            height: '38px',
             borderRadius: '10px',
             background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)',
             display: 'flex',
@@ -109,25 +134,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
               PROCURE
             </span>
           </div>
-          <div style={{ fontSize: '0.73rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-            PS 26108 · BIS Intelligence
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+            PS 26108 · Indian Standards Hub
           </div>
         </div>
       </div>
 
       {/* Navigation Links */}
-      <div style={{ flex: 1, padding: '20px 14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <div style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: '4px', overflowY: 'auto' }}>
         <div
           style={{
-            fontSize: '0.7rem',
-            fontWeight: 700,
+            fontSize: '0.68rem',
+            fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.06em',
             color: 'var(--text-dim)',
-            padding: '4px 10px 8px',
+            padding: '2px 10px 6px',
           }}
         >
-          Procurement Modules
+          Procurement Intelligence
         </div>
 
         {navItems.map((item) => {
@@ -140,26 +165,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
+                gap: '10px',
                 width: '100%',
-                padding: '12px 14px',
+                padding: '10px 12px',
                 borderRadius: 'var(--radius-md)',
                 background: isActive ? 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)' : 'transparent',
                 color: isActive ? '#ffffff' : 'var(--text-secondary)',
                 border: 'none',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                boxShadow: isActive ? '0 4px 14px rgba(79, 70, 229, 0.32)' : 'none',
+                transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: isActive ? '0 4px 14px rgba(79, 70, 229, 0.3)' : 'none',
               }}
             >
               <span
                 style={{
-                  fontSize: '1.25rem',
+                  fontSize: '1.15rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '24px',
+                  width: '22px',
                 }}
               >
                 {item.icon}
@@ -167,7 +192,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
-                    fontSize: '0.88rem',
+                    fontSize: '0.84rem',
                     fontWeight: isActive ? 700 : 600,
                     color: isActive ? '#ffffff' : 'var(--text-primary)',
                     display: 'flex',
@@ -179,8 +204,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   {item.badge && (
                     <span
                       style={{
-                        fontSize: '0.65rem',
-                        fontWeight: 700,
+                        fontSize: '0.62rem',
+                        fontWeight: 800,
                         padding: '1px 6px',
                         borderRadius: 'var(--radius-full)',
                         background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'rgba(79, 70, 229, 0.08)',
@@ -193,9 +218,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
                 <div
                   style={{
-                    fontSize: '0.72rem',
+                    fontSize: '0.7rem',
                     color: isActive ? 'rgba(255, 255, 255, 0.8)' : 'var(--text-muted)',
-                    marginTop: '2px',
+                    marginTop: '1px',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -212,7 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* System Status Footer */}
       <div
         style={{
-          padding: '18px 20px',
+          padding: '14px 16px',
           borderTop: '1px solid var(--border-subtle)',
           background: '#f8fafc',
         }}
@@ -220,44 +245,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div
           style={{
             background: '#ffffff',
-            padding: '12px 14px',
+            padding: '10px 12px',
             borderRadius: 'var(--radius-md)',
             border: '1px solid var(--border-subtle)',
             boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
               Database
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span className={`pulse-dot ${isBackendHealthy ? 'pulse-dot-green' : 'pulse-dot-red'}`} />
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, color: isBackendHealthy ? 'var(--status-success)' : 'var(--status-danger)' }}>
-                {isBackendHealthy ? 'Grounded' : 'Offline'}
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: isBackendHealthy ? 'var(--status-success)' : 'var(--status-danger)' }}>
+                {isBackendHealthy ? 'Online' : 'Offline'}
               </span>
             </div>
           </div>
-          <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
+          <div style={{ fontSize: '0.74rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
             sih_bis.db (9.4 MB)
           </div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '4px' }}>
-            14 Modules · Strict Schema
+          <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: '2px' }}>
+            2,100+ Standards · 14 Modules
           </div>
         </div>
 
-        <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
             v1.0.0 Enterprise
           </span>
           <a
-            href="/api/health"
+            href="http://localhost:8000/docs"
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              fontSize: '0.72rem',
+              fontSize: '0.7rem',
               color: 'var(--accent-primary)',
               textDecoration: 'none',
-              fontWeight: 600,
+              fontWeight: 700,
             }}
           >
             API Specs ↗

@@ -7,8 +7,12 @@ import { Header } from '@/components/Header';
 import { TabNav, TabKey } from '@/components/TabNav';
 import { RecommendView } from '@/components/views/RecommendView';
 import { StandardView } from '@/components/views/StandardView';
+import { GraphView } from '@/components/views/GraphView';
+import { ComplianceView } from '@/components/views/ComplianceView';
 import { TenderView } from '@/components/views/TenderView';
+import { SpecView } from '@/components/views/SpecView';
 import { VoiceView } from '@/components/views/VoiceView';
+import { HistoryView } from '@/components/views/HistoryView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 import { animateHeroText } from '@/lib/gsap-animations';
 import { checkHealth } from '@/lib/api';
@@ -16,6 +20,7 @@ import { checkHealth } from '@/lib/api';
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabKey>('recommend');
   const [explorerStandardId, setExplorerStandardId] = useState<string>('IS 12615:2018');
+  const [activeQuery, setActiveQuery] = useState<string>('');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isOnline, setIsOnline] = useState<boolean>(true);
 
@@ -67,9 +72,27 @@ export default function Home() {
     addToast(`Opened explorer for ${stdId}`, 'info');
   };
 
+  const handleOpenGraph = (stdId: string) => {
+    setExplorerStandardId(stdId);
+    setActiveTab('graph');
+    addToast(`Opened topology graph for ${stdId}`, 'info');
+  };
+
+  const handleOpenCompliance = (stdId: string) => {
+    setExplorerStandardId(stdId);
+    setActiveTab('compliance');
+    addToast(`Opened QCO matrix for ${stdId}`, 'info');
+  };
+
+  const handleSelectQueryFromHistory = (query: string) => {
+    setActiveQuery(query);
+    setActiveTab('recommend');
+    addToast('Loaded query from history into matcher.', 'info');
+  };
+
   return (
     <div className="dashboard-layout">
-      {/* Left Executive Sidebar Navigation */}
+      {/* Left Fixed Sidebar Navigation */}
       <Sidebar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
@@ -86,7 +109,7 @@ export default function Home() {
           {/* Executive Hero Banner */}
           <section
             style={{
-              padding: '28px 0 20px',
+              padding: '24px 0 16px',
               maxWidth: '960px',
               margin: '0 auto',
               textAlign: 'center',
@@ -98,43 +121,43 @@ export default function Home() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '5px 16px',
+                padding: '4px 16px',
                 borderRadius: 'var(--radius-full)',
                 background: 'rgba(79, 70, 229, 0.08)',
                 border: '1px solid rgba(79, 70, 229, 0.22)',
-                marginBottom: '16px',
+                marginBottom: '14px',
               }}
             >
               <span style={{ fontSize: '0.78rem', color: 'var(--accent-primary-dark)', fontWeight: 700 }}>
-                ⚡ PS 26108 · Indian Standards Intelligence Architecture
+                ⚡ PS 26108 · Indian Standards Intelligence Platform
               </span>
             </div>
 
             <h1
               ref={heroHeadlineRef}
               style={{
-                fontSize: 'clamp(1.9rem, 3.8vw, 2.9rem)',
+                fontSize: 'clamp(1.85rem, 3.6vw, 2.8rem)',
                 fontWeight: 800,
                 letterSpacing: '-0.03em',
                 lineHeight: 1.18,
-                marginBottom: '14px',
+                marginBottom: '12px',
                 background: 'linear-gradient(135deg, #0f172a 20%, #312e81 60%, #4338ca 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              AI-Powered Indian Standards Intelligence for Public Procurement
+              Intelligent Indian Standards Reasoning for Public Procurement
             </h1>
 
             <p
               ref={heroSubtitleRef}
               style={{
-                fontSize: 'clamp(0.92rem, 1.6vw, 1.05rem)',
+                fontSize: 'clamp(0.9rem, 1.5vw, 1.02rem)',
                 color: 'var(--text-secondary)',
                 lineHeight: 1.6,
-                marginBottom: '20px',
+                marginBottom: '18px',
                 maxWidth: '780px',
-                margin: '0 auto 20px',
+                margin: '0 auto 18px',
               }}
             >
               Real-time BIS ontology reasoning, automated tender compliance auditing, version supersession tracking,
@@ -154,13 +177,13 @@ export default function Home() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--status-success)' }}>✓</span> Grounded BIS Citations
+                <span style={{ color: 'var(--status-success)' }}>✓</span> 2,100+ Verified BIS Standards
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ color: 'var(--status-success)' }}>✓</span> Zero Spec Hallucinations
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--status-success)' }}>✓</span> QCO & Regulatory Tracking
+                <span style={{ color: 'var(--status-success)' }}>✓</span> Statutory QCO Tracking
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ color: 'var(--status-success)' }}>✓</span> Multilingual Speech AI
@@ -168,59 +191,125 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Quick Mobile / Tablet Tab Switcher (Visible on small screens) */}
-          <div className="md:hidden" style={{ display: 'none' }}>
+          {/* Mobile / Tablet Tab Switcher */}
+          <div className="lg:hidden" style={{ display: 'flex', justifyContent: 'center' }}>
             <TabNav activeTab={activeTab} onChange={setActiveTab} />
           </div>
 
-          {/* Animated Dynamic View Container */}
-          <div style={{ marginTop: '20px' }}>
+          {/* Animated Dynamic Workspace Container */}
+          <div style={{ marginTop: '16px' }}>
             <AnimatePresence mode="wait">
               {activeTab === 'recommend' && (
                 <motion.div
                   key="recommend"
-                  initial={{ opacity: 0, y: 14 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.28, ease: 'easeOut' }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
-                  <RecommendView onExploreStandard={handleExploreStandard} onToast={addToast} />
+                  <RecommendView
+                    initialQuery={activeQuery || undefined}
+                    onExploreStandard={handleExploreStandard}
+                    onOpenGraph={handleOpenGraph}
+                    onOpenCompliance={handleOpenCompliance}
+                    onToast={addToast}
+                  />
                 </motion.div>
               )}
 
               {activeTab === 'standard' && (
                 <motion.div
                   key="standard"
-                  initial={{ opacity: 0, y: 14 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.28, ease: 'easeOut' }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <StandardView initialStandardId={explorerStandardId} onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'graph' && (
+                <motion.div
+                  key="graph"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <GraphView
+                    initialStandardId={explorerStandardId}
+                    onExploreStandard={handleExploreStandard}
+                    onToast={addToast}
+                  />
+                </motion.div>
+              )}
+
+              {activeTab === 'compliance' && (
+                <motion.div
+                  key="compliance"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <ComplianceView
+                    initialStandardId={explorerStandardId}
+                    onExploreStandard={handleExploreStandard}
+                    onToast={addToast}
+                  />
                 </motion.div>
               )}
 
               {activeTab === 'tender' && (
                 <motion.div
                   key="tender"
-                  initial={{ opacity: 0, y: 14 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.28, ease: 'easeOut' }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <TenderView onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'spec' && (
+                <motion.div
+                  key="spec"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <SpecView onToast={addToast} />
                 </motion.div>
               )}
 
               {activeTab === 'voice' && (
                 <motion.div
                   key="voice"
-                  initial={{ opacity: 0, y: 14 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.28, ease: 'easeOut' }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <VoiceView onExploreStandard={handleExploreStandard} onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'history' && (
+                <motion.div
+                  key="history"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <HistoryView
+                    onSelectQuery={handleSelectQueryFromHistory}
+                    onExploreStandard={handleExploreStandard}
+                    onToast={addToast}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -253,7 +342,7 @@ export default function Home() {
               <strong style={{ color: 'var(--text-primary)' }}>ARISTEA-PROCURE</strong> • Problem Statement 26108 • Smart India Hackathon
             </div>
             <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>
-              All recommendations grounded deterministically in verified BIS catalog data.
+              All recommendations grounded deterministically in verified Bureau of Indian Standards catalog data.
             </div>
           </div>
         </footer>

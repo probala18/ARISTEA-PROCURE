@@ -15,16 +15,32 @@ const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
     desc: 'Neural matching & deterministic graph grounding against Bureau of Indian Standards catalog',
   },
   standard: {
-    title: 'Standards Intelligence Explorer',
-    desc: 'Authoritative IS lifecycle tracing, multi-version lineage, compliance & graph relationships',
+    title: 'Standards Directory & Metadata',
+    desc: 'Authoritative IS catalog records, publication years, ICS codes, and normative references',
+  },
+  graph: {
+    title: 'Knowledge Graph Topology',
+    desc: 'Interactive radial node visualization of direct, allied, and testing relationships',
+  },
+  compliance: {
+    title: 'Compliance & Quality Control Orders',
+    desc: 'Quality Control Orders (QCO), mandatory vs voluntary schemes, and regulatory divergences',
   },
   tender: {
-    title: 'Tender Engine & Grounded Auditor',
-    desc: 'Multi-format RFP parsing (PDF, DOCX, TXT), clause detection, gap analysis & spec generation',
+    title: 'Tender Document Auditor',
+    desc: 'Multi-format RFP parsing (PDF, DOCX, TXT), clause detection, and gap analysis',
+  },
+  spec: {
+    title: 'Specification Drafting Workspace',
+    desc: 'Formulate, edit, and export legally grounded technical clauses and inspection plans',
   },
   voice: {
     title: 'Voice Procurement Assistant',
     desc: 'Multi-lingual voice query input, Whisper STT transcription & audio response playback',
+  },
+  history: {
+    title: 'Session Activity & History',
+    desc: 'Local history of analyzed requirements, explored standards, and audited tenders',
   },
 };
 
@@ -55,28 +71,28 @@ export const Header: React.FC<HeaderProps> = ({ activeTab = 'recommend' }) => {
       {/* Left: Breadcrumbs & Current Workspace */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+          <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)', fontWeight: 600 }}>
             ARISTEA-PROCURE
           </span>
-          <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>/</span>
-          <span style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: 700 }}>
+          <span style={{ fontSize: '0.76rem', color: 'var(--text-dim)' }}>/</span>
+          <span style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: 800 }}>
             {currentTabInfo.title}
           </span>
         </div>
       </div>
 
       {/* Right: Live Status, BIS Certification Pill & Docs */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '5px 12px',
+            padding: '4px 12px',
             borderRadius: 'var(--radius-full)',
             background: '#ffffff',
             border: '1px solid var(--border-subtle)',
-            fontSize: '0.78rem',
+            fontSize: '0.76rem',
             boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
           }}
         >
@@ -100,11 +116,11 @@ export const Header: React.FC<HeaderProps> = ({ activeTab = 'recommend' }) => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '5px 12px',
+            padding: '4px 12px',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(79, 70, 229, 0.08)',
             border: '1px solid rgba(79, 70, 229, 0.2)',
-            fontSize: '0.75rem',
+            fontSize: '0.74rem',
             fontWeight: 700,
             color: 'var(--accent-primary-dark)',
           }}
@@ -117,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab = 'recommend' }) => {
           target="_blank"
           rel="noreferrer"
           className="btn-secondary"
-          style={{ fontSize: '0.78rem', padding: '6px 12px', borderRadius: 'var(--radius-sm)' }}
+          style={{ fontSize: '0.76rem', padding: '5px 12px', borderRadius: 'var(--radius-sm)' }}
         >
           OpenAPI ↗
         </a>
