@@ -1,6 +1,6 @@
 """
-Retrieval Package Init for Module 5.
-Exports Embedding Providers, BM25 Index, Vector Retriever, Reranker, and Hybrid Engine.
+Retrieval Package Init for ARISTEA-PROCURE.
+Exports Embedding Providers, Vector Retriever, and Semantic Retrieval Engine.
 """
 from backend.app.services.retrieval.embedding_provider import (
     BaseEmbeddingProvider,
@@ -9,16 +9,13 @@ from backend.app.services.retrieval.embedding_provider import (
     EmbeddingTextBuilder,
     get_embedding_provider,
 )
-from backend.app.services.retrieval.lexical_retriever import BM25Index
 from backend.app.services.retrieval.vector_retriever import VectorRetriever
-from backend.app.services.retrieval.reranker import (
-    MultiSignalReranker,
-    RerankingWeights,
-    ScoredRecommendation,
-)
-from backend.app.services.retrieval.hybrid_retriever import (
-    HybridRetrievalEngine,
+from backend.app.services.retrieval.semantic_retriever import (
+    SemanticRetrievalEngine,
+    SemanticRetrievalResponse,
     RetrievalFilter,
+    ScoredRecommendation,
+    HybridRetrievalEngine,
     HybridRetrievalResponse,
 )
 
@@ -28,12 +25,11 @@ __all__ = [
     "SentenceTransformerEmbeddingProvider",
     "EmbeddingTextBuilder",
     "get_embedding_provider",
-    "BM25Index",
     "VectorRetriever",
-    "MultiSignalReranker",
-    "RerankingWeights",
+    "SemanticRetrievalEngine",
+    "SemanticRetrievalResponse",
+    "RetrievalFilter",
     "ScoredRecommendation",
     "HybridRetrievalEngine",
-    "RetrievalFilter",
     "HybridRetrievalResponse",
 ]

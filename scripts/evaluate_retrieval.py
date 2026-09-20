@@ -1,6 +1,6 @@
 """
-Retrieval Evaluation Script for Module 5.
-Evaluates Hybrid Retrieval against the 14 benchmark queries in query_dataset.json.
+Retrieval Evaluation Script for ARISTEA-PROCURE.
+Evaluates Semantic Vector Retrieval against the 14 benchmark queries in query_dataset.json.
 Measures:
 - Top-1 Accuracy
 - Top-3 Accuracy
@@ -23,7 +23,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 from sqlalchemy.orm import sessionmaker
 from backend.app.core.database import get_engine
-from backend.app.services.retrieval.hybrid_retriever import HybridRetrievalEngine
+from backend.app.services.retrieval.semantic_retriever import SemanticRetrievalEngine
 from backend.app.core.normalizers import parse_standard_id
 
 
@@ -47,7 +47,7 @@ def evaluate_retrieval_benchmark(db_url: str = "sqlite:///./sih_bis.db", json_pa
     session = Session()
 
     try:
-        retriever = HybridRetrievalEngine(session)
+        retriever = SemanticRetrievalEngine(session)
         print("\n" + "=" * 70)
         print("     PS 26108 — RETRIEVAL EVALUATION ON BENCHMARK DATASET")
         print("=" * 70 + "\n")

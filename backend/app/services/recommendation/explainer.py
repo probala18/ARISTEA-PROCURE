@@ -77,7 +77,7 @@ class Explainer:
         sb = candidate.score_breakdown
         reasons.append(
             f"Internal Relevance Score: {candidate.relevance_score:.2f} "
-            f"(Semantic: {sb.semantic_similarity:.2f}, BM25: {sb.bm25_score:.2f}, Status: {sb.status_support:.2f})."
+            f"(Semantic Similarity: {sb.semantic_similarity:.2f}, Status: {sb.status_support:.2f})."
         )
 
         return " ".join(reasons)

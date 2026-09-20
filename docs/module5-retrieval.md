@@ -1,23 +1,26 @@
-# Module 5 — Semantic & Hybrid Retrieval Engine
+# Module 5 — Semantic-Only Retrieval Engine
 
 ## Overview
 
-Module 5 provides the retrieval and scoring core for the PS 26108 BIS standards recommendation system. It implements a multi-stage hybrid search pipeline combining:
-1. **Dense Vector Search** (384-dimensional cosine similarity embeddings)
-2. **Sparse Lexical Search** (BM25Okapi tailored for Indian standard identifiers and technical terminology)
-3. **Reciprocal Rank Fusion (RRF)** merging top vector and lexical candidates ($k=60$)
-4. **Active Metadata Filtering** (status, category, department, mandatory certification, QCO applicability)
-5. **Multi-Signal Reranker** generating transparent, explainable relevance scores $[0.0, 1.0]$
+Module 5 provides the semantic retrieval and scoring core for the PS 26108 BIS standards recommendation system. In accordance with Problem Statement 26108, it implements a **Semantic-Search-Only Architecture** for natural-language procurement specifications:
+1. **Dense Vector Similarity Search** (384-dimensional cosine similarity embeddings via Sentence Transformers)
+2. **Deterministic Exact Standard Lookup** (fast path strictly for explicit canonical standard identifiers, respecting active filters)
+3. **Deterministic Metadata Filtering** (status, category, department, mandatory certification, QCO applicability)
+4. **Pure Semantic Ranking** generating transparent relevance scores directly from vector cosine similarity $[0.0, 1.0]$
+
+Natural language queries follow the streamlined flow:
+$$\text{Natural Language Query} \longrightarrow \text{Semantic Embedding} \longrightarrow \text{Vector Similarity Search} \longrightarrow \text{Relevant Standards}$$
+
+BM25 lexical search, Reciprocal Rank Fusion (RRF), and keyword boosting are completely eliminated from natural language retrieval.
 
 ---
 
 ## Architectural Principles & Implementation
 
 ### 1. Pretrained vs. Deterministic Fallback Embedding Providers
-* **Primary Pretrained Provider**: `SentenceTransformerEmbeddingProvider` using `all-MiniLM-L6-v2` (`dimension = 384`, `is_pretrained = True`).
+* **Primary Pretrained Provider**: `SentenceTransformerEmbeddingProvider` using `all-MiniLM-L6-v2` / `paraphrase-multilingual-MiniLM-L12-v2` (`dimension = 384`, `is_pretrained = True`).
 * **Offline/Testing Fallback**: `DeterministicSemanticEmbeddingProvider` (`deterministic-offline-fallback-384d`, `dimension = 384`, `is_pretrained = False`).
-  * *Audit Finding*: Because the runtime environment lacks `sentence-transformers`/PyTorch packages, the database embeddings for all 268 canonical standards in `sih_bis.db` were populated using the `DeterministicSemanticEmbeddingProvider`.
-  * The fallback is strictly designated for offline testing and is never presented as equivalent to genuine pretrained semantic representations.
+  * *Audit Finding*: Designated strictly as an offline testing fallback for sandboxed environments without network access to Hugging Face, preserving deterministic vector math across test suites. It is never presented as equivalent to genuine pretrained neural representations.
 * **Embedding Coverage**:
   * Total canonical standards: **268**
   * Populated embeddings: **268 / 268 (100%)**
@@ -32,43 +35,34 @@ Query Input + Optional Metadata Filters
          Query Normalization
                   │
                   ▼
-        Exact-ID Detection
+     Exact-ID Detection / Mention Extraction
+     ├── Exact Match + Pass Filters ──► Direct Lookup Fast-Path (Score = 1.0)
+     └── Natural Language Query     ──► Proceed to Semantic Vector Retrieval
                   │
                   ▼
-        Filter Validation (Does candidate pass active filters?)
-        ├── YES ──► Exact Lookup Fast-Path Return (Score = 1.0)
-        └── NO  ──► Proceed to Hybrid Search
+         Vector Semantic Search
+         (Top Candidates, Cosine Similarity over 384-d Embeddings)
                   │
                   ▼
-        Parallel Retrieval
-        ├── Dense Vector Search (Top 30, Cosine 384-d)
-        └── Sparse Lexical Search (Top 30, BM25Okapi)
+        Active Metadata Filtering
+        (Deterministic filter constraints applied post-vector search)
                   │
                   ▼
-     Reciprocal Rank Fusion (RRF, k=60)
+        Pure Semantic Ranking
+        (Relevance Score = Vector Cosine Similarity)
                   │
                   ▼
-       Active Metadata Filtering
-                  │
-                  ▼
-         Multi-Signal Reranker
-                  │
-                  ▼
-  Ranked Recommendations + Auditable Signal Breakdown
+   Ranked Recommendations + Auditable Signal Breakdown
 ```
-*Exact standard code lookup is a supporting accelerator and **cannot bypass active metadata filters**.*
+*Exact standard code lookup is a deterministic supporting fast path and **strictly respects active metadata filters**.*
 
-### 3. Multi-Signal Reranker & Explainable Scoring
-* Weights:
-  * Semantic Vector Similarity: **0.40**
-  * BM25 Lexical Score: **0.35**
-  * Exact Identifier / Token Match: **0.15**
-  * Category / Domain Match: **0.05**
-  * Current Status Support: **0.05**
-* Every individual signal is clamped to $[0.0, 1.0]$.
-* Final `relevance_score` is strictly bounded within $[0.0, 1.0]$:
-  $$\text{Relevance Score} \in [0.0, 1.0]$$
-* Each result includes an auditable explanation string with individual signal weights and contributions.
+### 3. Pure Semantic Scoring & Explainability
+* **Relevance Score**: Strictly equals the cosine similarity between the query embedding and the standard embedding vector $[0.0, 1.0]$.
+* **Signals**:
+  * `semantic_similarity`: Raw cosine similarity score.
+  * `status_support`: Indicator of current standard status.
+  * `bm25_score`: Fixed to 0.0 (no lexical search invocation).
+* Each result includes an auditable explanation string documenting the dense vector similarity and embedding model.
 
 ---
 

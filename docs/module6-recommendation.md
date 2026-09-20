@@ -6,7 +6,7 @@ Module 6 implements the **AI-Powered Recommendation Engine** for Problem Stateme
 
 Building directly upon:
 - **Module 4**: Knowledge Graph & Relationship Engine (direct 1-hop traversal, supersession lineage, compliance connectors).
-- **Module 5**: Semantic & Hybrid Retrieval Engine (BM25 lexical search, 384-dimensional vector retrieval, Reciprocal Rank Fusion, multi-signal reranking).
+- **Module 5**: Semantic Retrieval Engine (384-dimensional dense vector embeddings, cosine similarity, deterministic metadata filtering).
 
 Module 6 delivers:
 1. **Primary Standard Selection**: Algorithmic selection of governing standards for procurement specifications.
@@ -26,7 +26,7 @@ Module 6 delivers:
 | **3** | **Confidence is Decision-Support Metric** | `confidence_score` is bound between 0.0 and 1.0 and accompanied by a mandatory disclaimer: *"Confidence score is an internal decision-support metric, not a probability, legal certainty, or claimed correctness percentage."* |
 | **4** | **Supersession Promotion via Graph Only** | Supersession promotion (e.g. promoting IS 12615 when IS 325 is queried) occurs **only** when `SupersessionChainService` finds an explicit edge in the Module 4 graph. Successors are never inferred from title similarity alone. Verified in `test_supersession_promotion_explicit_module4_graph_only`. |
 | **5** | **Strict Grounding of Compliance Conclusions** | Compliance evidence is gathered strictly via `ComplianceConnectorService` from `certification_records` and `qco_records`. Distinguishes "evidence found" from "legally mandatory" unless the supplied data explicitly supports the mandatory conclusion. |
-| **6** | **No Hard-Coded Domain Facts** | Standards are discovered dynamically via hybrid BM25 + vector search and graph edges. Benchmark expectations reflect traceable dataset records. |
+| **6** | **No Hard-Coded Domain Facts** | Standards are discovered dynamically via semantic vector search and graph edges. Benchmark expectations reflect traceable dataset records. |
 | **7** | **Complete Provenance Preserved** | Every recommendation candidate and allied standard carries an `EvidenceRecord` detailing `source_type`, `standard_number`, `source_dataset`, and `record_identifier`. |
 | **8** | **Ambiguity Candidate Spectrum** | Genuinely underspecified queries (e.g. "cables", "pipes", "cement", "What testing is required?") return `AMBIGUOUS_QUERY`, candidate spectrum with `role = CONDITIONAL`, zero single primary declared, and a `ClarificationPrompt` with missing technical discriminators. |
 | **9** | **Out-of-Scope Zero-Hallucination Discipline** | Non-domain queries (e.g. "What is the weather in Delhi today?") return `is_out_of_scope = True`, 0 primary standards, 0 allied standards, and 0 fabricated evidence records. |

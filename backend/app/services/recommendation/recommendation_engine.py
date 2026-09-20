@@ -2,7 +2,7 @@
 Recommendation Engine Facade for Module 6.
 Orchestrates:
 - Query analysis & Intent classification
-- Hybrid retrieval (BM25 + Vector + RRF)
+- Semantic vector retrieval (Sentence Transformers + Dense Cosine Similarity)
 - Role classification (PRIMARY as internal recommendation role)
 - Supersession promotion strictly via Module 4 graph edges
 - Knowledge Graph allied standard discovery (TESTING, SAFETY, etc.)
@@ -15,7 +15,7 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.orm import Session
 
 from backend.app.models.standard import Standard
-from backend.app.services.retrieval.hybrid_retriever import HybridRetrievalEngine, RetrievalFilter
+from backend.app.services.retrieval.semantic_retriever import SemanticRetrievalEngine, RetrievalFilter
 from backend.app.services.recommendation.schemas import (
     StandardRole,
     ConfidenceLevel,
@@ -36,9 +36,9 @@ from backend.app.services.recommendation.explainer import Explainer
 class RecommendationEngine:
     """Core recommendation orchestrator for PS 26108."""
 
-    def __init__(self, session: Session, retrieval_engine: Optional[HybridRetrievalEngine] = None):
+    def __init__(self, session: Session, retrieval_engine: Optional[SemanticRetrievalEngine] = None):
         self.session = session
-        self.retrieval_engine = retrieval_engine or HybridRetrievalEngine(session)
+        self.retrieval_engine = retrieval_engine or SemanticRetrievalEngine(session)
         self.query_analyzer = QueryAnalyzer()
         self.graph_enricher = GraphEnricher(session)
         self.confidence_scorer = ConfidenceScorer()
@@ -117,8 +117,8 @@ class RecommendationEngine:
                     confidence_score=round(r.relevance_score * 0.45, 3),
                     confidence_level=ConfidenceLevel.LOW,
                     score_breakdown=ExplainableScoreBreakdown(
-                        semantic_similarity=r.signals.get("semantic_similarity", 0.0),
-                        bm25_score=r.signals.get("bm25_score", 0.0),
+                        semantic_similarity=r.signals.get("semantic_similarity", r.relevance_score),
+                        bm25_score=0.0,
                         id_token_match=r.signals.get("id_match", 0.0),
                         category_match=r.signals.get("category_match", 0.0),
                         status_support=r.signals.get("status_support", 0.0),
@@ -221,8 +221,8 @@ class RecommendationEngine:
                     confidence_score=0.60,
                     confidence_level=ConfidenceLevel.MEDIUM,
                     score_breakdown=ExplainableScoreBreakdown(
-                        semantic_similarity=top_rec.signals.get("semantic_similarity", 0.0),
-                        bm25_score=top_rec.signals.get("bm25_score", 0.0),
+                        semantic_similarity=top_rec.signals.get("semantic_similarity", top_rec.relevance_score),
+                        bm25_score=0.0,
                         id_token_match=top_rec.signals.get("id_match", 0.0),
                         category_match=top_rec.signals.get("category_match", 0.0),
                         status_support=0.3,
@@ -252,7 +252,7 @@ class RecommendationEngine:
         confidence = self.confidence_scorer.compute_confidence(
             top_relevance=top_rel,
             runner_up_relevance=runner_up_rel,
-            retriever_agreement=True if top_rec.signals.get("semantic_similarity", 0) > 0.4 and top_rec.signals.get("bm25_score", 0) > 0.3 else False,
+            retriever_agreement=False,
             is_exact_lookup=is_exact,
             is_ambiguous=False,
             is_out_of_scope=False,
@@ -271,8 +271,8 @@ class RecommendationEngine:
             confidence_score=confidence,
             confidence_level=conf_level,
             score_breakdown=ExplainableScoreBreakdown(
-                semantic_similarity=top_rec.signals.get("semantic_similarity", 0.0),
-                bm25_score=top_rec.signals.get("bm25_score", 0.0),
+                semantic_similarity=top_rec.signals.get("semantic_similarity", top_rel),
+                bm25_score=0.0,
                 id_token_match=top_rec.signals.get("id_match", 0.0),
                 category_match=top_rec.signals.get("category_match", 0.0),
                 status_support=top_rec.signals.get("status_support", 1.0),
@@ -312,8 +312,8 @@ class RecommendationEngine:
                 confidence_score=round(r.relevance_score * 0.75, 3),
                 confidence_level=self.confidence_scorer.get_confidence_level(r.relevance_score * 0.75),
                 score_breakdown=ExplainableScoreBreakdown(
-                    semantic_similarity=r.signals.get("semantic_similarity", 0.0),
-                    bm25_score=r.signals.get("bm25_score", 0.0),
+                    semantic_similarity=r.signals.get("semantic_similarity", r.relevance_score),
+                    bm25_score=0.0,
                     id_token_match=r.signals.get("id_match", 0.0),
                     category_match=r.signals.get("category_match", 0.0),
                     status_support=r.signals.get("status_support", 1.0),

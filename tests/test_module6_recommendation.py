@@ -219,8 +219,8 @@ def test_relevance_score_and_breakdown_transparency(recommendation_engine):
 
     assert 0.0 <= top.relevance_score <= 1.0
     sb = top.score_breakdown
-    assert sb.semantic_similarity >= 0.0
-    assert sb.bm25_score >= 0.0
+    assert sb.semantic_similarity > 0.0
+    assert sb.bm25_score == 0.0  # Lexical scoring eliminated in semantic-only architecture
     assert sb.provenance_quality == 1.0
     assert len(sb.explanation) > 0
 

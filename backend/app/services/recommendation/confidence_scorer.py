@@ -39,15 +39,15 @@ class ConfidenceScorer:
             # Direct IS standard lookup fast path
             return min(0.95, round(top_relevance, 3))
 
-        # Base confidence from top candidate relevance
-        conf = top_relevance * 0.70
+        # Base confidence from top candidate relevance (calibrated for 384d semantic vector similarity)
+        conf = top_relevance * 0.95
 
         # Margin bonus: distinct gap over runner-up indicates clear separation
         if runner_up_relevance is not None:
             margin = max(0.0, top_relevance - runner_up_relevance)
-            conf += min(0.15, margin * 0.5)
+            conf += min(0.15, margin * 1.0)
 
-        # Agreement bonus: vector + lexical both retrieved top candidate
+        # Agreement bonus: maintained for interface consistency (0.0 in semantic-only architecture)
         if retriever_agreement:
             conf += 0.15
 

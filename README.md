@@ -24,7 +24,7 @@ All standard records, relationships, and compliance rules preserve source file a
 
 - **Backend**: FastAPI (Python 3.13), SQLAlchemy 2.0, Pydantic v2, SQLite (`sih_bis.db`) / PostgreSQL (optional)
 - **Embedding Model**: Pretrained Sentence Transformers embedding model (`paraphrase-multilingual-MiniLM-L12-v2`)
-- **Retrieval Engine**: Hybrid Retrieval: Semantic Vector Search + BM25 Lexical Search + Metadata Filtering + RRF + Reranking
+- **Retrieval Engine**: Semantic Retrieval using Pretrained Sentence Transformers (`paraphrase-multilingual-MiniLM-L12-v2`) and Dense Vector Similarity Search
 - **Frontend**: Next.js 14 (App Router), React 18, TypeScript, CSS Variables Design System
 - **Mounted Workspaces (10)**:
   1. **Requirement Recommendation**: Semantic requirement matching and primary/allied identification

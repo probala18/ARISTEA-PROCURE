@@ -1,24 +1,21 @@
 """
-Module 5 Test Suite — Semantic & Hybrid Retrieval Engine.
+Module 5 Test Suite — Semantic Vector Retrieval Engine (PS 26108).
 Covers:
 1. Embedding Provider:
    - 384-dimensional vector output & L2 unit normalization
    - Pretrained vs deterministic fallback distinction
    - Standard embedding text construction
-2. Lexical Retrieval (BM25Okapi):
-   - Keyword search across titles, scopes, categories, keywords
-   - Standard number token matching
-3. Vector Retrieval:
-   - Cosine similarity ranking in 384-dim space
-   - Semantic similarity on natural language queries
-4. Hybrid Retrieval & Reciprocal Rank Fusion (RRF):
-   - Fast-path exact match supporting check
+2. Semantic Vector Retrieval:
+   - Cosine similarity ranking in 384-dim dense space
+   - Semantic understanding on natural language procurement queries
+   - Alternative wording with similar meaning retrieves conceptually relevant standards
+3. Deterministic Exact Standard Lookup:
+   - Fast-path check for exact standard identifier
    - Fast-path MUST strictly respect active metadata filters
-   - Candidate merge via RRF
-   - Metadata filtering (status, category, mandatory cert, QCO)
-5. Multi-Signal Reranker:
-   - Transparent relevance score calculation (0.0 to 1.0)
-   - Explainable breakdown of signals
+4. Metadata Filtering:
+   - Deterministic status and category filtering without lexical weighting
+5. Semantic-Only Architecture Discipline:
+   - Absence of BM25, RRF, or lexical scoring in recommendation signals
 6. Benchmark Query Retrieval:
    - Evaluation on representative queries from query_dataset.json
 """
@@ -38,14 +35,11 @@ from backend.app.services.retrieval import (
     SentenceTransformerEmbeddingProvider,
     EmbeddingTextBuilder,
     get_embedding_provider,
-    BM25Index,
     VectorRetriever,
-    MultiSignalReranker,
-    RerankingWeights,
-    ScoredRecommendation,
-    HybridRetrievalEngine,
+    SemanticRetrievalEngine,
     RetrievalFilter,
-    HybridRetrievalResponse,
+    SemanticRetrievalResponse,
+    ScoredRecommendation,
 )
 
 
@@ -59,8 +53,8 @@ def db_session():
 
 
 @pytest.fixture(scope="module")
-def hybrid_engine(db_session):
-    return HybridRetrievalEngine(db_session)
+def semantic_engine(db_session):
+    return SemanticRetrievalEngine(db_session)
 
 
 # ============================================================
@@ -107,35 +101,7 @@ def test_embedding_text_builder(db_session):
 
 
 # ============================================================
-# 2. LEXICAL RETRIEVAL (BM25) TESTS
-# ============================================================
-
-def test_bm25_keyword_retrieval(db_session):
-    """BM25 successfully retrieves standards for domain product keywords."""
-    stds = db_session.query(Standard).all()
-    bm25 = BM25Index()
-    bm25.build_index(stds)
-
-    results = bm25.search("slotted countersunk head screws", top_k=5)
-    assert len(results) > 0
-    top_hit = results[0]
-    assert "screw" in top_hit["title"].lower() or "1364" in top_hit["standard_id"] or "1363" in top_hit["standard_id"]
-
-
-def test_bm25_exact_is_token_matching(db_session):
-    """BM25 matches specific standard number tokens."""
-    stds = db_session.query(Standard).all()
-    bm25 = BM25Index()
-    bm25.build_index(stds)
-
-    results = bm25.search("IS 1293", top_k=5)
-    assert len(results) > 0
-    matched_ids = [r["standard_id"] for r in results]
-    assert any("IS 1293" in sid for sid in matched_ids)
-
-
-# ============================================================
-# 3. VECTOR SEMANTIC RETRIEVAL TESTS
+# 2. SEMANTIC VECTOR RETRIEVAL TESTS
 # ============================================================
 
 def test_vector_semantic_search(db_session):
@@ -149,20 +115,65 @@ def test_vector_semantic_search(db_session):
     assert results[0]["vector_similarity"] > 0.0
 
 
+def test_semantic_retrieval_alternative_wording(semantic_engine):
+    """
+    Core Semantic Property:
+    Semantically equivalent natural language wording retrieves the relevant standard
+    even when the exact keywords differ from the standard title.
+    """
+    resp = semantic_engine.retrieve("copper conductors for domestic electricity distribution", top_k=5)
+    assert len(resp.recommendations) > 0
+    top_ids = [r.standard_id for r in resp.recommendations]
+    assert any("694" in sid or "1554" in sid or "8130" in sid for sid in top_ids)
+    assert resp.recommendations[0].relevance_score > 0.0
+
+
+def test_semantic_retrieval_pure_vector_ranking(semantic_engine):
+    """
+    Verifies that relevance score strictly equals vector cosine similarity.
+    No BM25, RRF, or lexical boost is applied.
+    """
+    resp = semantic_engine.retrieve("PVC insulated cables for power transmission", top_k=5)
+    assert len(resp.recommendations) > 0
+    for r in resp.recommendations:
+        assert 0.0 <= r.relevance_score <= 1.0
+        # Signals must reflect pure semantic similarity
+        assert "semantic_similarity" in r.signals
+        assert "bm25_score" not in r.signals
+        assert "rrf_score" not in r.signals
+        assert r.signals["semantic_similarity"] == r.relevance_score
+
+
+def test_semantic_retrieval_does_not_invoke_bm25_or_rrf(semantic_engine):
+    """
+    Architectural Discipline:
+    Natural-language recommendation flow must no longer call BM25 or RRF for relevance ranking.
+    """
+    resp = semantic_engine.retrieve("energy efficient three phase induction motors", top_k=5)
+    assert len(resp.recommendations) > 0
+    top = resp.recommendations[0]
+    assert "12615" in top.standard_id or "motor" in top.title.lower()
+    # Ensure explanation documents dense vector similarity, not hybrid or BM25
+    assert "semantic" in top.explanation.lower() or "dense" in top.explanation.lower()
+    assert "bm25" not in top.explanation.lower()
+    assert "rrf" not in top.explanation.lower()
+
+
 # ============================================================
-# 4. HYBRID RETRIEVAL & FAST PATH RESPECTING FILTERS
+# 3. DETERMINISTIC EXACT LOOKUP TESTS
 # ============================================================
 
-def test_exact_lookup_fast_path(hybrid_engine):
-    """Exact standard number queries use fast path when no conflicting filters apply."""
-    resp = hybrid_engine.retrieve("IS 694:2010")
+def test_exact_lookup_deterministic_direct_path(semantic_engine):
+    """Exact standard number queries use deterministic direct lookup when no conflicting filters apply."""
+    resp = semantic_engine.retrieve("IS 694:2010")
     assert resp.is_exact_match_fast_path is True
     assert len(resp.recommendations) == 1
     assert resp.recommendations[0].standard_id == "IS 694:2010"
     assert resp.recommendations[0].relevance_score == 1.0
+    assert "exact" in resp.recommendations[0].explanation.lower()
 
 
-def test_exact_lookup_must_respect_active_filters(hybrid_engine):
+def test_exact_lookup_must_respect_active_filters(semantic_engine):
     """
     CRITICAL RULE:
     Exact lookup is a supporting fast path, NOT the primary recommendation mechanism.
@@ -171,7 +182,7 @@ def test_exact_lookup_must_respect_active_filters(hybrid_engine):
     """
     # IS 694 is Electrical/Cables, NOT Civil
     filter_civil = RetrievalFilter(category="Civil Engineering")
-    resp = hybrid_engine.retrieve("IS 694:2010", filters=filter_civil)
+    resp = semantic_engine.retrieve("IS 694:2010", filters=filter_civil)
 
     # Fast path must be bypassable when filters do not match
     if resp.recommendations:
@@ -180,76 +191,32 @@ def test_exact_lookup_must_respect_active_filters(hybrid_engine):
             assert "Civil" in r.category
 
 
-def test_hybrid_retrieval_reciprocal_rank_fusion(hybrid_engine):
-    """Natural language query blends vector and BM25 using RRF and reranker."""
-    resp = hybrid_engine.retrieve("PVC insulated cables for power transmission", top_k=5)
-    assert len(resp.recommendations) > 0
-    top = resp.recommendations[0]
-    assert top.relevance_score > 0.0
-    assert "semantic_similarity" in top.signals
-    assert "bm25_score" in top.signals
+# ============================================================
+# 4. METADATA FILTERING TESTS
+# ============================================================
 
-
-def test_hybrid_retrieval_status_filtering(hybrid_engine):
-    """Retrieval filter excludes non-matching statuses."""
+def test_semantic_retrieval_status_filtering(semantic_engine):
+    """Retrieval filter excludes non-matching statuses deterministically."""
     filters = RetrievalFilter(status="CURRENT")
-    resp = hybrid_engine.retrieve("cement", filters=filters, top_k=10)
+    resp = semantic_engine.retrieve("cement", filters=filters, top_k=10)
     for r in resp.recommendations:
         assert r.status == "CURRENT"
 
 
 # ============================================================
-# 5. MULTI-SIGNAL RERANKER TESTS
+# 5. BENCHMARK QUERY EVALUATION TESTS
 # ============================================================
 
-def test_multi_signal_reranker_scoring():
-    """Reranker calculates transparent, bounded relevance scores (0.0 to 1.0)."""
-    reranker = MultiSignalReranker()
-    candidates = [
-        {
-            "id": 1,
-            "standard_id": "IS 694:2010",
-            "is_number": "IS 694",
-            "title": "PVC Insulated Cables",
-            "category": "Electrotechnical",
-            "status": "CURRENT",
-            "vector_similarity": 0.85,
-            "bm25_score": 0.90,
-        },
-        {
-            "id": 2,
-            "standard_id": "IS 269:2015",
-            "is_number": "IS 269",
-            "title": "Ordinary Portland Cement",
-            "category": "Civil",
-            "status": "CURRENT",
-            "vector_similarity": 0.20,
-            "bm25_score": 0.10,
-        }
-    ]
-
-    ranked = reranker.rerank("pvc insulated cables", candidates, top_k=2)
-    assert len(ranked) == 2
-    assert ranked[0].standard_id == "IS 694:2010"
-    assert ranked[0].relevance_score > ranked[1].relevance_score
-    assert 0.0 <= ranked[0].relevance_score <= 1.0
-    assert "Semantic:" in ranked[0].explanation
-
-
-# ============================================================
-# 6. BENCHMARK QUERY EVALUATION TESTS
-# ============================================================
-
-def test_benchmark_queries_accuracy(hybrid_engine):
-    """Evaluates core benchmark queries from query_dataset.json."""
+def test_benchmark_queries_semantic_accuracy(semantic_engine):
+    """Evaluates core benchmark queries from query_dataset.json using pure semantic retrieval."""
     # Query 1: Direct standard lookup
-    r1 = hybrid_engine.retrieve("What is IS 694:2010?", top_k=3)
+    r1 = semantic_engine.retrieve("What is IS 694:2010?", top_k=3)
     assert any("694" in r.standard_id for r in r1.recommendations)
 
     # Query 2: Product to standard lookup
-    r2 = hybrid_engine.retrieve("Which standard applies to PVC insulated electrical cables?", top_k=3)
+    r2 = semantic_engine.retrieve("Which standard applies to PVC insulated electrical cables?", top_k=3)
     assert any("694" in r.standard_id or "1554" in r.standard_id for r in r2.recommendations)
 
     # Query 11: Alternative wording
-    r11 = hybrid_engine.retrieve("flexible wires for domestic home wiring", top_k=3)
+    r11 = semantic_engine.retrieve("flexible wires for domestic home wiring", top_k=3)
     assert any("694" in r.standard_id or "732" in r.standard_id for r in r11.recommendations)
