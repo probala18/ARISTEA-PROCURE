@@ -30,6 +30,7 @@ ENV/
 # Database files
 *.db
 *.sqlite3
+!sih_bis.db
 
 # Environment variables
 .env
