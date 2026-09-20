@@ -25,24 +25,24 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
       case 'CRITICAL':
         return <span className="badge badge-red">CRITICAL GAP</span>;
       case 'WARNING':
-        return <span className="badge badge-orange">WARNING</span>;
+        return <span className="badge badge-amber">WARNING</span>;
       case 'ADVISORY':
       case 'INFO':
       default:
-        return <span className="badge badge-blue">ADVISORY</span>;
+        return <span className="badge badge-cyan">ADVISORY</span>;
     }
   };
 
-  const getSeverityBorder = () => {
+  const getSeverityBorderColor = () => {
     switch (severityUpper) {
       case 'CRITICAL':
-        return 'rgba(220, 38, 38, 0.4)';
+        return 'var(--status-danger)';
       case 'WARNING':
-        return 'rgba(217, 119, 6, 0.4)';
+        return 'var(--status-warning)';
       case 'ADVISORY':
       case 'INFO':
       default:
-        return 'rgba(2, 132, 199, 0.35)';
+        return 'var(--accent-primary)';
     }
   };
 
@@ -57,21 +57,23 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
       ref={cardRef}
       className="glass-panel"
       style={{
-        padding: '18px 20px',
+        padding: '20px 22px',
         marginBottom: '14px',
         borderRadius: 'var(--radius-md)',
-        borderLeft: `4px solid ${severityUpper === 'CRITICAL' ? '#dc2626' : severityUpper === 'WARNING' ? '#d97706' : '#0284c7'}`,
-        borderColor: getSeverityBorder(),
+        background: '#ffffff',
+        border: '1px solid var(--border-subtle)',
+        borderLeft: `4px solid ${getSeverityBorderColor()}`,
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {getSeverityBadge()}
           <span
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              fontWeight: 600,
+              fontSize: '0.88rem',
+              fontWeight: 700,
               color: 'var(--text-primary)',
             }}
           >
@@ -79,7 +81,7 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
           </span>
         </div>
         {clauseLabel && (
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
             Clause {clauseLabel}
           </span>
         )}
@@ -90,27 +92,28 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
         <div
           style={{
             display: 'flex',
-            gap: '16px',
-            margin: '10px 0',
-            padding: '10px 14px',
-            background: 'rgba(241, 245, 249, 0.95)',
+            gap: '20px',
+            margin: '12px 0',
+            padding: '12px 16px',
+            background: '#f8fafc',
             borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-subtle)',
+            border: '1px solid #e2e8f0',
             fontSize: '0.85rem',
+            flexWrap: 'wrap',
           }}
         >
           {citedStd && (
             <div>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', display: 'block' }}>CITED IN TENDER:</span>
-              <span style={{ color: 'var(--status-danger)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', display: 'block', fontWeight: 600, textTransform: 'uppercase' }}>CITED IN TENDER:</span>
+              <span style={{ color: 'var(--status-danger)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
                 {citedStd}
               </span>
             </div>
           )}
           {expectedStd && (
             <div>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', display: 'block' }}>EXPECTED / CURRENT:</span>
-              <span style={{ color: 'var(--status-success)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', display: 'block', fontWeight: 600, textTransform: 'uppercase' }}>EXPECTED / CURRENT:</span>
+              <span style={{ color: 'var(--status-success)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
                 {expectedStd}
               </span>
             </div>
@@ -122,12 +125,13 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
       {gap.clause_text && (
         <div
           style={{
-            fontSize: '0.86rem',
+            fontSize: '0.875rem',
             color: 'var(--text-secondary)',
             fontStyle: 'italic',
-            borderLeft: '2px solid var(--border-subtle)',
-            paddingLeft: '10px',
-            margin: '10px 0',
+            borderLeft: '2px solid #cbd5e1',
+            paddingLeft: '12px',
+            margin: '12px 0',
+            lineHeight: 1.5,
           }}
         >
           "{gap.clause_text}"
@@ -137,16 +141,17 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
       {/* Remediation Note */}
       <div
         style={{
-          marginTop: '10px',
-          padding: '8px 12px',
-          background: 'rgba(13, 148, 136, 0.08)',
+          marginTop: '12px',
+          padding: '10px 14px',
+          background: 'var(--accent-primary-subtle)',
           borderRadius: 'var(--radius-sm)',
-          border: '1px solid rgba(13, 148, 136, 0.22)',
-          fontSize: '0.83rem',
+          border: '1px solid rgba(79, 70, 229, 0.2)',
+          fontSize: '0.84rem',
           color: 'var(--text-primary)',
+          lineHeight: 1.5,
         }}
       >
-        <strong style={{ color: 'var(--accent-teal-dark)' }}>Grounding Advice: </strong>
+        <strong style={{ color: 'var(--accent-primary-dark)' }}>Grounding Advice: </strong>
         {adviceNotes}
       </div>
     </div>

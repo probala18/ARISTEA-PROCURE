@@ -27,6 +27,9 @@ from backend.app.services.tender_engine import (
 )
 from backend.app.services.tender_audit import TenderAuditService, TenderAuditReport
 
+import logging
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/tenders", tags=["Tender Document API"])
 tenders_router = router
 
@@ -93,8 +96,9 @@ async def upload_tender_document(
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception:
-        raise HTTPException(status_code=500, detail="Tender document processing failed.")
+    except Exception as exc:
+        logger.exception("Tender processing failed: %s", exc)
+        raise HTTPException(status_code=500, detail=f"Tender document processing failed: {exc}")
 
 
 @router.get("/{id}", response_model=TenderDetailResponse)

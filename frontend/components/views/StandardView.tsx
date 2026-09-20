@@ -70,12 +70,10 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
       else setGraph(null);
 
       if (detailRes.status === 'rejected') {
-        onToast(`Standard '${stdId}' not found or error fetching details.`, 'error');
-      } else {
-        onToast(`Loaded standard intelligence for ${stdId}`, 'success');
+        onToast(`Could not load full record for "${stdId}". Showing available graph data.`, 'info');
       }
     } catch (err: any) {
-      onToast(err.message || 'Error fetching standard data.', 'error');
+      onToast(err.message || 'Failed to query standards repository.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -91,147 +89,205 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setSelectedStandard(standardInput);
-    fetchAllData(standardInput);
+    if (!standardInput.trim()) return;
+    setSelectedStandard(standardInput.trim());
+    fetchAllData(standardInput.trim());
   };
 
   const handleSelectQuick = (stdId?: string) => {
     if (!stdId || typeof stdId !== 'string' || !stdId.trim()) return;
-    setStandardInput(stdId);
-    setSelectedStandard(stdId);
-    fetchAllData(stdId);
+    const clean = stdId.trim();
+    setStandardInput(clean);
+    setSelectedStandard(clean);
+    fetchAllData(clean);
   };
 
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
       <Panel
-        title="Indian Standards Explorer & Knowledge Graph"
-        subtitle="Lookup canonical BIS records, supersession lineage, QCO regulatory compliance, and multi-hop relationships."
-        badge="Module 7 & 8"
+        title="Standards Intelligence Explorer"
+        subtitle="Canonical Bureau of Indian Standards lifecycle tracing, multi-version lineage, compliance mandates, and graph edges."
+        badge="Module 4-6"
       >
-        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
-          <input
-            type="text"
-            value={standardInput ?? ''}
-            onChange={(e) => setStandardInput(e.target.value ?? '')}
-            placeholder="Enter standard ID (e.g. IS 12615:2018, IS 694)..."
-            style={{ flex: 1 }}
-            required
-          />
-          <button type="submit" disabled={isLoading} className="btn-primary" style={{ minWidth: '140px' }}>
-            {isLoading ? 'Loading...' : 'Explore ↗'}
-          </button>
+        {/* Search Input & Quick Select */}
+        <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: '260px' }}>
+              <input
+                type="text"
+                value={standardInput}
+                onChange={(e) => setStandardInput(e.target.value)}
+                placeholder="Enter IS identifier (e.g. IS 12615:2018, IS 694, IS 10500)..."
+                required
+                style={{ fontSize: '0.94rem' }}
+              />
+            </div>
+            <button type="submit" disabled={isLoading} className="btn-primary" style={{ padding: '11px 24px' }}>
+              {isLoading ? 'Exploring...' : '🏛️ Query Standard'}
+            </button>
+          </div>
         </form>
 
-        {/* Quick pills */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Quick Standards:</span>
-          {QUICK_STANDARDS.map((std) => (
-            <button
-              key={std}
-              type="button"
-              onClick={() => handleSelectQuick(std)}
-              style={{
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-full)',
-                background: selectedStandard === std ? 'rgba(13, 148, 136, 0.12)' : 'rgba(15, 23, 42, 0.04)',
-                border: selectedStandard === std ? '1px solid var(--accent-teal)' : '1px solid var(--border-subtle)',
-                color: selectedStandard === std ? 'var(--accent-teal-dark)' : 'var(--text-secondary)',
-                fontWeight: selectedStandard === std ? 600 : 500,
-                fontSize: '0.78rem',
-                fontFamily: 'var(--font-mono)',
-                cursor: 'pointer',
-              }}
-            >
-              {std}
-            </button>
-          ))}
+        {/* Quick Pick Chips */}
+        <div>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '8px', fontWeight: 600 }}>
+            Common Indian Standards:
+          </span>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {QUICK_STANDARDS.map((std) => (
+              <button
+                key={std}
+                type="button"
+                onClick={() => handleSelectQuick(std)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  background: selectedStandard === std ? 'rgba(79, 70, 229, 0.08)' : '#f8fafc',
+                  border: `1px solid ${selectedStandard === std ? 'var(--accent-primary)' : 'var(--border-subtle)'}`,
+                  color: selectedStandard === std ? 'var(--accent-primary-dark)' : 'var(--text-secondary)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {std}
+              </button>
+            ))}
+          </div>
         </div>
       </Panel>
 
+      {/* Loading Skeleton */}
       {isLoading && (
-        <Panel title={`Retrieving intelligence for ${selectedStandard}...`}>
-          <LoadingSkeleton height="80px" />
-          <LoadingSkeleton height="120px" />
-          <LoadingSkeleton height="100px" />
-        </Panel>
+        <div>
+          <Panel title="Querying Knowledge Graph...">
+            <LoadingSkeleton height="40px" width="50%" />
+            <LoadingSkeleton height="20px" width="90%" />
+            <LoadingSkeleton height="20px" width="70%" />
+          </Panel>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+            <Panel><LoadingSkeleton height="120px" /></Panel>
+            <Panel><LoadingSkeleton height="120px" /></Panel>
+          </div>
+        </div>
       )}
 
-      {!isLoading && detail && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-          {/* Header Card */}
+      {/* Loaded Content */}
+      {!isLoading && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}>
+          {/* Main Standard Header Card */}
           <div
             className="glass-panel"
             style={{
-              padding: '24px',
-              marginBottom: '20px',
-              borderLeft: '4px solid var(--accent-teal)',
+              padding: '24px 26px',
+              marginBottom: '22px',
+              background: '#ffffff',
+              border: '1px solid var(--border-subtle)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                  <h2
                     style={{
                       fontFamily: 'var(--font-mono)',
                       fontSize: '1.4rem',
                       fontWeight: 800,
                       color: 'var(--text-primary)',
+                      letterSpacing: '-0.01em',
                     }}
                   >
-                    {detail.standard_id}
-                  </span>
-                  <span
-                    className={`badge ${
-                      detail.status?.toLowerCase().includes('active') || detail.status?.toLowerCase().includes('valid')
-                        ? 'badge-teal'
-                        : 'badge-orange'
-                    }`}
-                  >
-                    {detail.status || 'ACTIVE'}
-                  </span>
+                    {detail?.standard_id || selectedStandard}
+                  </h2>
+                  {detail?.status && (
+                    <span
+                      className={`badge ${
+                        detail.status.toUpperCase().includes('ACTIVE') || detail.status.toUpperCase().includes('VALID')
+                          ? 'badge-green'
+                          : 'badge-amber'
+                      }`}
+                    >
+                      {detail.status}
+                    </span>
+                  )}
+                  {detail?.is_mandatory && <span className="badge badge-red">QCO MANDATORY</span>}
+                  {detail?.technical_department && (
+                    <span className="badge badge-indigo">{detail.technical_department}</span>
+                  )}
                 </div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-primary)', marginTop: '8px' }}>
-                  {detail.title}
-                </h2>
+
+                <h3
+                  style={{
+                    fontSize: '1.05rem',
+                    fontWeight: 600,
+                    color: 'var(--text-primary)',
+                    marginTop: '8px',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {detail?.title || 'Authoritative Indian Standard Specification'}
+                </h3>
               </div>
 
-              <div style={{ display: 'flex', gap: '16px', textAlign: 'right' }}>
-                {detail.publication_year && (
-                  <div>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>YEAR</span>
-                    <span style={{ fontSize: '1.1rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
-                      {detail.publication_year}
-                    </span>
+              {/* Scope & Date Meta */}
+              <div style={{ textAlign: 'right', minWidth: '150px' }}>
+                {detail?.publication_year && (
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                    Published: <strong style={{ color: 'var(--text-secondary)' }}>{detail.publication_year}</strong>
                   </div>
                 )}
-                {detail.category && (
-                  <div>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>CATEGORY</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent-teal-dark)' }}>
-                      {detail.category}
-                    </span>
+                {detail?.ics_code && (
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    ICS Code: <strong style={{ color: 'var(--text-secondary)' }}>{detail.ics_code}</strong>
+                  </div>
+                )}
+                {detail?.page_count && (
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    Pages: <strong style={{ color: 'var(--text-secondary)' }}>{detail.page_count}</strong>
                   </div>
                 )}
               </div>
             </div>
+
+            {/* Scope / Description */}
+            {detail?.scope && (
+              <div
+                style={{
+                  marginTop: '16px',
+                  padding: '14px 16px',
+                  background: '#f8fafc',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid #e2e8f0',
+                  fontSize: '0.88rem',
+                  color: 'var(--text-secondary)',
+                  lineHeight: 1.6,
+                }}
+              >
+                <strong style={{ color: 'var(--text-primary)', display: 'block', marginBottom: '4px' }}>
+                  Authoritative Scope:
+                </strong>
+                {detail.scope}
+              </div>
+            )}
           </div>
 
-          {/* Grid: Version & Compliance */}
+          {/* Bento-grid: Version Intelligence & Compliance */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
               gap: '20px',
-              marginBottom: '20px',
+              marginBottom: '22px',
             }}
           >
             {/* Version Intelligence */}
-            <div className="glass-panel" style={{ padding: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                <span style={{ fontSize: '1.1rem' }}>🔄</span>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                  Version & Supersession Intelligence
+            <div className="glass-panel" style={{ padding: '22px', background: '#ffffff' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '1.2rem' }}>🔄</span>
+                <h4 style={{ fontSize: '1.02rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                  Version & Supersession Lineage
                 </h4>
               </div>
 
@@ -241,37 +297,38 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '10px',
-                      padding: '10px 14px',
-                      borderRadius: 'var(--radius-sm)',
-                      background: versions.is_current ? 'rgba(5, 150, 105, 0.08)' : 'rgba(217, 119, 6, 0.08)',
-                      border: `1px solid ${versions.is_current ? 'rgba(5, 150, 105, 0.25)' : 'rgba(217, 119, 6, 0.25)'}`,
+                      gap: '12px',
+                      padding: '12px 14px',
+                      borderRadius: 'var(--radius-md)',
+                      background: versions.is_current ? 'rgba(5, 150, 105, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+                      border: `1px solid ${versions.is_current ? 'rgba(5, 150, 105, 0.25)' : 'rgba(245, 158, 11, 0.25)'}`,
                       marginBottom: '14px',
                     }}
                   >
-                    <span style={{ fontSize: '1.2rem' }}>{versions.is_current ? '✅' : '⚠️'}</span>
+                    <span style={{ fontSize: '1.25rem' }}>{versions.is_current ? '✅' : '⚠️'}</span>
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--text-primary)' }}>
                         {versions.is_current ? 'Current & Valid Version' : 'Superseded / Outdated Version'}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        Status: {versions.current_status}
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                        Catalog Status: {versions.current_status}
                       </div>
                     </div>
                   </div>
 
                   {versions.successor_standard_id && (
-                    <div style={{ marginBottom: '12px', fontSize: '0.85rem' }}>
+                    <div style={{ marginBottom: '12px', fontSize: '0.86rem' }}>
                       <span style={{ color: 'var(--text-muted)' }}>Successor Standard: </span>
                       <button
                         onClick={() => handleSelectQuick(versions.successor_standard_id!)}
                         style={{
                           background: 'none',
                           border: 'none',
-                          color: 'var(--accent-teal)',
+                          color: 'var(--accent-primary)',
                           fontWeight: 700,
                           cursor: 'pointer',
                           fontFamily: 'var(--font-mono)',
+                          fontSize: '0.86rem',
                         }}
                       >
                         {versions.successor_standard_id} ↗
@@ -280,9 +337,9 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                   )}
 
                   {versions.predecessor_standard_id && (
-                    <div style={{ marginBottom: '12px', fontSize: '0.85rem' }}>
+                    <div style={{ marginBottom: '12px', fontSize: '0.86rem' }}>
                       <span style={{ color: 'var(--text-muted)' }}>Predecessor Standard: </span>
-                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', fontWeight: 600 }}>
                         {versions.predecessor_standard_id}
                       </span>
                     </div>
@@ -298,57 +355,57 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
             </div>
 
             {/* Compliance Intelligence */}
-            <div className="glass-panel" style={{ padding: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                <span style={{ fontSize: '1.1rem' }}>🛡️</span>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+            <div className="glass-panel" style={{ padding: '22px', background: '#ffffff' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '1.2rem' }}>🛡️</span>
+                <h4 style={{ fontSize: '1.02rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Regulatory Compliance & QCO Mandates
                 </h4>
               </div>
 
               {compliance ? (
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
                     <span
                       className={`badge ${
                         compliance.requirement_level === 'MANDATORY'
                           ? 'badge-red'
                           : compliance.requirement_level === 'CONDITIONAL'
-                          ? 'badge-orange'
-                          : 'badge-teal'
+                          ? 'badge-amber'
+                          : 'badge-indigo'
                       }`}
                     >
                       {compliance.requirement_level} COMPLIANCE
                     </span>
                     {compliance.governing_scheme && (
-                      <span className="badge badge-blue">{compliance.governing_scheme}</span>
+                      <span className="badge badge-cyan">{compliance.governing_scheme}</span>
                     )}
                   </div>
 
                   {compliance.qco_orders && compliance.qco_orders.length > 0 ? (
                     <div>
-                      <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                      <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '8px' }}>
                         Active Quality Control Orders (QCOs):
                       </div>
                       {compliance.qco_orders.map((qco, idx) => (
                         <div
                           key={idx}
                           style={{
-                            padding: '8px 12px',
-                            background: 'rgba(15, 23, 42, 0.04)',
+                            padding: '10px 14px',
+                            background: '#f8fafc',
                             borderRadius: 'var(--radius-sm)',
-                            border: '1px solid var(--border-subtle)',
+                            border: '1px solid #e2e8f0',
                             marginBottom: '6px',
-                            fontSize: '0.8rem',
+                            fontSize: '0.82rem',
                           }}
                         >
-                          <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{qco.order_number}</div>
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{qco.title}</div>
+                          <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{qco.order_number}</div>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', marginTop: '2px' }}>{qco.title}</div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
                       No mandatory QCO orders cataloged. Governed by voluntary BIS certification schemes.
                     </div>
                   )}
@@ -357,11 +414,11 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                     <div
                       style={{
                         marginTop: '12px',
-                        padding: '8px 12px',
+                        padding: '10px 14px',
                         borderRadius: 'var(--radius-sm)',
                         background: 'rgba(220, 38, 38, 0.08)',
                         border: '1px solid rgba(220, 38, 38, 0.25)',
-                        fontSize: '0.78rem',
+                        fontSize: '0.8rem',
                         color: 'var(--status-danger)',
                       }}
                     >
@@ -376,21 +433,21 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
           </div>
 
           {/* Relationships & Ontology Links */}
-          <div className="glass-panel" style={{ padding: '22px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+          <div className="glass-panel" style={{ padding: '24px', background: '#ffffff' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.1rem' }}>🕸️</span>
+                <span style={{ fontSize: '1.2rem' }}>🕸️</span>
                 <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Ontology Relationships ({relationships.length})
                 </h4>
               </div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                Direct edges & testing/safety linkages
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                Direct graph edges & testing/safety linkages
               </span>
             </div>
 
             {relationships.length > 0 ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
                 {relationships.map((rel, idx) => {
                   const targetIdentifier =
                     rel.target ||
@@ -408,10 +465,10 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                       className={isClickable ? 'glass-panel-interactive' : 'glass-panel'}
                       onClick={() => isClickable && handleSelectQuick(targetIdentifier)}
                       style={{
-                        padding: '12px 14px',
-                        borderRadius: 'var(--radius-sm)',
-                        background: 'rgba(241, 245, 249, 0.95)',
-                        border: '1px solid var(--border-subtle)',
+                        padding: '14px 16px',
+                        borderRadius: 'var(--radius-md)',
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
@@ -419,26 +476,26 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                       }}
                     >
                       <div>
-                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
-                          <span className="badge badge-blue" style={{ fontSize: '0.68rem' }}>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '6px' }}>
+                          <span className="badge badge-indigo" style={{ fontSize: '0.68rem' }}>
                             {rel.relationship_type}
                           </span>
                           {rel.is_unresolved && (
-                            <span className="badge badge-orange" style={{ fontSize: '0.65rem' }}>
+                            <span className="badge badge-amber" style={{ fontSize: '0.65rem' }}>
                               Unresolved
                             </span>
                           )}
                         </div>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.92rem', color: 'var(--text-primary)' }}>
                           {targetIdentifier || 'IS Standard'}
                         </div>
                         {rel.target_title && (
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                          <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '3px' }}>
                             {rel.target_title}
                           </div>
                         )}
                       </div>
-                      {isClickable && <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>↗</span>}
+                      {isClickable && <span style={{ fontSize: '0.85rem', color: 'var(--accent-primary)', fontWeight: 700 }}>↗</span>}
                     </div>
                   );
                 })}

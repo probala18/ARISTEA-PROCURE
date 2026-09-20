@@ -18,10 +18,10 @@ interface TabItem {
 }
 
 const TABS: TabItem[] = [
-  { key: 'recommend', label: 'Semantic Recommendation', icon: '🔍' },
-  { key: 'standard', label: 'Standards Explorer & Graph', icon: '📚' },
-  { key: 'tender', label: 'Tender Audit & Spec Gen', badge: 'Module 11-13', icon: '📑' },
-  { key: 'voice', label: 'Voice Query AI', badge: 'Module 10', icon: '🎙️' },
+  { key: 'recommend', label: 'Semantic Matcher', icon: '⚡' },
+  { key: 'standard', label: 'Standards Explorer', icon: '🏛️' },
+  { key: 'tender', label: 'Tender Auditor', badge: 'Audit', icon: '📋' },
+  { key: 'voice', label: 'Voice Assistant', badge: 'Speech AI', icon: '🎙️' },
 ];
 
 export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
@@ -31,15 +31,14 @@ export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: '28px 0',
+        margin: '18px 0 28px',
       }}
     >
       <div
         style={{
           display: 'flex',
           gap: '4px',
-          background: 'rgba(241, 245, 249, 0.9)',
-          backdropFilter: 'blur(12px)',
+          background: '#ffffff',
           padding: '6px',
           borderRadius: 'var(--radius-full)',
           border: '1px solid var(--border-subtle)',
@@ -59,13 +58,13 @@ export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '10px 20px',
+                padding: '9px 18px',
                 borderRadius: 'var(--radius-full)',
                 border: 'none',
                 background: 'transparent',
                 color: isActive ? '#ffffff' : 'var(--text-secondary)',
-                fontWeight: isActive ? 600 : 500,
-                fontSize: '0.9rem',
+                fontWeight: isActive ? 700 : 600,
+                fontSize: '0.88rem',
                 cursor: 'pointer',
                 transition: 'color 0.2s ease',
                 zIndex: 1,
@@ -80,8 +79,8 @@ export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
                     position: 'absolute',
                     inset: 0,
                     borderRadius: 'var(--radius-full)',
-                    background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
-                    boxShadow: '0 4px 12px rgba(13, 148, 136, 0.3)',
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)',
+                    boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
                     zIndex: -1,
                   }}
                 />
@@ -94,8 +93,9 @@ export const TabNav: React.FC<TabNavProps> = ({ activeTab, onChange }) => {
                     fontSize: '0.65rem',
                     padding: '2px 7px',
                     borderRadius: '999px',
-                    background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'rgba(15, 23, 42, 0.06)',
-                    color: isActive ? '#ffffff' : 'var(--text-muted)',
+                    background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'rgba(79, 70, 229, 0.08)',
+                    color: isActive ? '#ffffff' : 'var(--accent-primary)',
+                    fontWeight: 700,
                   }}
                 >
                   {tab.badge}

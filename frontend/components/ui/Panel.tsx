@@ -24,14 +24,18 @@ export const Panel: React.FC<PanelProps> = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.35, ease: 'easeOut' }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       className={`glass-panel ${className}`}
       style={{
-        padding: '24px',
+        padding: '28px',
         marginBottom: '24px',
+        background: '#ffffff',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 'var(--radius-lg)',
+        boxShadow: 'var(--shadow-card)',
         ...style,
       }}
     >
@@ -41,22 +45,24 @@ export const Panel: React.FC<PanelProps> = ({
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            marginBottom: '20px',
-            borderBottom: '1px solid var(--border-subtle)',
-            paddingBottom: '14px',
+            marginBottom: '22px',
+            borderBottom: '1px solid #f1f5f9',
+            paddingBottom: '16px',
+            gap: '16px',
+            flexWrap: 'wrap',
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
               {title && (
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                <h3 style={{ fontSize: '1.22rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.015em' }}>
                   {title}
                 </h3>
               )}
-              {badge && <span className="badge badge-teal">{badge}</span>}
+              {badge && <span className="badge badge-indigo">{badge}</span>}
             </div>
             {subtitle && (
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '4px', lineHeight: 1.5 }}>
                 {subtitle}
               </p>
             )}

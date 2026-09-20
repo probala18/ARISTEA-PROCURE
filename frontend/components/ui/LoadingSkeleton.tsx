@@ -21,7 +21,7 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
         height,
         width,
         borderRadius,
-        background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%)',
+        background: 'linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%)',
         backgroundSize: '200% 100%',
         animation: 'skeleton-shimmer 1.5s infinite linear',
         margin: '8px 0',

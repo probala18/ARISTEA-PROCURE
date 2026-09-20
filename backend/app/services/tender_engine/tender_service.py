@@ -39,6 +39,14 @@ class TenderEngineService:
 
     def __init__(self, db_session: Optional[Session] = None):
         self.db = db_session
+        if self.db:
+            try:
+                from backend.app.core.database import Base
+                import backend.app.models.tender
+                import backend.app.models.specification
+                Base.metadata.create_all(bind=self.db.get_bind())
+            except Exception as e:
+                logger.warning(f"Error ensuring tender tables exist: {e}")
         self.clause_detector = ClauseDetector()
         self.standard_extractor = StandardExtractor(db_session) if db_session else None
 
