@@ -1,0 +1,15 @@
+alembic
+fastapi
+numpy
+pandas
+pgvector
+psycopg2-binary
+pydantic-settings
+pypdf
+python-docx
+python-multipart
+scikit-learn
+sentence-transformers
+sqlalchemy
+torch
+uvicorn[standard]

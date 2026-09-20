@@ -10,6 +10,8 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Q
 from sqlalchemy.orm import Session
 
 from backend.app.core.database import get_db
+from backend.app.core.config import settings
+from backend.app.core.security import validate_upload
 from backend.app.services.speech import (
     SpeechService,
     TranscriptionResult,
@@ -38,10 +40,19 @@ async def transcribe_audio(
     Flags repetition_needed if confidence is low (<0.60) or audio is unclear.
     """
     audio_data = await file.read()
-    if not audio_data or len(audio_data) < 44:
+    try:
+        validate_upload(
+            file.filename or "audio.wav",
+            audio_data,
+            {"wav", "mp3", "pcm"},
+            settings.MAX_AUDIO_BYTES,
+            file.content_type,
+            {"audio/wav", "audio/x-wav", "audio/mpeg", "application/octet-stream"},
+        )
+    except ValueError:
         raise HTTPException(
-            status_code=400, 
-            detail="Uploaded audio file is empty or too small to be a valid audio stream."
+            status_code=400,
+            detail="Invalid audio upload."
         )
 
     try:
@@ -49,8 +60,8 @@ async def transcribe_audio(
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Speech transcription failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Speech transcription failed.")
 
 
 @router.post("/synthesize", response_model=SynthesisResult)
@@ -68,8 +79,8 @@ def synthesize_speech(
     try:
         result = service.synthesize(request.text, language=request.language)
         return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Speech synthesis failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Speech synthesis failed.")
 
 
 @router.post("/voice-query", response_model=VoiceQueryResponse)
@@ -88,10 +99,19 @@ async def voice_query(
     4. Synthesizes spoken audio (TTS failure will never block text recommendation).
     """
     audio_data = await file.read()
-    if not audio_data or len(audio_data) < 44:
+    try:
+        validate_upload(
+            file.filename or "audio.wav",
+            audio_data,
+            {"wav", "mp3", "pcm"},
+            settings.MAX_AUDIO_BYTES,
+            file.content_type,
+            {"audio/wav", "audio/x-wav", "audio/mpeg", "application/octet-stream"},
+        )
+    except ValueError:
         raise HTTPException(
             status_code=400, 
-            detail="Uploaded audio file is empty or too small to be a valid audio stream."
+            detail="Invalid audio upload."
         )
 
     try:
@@ -104,5 +124,5 @@ async def voice_query(
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Voice query execution failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Voice query execution failed.")

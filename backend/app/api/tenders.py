@@ -12,6 +12,8 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Q
 from sqlalchemy.orm import Session
 
 from backend.app.core.database import get_db
+from backend.app.core.config import settings
+from backend.app.core.security import validate_upload
 from backend.app.models.tender import TenderDocument, TenderSection, TenderRequirement, TenderStandardReference
 from backend.app.services.tender_engine import (
     TenderEngineService,
@@ -50,11 +52,19 @@ async def upload_tender_document(
 
     # Validate file format
     fname = file.filename or "tender.txt"
-    ext = fname.lower().split(".")[-1] if "." in fname else ""
-    if ext not in ["pdf", "docx", "txt"]:
+    try:
+        fname = validate_upload(
+            fname,
+            content,
+            {"pdf", "docx", "txt"},
+            settings.MAX_UPLOAD_BYTES,
+            file.content_type,
+            {"application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"},
+        )
+    except ValueError:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported file format '.{ext}'. Supported formats: PDF, DOCX, TXT."
+            detail="Unsupported or invalid tender upload. Supported formats are PDF, DOCX, and TXT within the configured size limit."
         )
 
     service = TenderEngineService(db)
@@ -83,8 +93,8 @@ async def upload_tender_document(
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Tender document processing failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Tender document processing failed.")
 
 
 @router.get("/{id}", response_model=TenderDetailResponse)
@@ -238,8 +248,8 @@ def get_tender_audit(
         return report
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Tender audit execution failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Tender audit execution failed.")
 
 
 @router.post("/{id}/generate")
@@ -284,5 +294,3 @@ def list_tender_specifications(
     from backend.app.services.specification_generator import SpecificationService
     service = SpecificationService(db)
     return service.list_specifications_for_tender(id)
-
-

@@ -5,6 +5,8 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from backend.app.core.database import SessionLocal, get_db
+from backend.app.core.config import settings
+from backend.app.core.security import validate_upload
 from backend.app.services.job_schemas import (
     JobResponse,
     JobSubmissionResponse,
@@ -48,11 +50,20 @@ async def submit_tender_upload(
 ):
     filename = file.filename or "tender.txt"
     extension = filename.lower().rsplit(".", 1)[-1] if "." in filename else ""
-    if extension not in {"pdf", "docx", "txt"}:
-        raise HTTPException(status_code=400, detail="Supported tender formats are PDF, DOCX, and TXT.")
     content = await file.read()
     if len(content) < 10:
         raise HTTPException(status_code=400, detail="Uploaded tender file is empty or corrupted.")
+    try:
+        filename = validate_upload(
+            filename,
+            content,
+            {"pdf", "docx", "txt"},
+            settings.MAX_UPLOAD_BYTES,
+            file.content_type,
+            {"application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"},
+        )
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid tender upload.")
 
     def work():
         db = SessionLocal()
@@ -71,7 +82,7 @@ async def submit_tender_upload(
     try:
         return _submission(job_registry.submit("tender_upload", work))
     except RuntimeError as exc:
-        raise HTTPException(status_code=503, detail=str(exc))
+        raise HTTPException(status_code=503, detail="Asynchronous job capacity is unavailable.")
 
 
 @router.post("/specifications/generate", response_model=JobSubmissionResponse, status_code=202)
@@ -86,4 +97,4 @@ def submit_specification_generation(request: SpecificationGenerationRequest):
     try:
         return _submission(job_registry.submit("specification_generation", work))
     except RuntimeError as exc:
-        raise HTTPException(status_code=503, detail=str(exc))
+        raise HTTPException(status_code=503, detail="Asynchronous job capacity is unavailable.")

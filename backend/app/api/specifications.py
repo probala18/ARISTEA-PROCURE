@@ -44,8 +44,8 @@ def generate_specification(
         raise HTTPException(status_code=400, detail=str(e))
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Specification generation failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Specification generation failed.")
 
 
 @router.get("/specifications/{id}", response_model=GeneratedSpecificationResponse)

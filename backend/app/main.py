@@ -8,6 +8,9 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException
+from starlette.middleware.base import BaseHTTPMiddleware
+import logging
 from sqlalchemy import text
 
 from backend.app.core.database import SessionLocal
@@ -16,7 +19,12 @@ from backend.app.api.speech import speech_router
 from backend.app.api.tenders import tenders_router
 from backend.app.api.specifications import specifications_router
 from backend.app.api.jobs import jobs_router
+from backend.app.api.evaluations import evaluations_router
 from backend.app.services.jobs import job_registry
+from backend.app.core.config import settings
+
+logger = logging.getLogger("aristea.api")
+logging.basicConfig(level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO))
 
 
 @asynccontextmanager
@@ -32,14 +40,23 @@ app = FastAPI(
     lifespan=app_lifespan,
 )
 
-# CORS middleware configuration
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "no-referrer")
+        return response
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[origin.strip() for origin in settings.CORS_ALLOWED_ORIGINS.split(",") if origin.strip()],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Register routers under /api
 app.include_router(standards_router, prefix="/api")
@@ -48,6 +65,7 @@ app.include_router(speech_router, prefix="/api")
 app.include_router(tenders_router, prefix="/api")
 app.include_router(specifications_router, prefix="/api")
 app.include_router(jobs_router, prefix="/api")
+app.include_router(evaluations_router, prefix="/api")
 
 
 @app.exception_handler(RequestValidationError)
@@ -60,6 +78,12 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "fields": exc.errors(),
         },
     )
+
+
+@app.exception_handler(Exception)
+async def unexpected_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled API exception on %s %s", request.method, request.url.path)
+    return JSONResponse(status_code=500, content={"error": "internal_server_error", "detail": "An unexpected error occurred."})
 
 
 @app.get("/")

@@ -30,7 +30,7 @@ def job_response(record: Any) -> JobResponse:
         job_type=record.job_type,
         status=record.status,
         result=record.result,
-        error=record.error,
+        error="Asynchronous job failed." if record.error else None,
         created_at=record.created_at,
         updated_at=record.updated_at,
     )
