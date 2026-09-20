@@ -276,7 +276,7 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
               </div>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                 Differences exist between the Indian Standard and international harmonized equivalents (ISO/IEC).
-                Bidders must satisfy the specific Indian Standard test requirements cited in the tender.
+                Review is recommended against the specific Indian Standard test requirements cited in the tender.
               </p>
               {report.regulatory_divergence_notes && report.regulatory_divergence_notes.length > 0 && (
                 <ul style={{ marginTop: '8px', paddingLeft: '18px', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>

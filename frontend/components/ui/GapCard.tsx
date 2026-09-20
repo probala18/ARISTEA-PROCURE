@@ -12,7 +12,7 @@ interface GapCardProps {
 export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const severityUpper = (gap.severity || 'INFO').toUpperCase();
+  const severityUpper = gap.severity ? gap.severity.toUpperCase() : 'UNKNOWN';
 
   useEffect(() => {
     if (severityUpper === 'CRITICAL' && cardRef.current) {
@@ -27,9 +27,11 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
       case 'WARNING':
         return <span className="badge badge-amber">WARNING</span>;
       case 'ADVISORY':
-      case 'INFO':
-      default:
         return <span className="badge badge-cyan">ADVISORY</span>;
+      case 'INFO':
+        return <span className="badge badge-neutral">INFO</span>;
+      default:
+        return <span className="badge badge-neutral">OBSERVATION</span>;
     }
   };
 
@@ -40,9 +42,9 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
       case 'WARNING':
         return 'var(--status-warning)';
       case 'ADVISORY':
-      case 'INFO':
-      default:
         return 'var(--accent-primary)';
+      default:
+        return 'var(--border-color)';
     }
   };
 

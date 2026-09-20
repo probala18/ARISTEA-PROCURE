@@ -1,9 +1,56 @@
-# ARISTEA-PROCURE
+# ARISTEA-PROCURE — Indian Standards & Public Procurement Intelligence Platform
 
-## Local setup
+AI-powered procurement decision support platform designed for SIH Problem Statement 26108.
 
-This repository contains the FastAPI application for SIH Problem Statement
-26108. Python 3.13 is the tested runtime.
+## Verified Data Baseline
+
+The local repository is grounded in the verified ARISTEA dataset:
+
+```text
+268 standards
+111 relationships
+275 versions
+710 QCO records
+1,573 certifications
+75 product licences
+28 ministry mappings
+14 evaluation queries
+100% provenance coverage
+```
+
+All standard records, relationships, and compliance rules preserve source file and line-level provenance.
+
+## Architecture & Technology Stack
+
+- **Backend**: FastAPI (Python 3.13), SQLAlchemy 2.0, Pydantic v2, SQLite (`sih_bis.db`) / PostgreSQL (optional)
+- **Embedding Model**: Pretrained Sentence Transformers embedding model (`paraphrase-multilingual-MiniLM-L12-v2`)
+- **Retrieval Engine**: Hybrid Retrieval: Semantic Vector Search + BM25 Lexical Search + Metadata Filtering + RRF + Reranking
+- **Frontend**: Next.js 14 (App Router), React 18, TypeScript, CSS Variables Design System
+- **Mounted Workspaces (10)**:
+  1. **Requirement Recommendation**: Semantic requirement matching and primary/allied identification
+  2. **Standards Explorer**: Hierarchical directory of 268 standards with scope and version history
+  3. **Knowledge Graph**: Interactive SVG dependency network and shortest-path tracer
+  4. **QCO & Compliance**: Regulatory mandatory orders, certification schemes (ISI/CRS), and divergences
+  5. **Tender Auditor**: Section-by-section tender gap analysis and evidence-grounded review
+  6. **Specification Drafter**: Verified parameter tables, testing clauses, and inspection plans
+  7. **Multilingual Voice**: Speech-to-text pipeline in 8 Indic languages + English
+  8. **Audit Trail & History**: Grounded local session activity recording
+  9. **BIS Service Hub**: Directory of 75 product licence categories and 28 ministry procurement mappings
+  10. **Clause Explainer**: Plain-language translation grounded in verified scopes and amendments
+
+## Database Configuration
+
+The canonical local development database is SQLite:
+
+```env
+DATABASE_URL=sqlite:///./sih_bis.db
+```
+
+For production deployments, PostgreSQL is supported via `.env`.
+
+## Local Setup
+
+### 1. Backend Setup (Python 3.13)
 
 ```powershell
 py -3.13 -m venv .venv
@@ -12,12 +59,13 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-Set real local database values in `.env`; `.env.example` contains placeholders
-only.
+Ensure `.env` contains:
+```env
+DATABASE_URL=sqlite:///./sih_bis.db
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+```
 
-## Database and supplied data
-
-Run the steps in order:
+### 2. Database Migration & Data Ingestion
 
 ```powershell
 alembic upgrade head
@@ -25,46 +73,51 @@ python -m scripts.ingest --data-dir csvfiles
 python scripts/validate_ingestion.py
 ```
 
-The application does not automatically migrate or ingest data during startup.
-
-## Start the API
+### 3. Start Backend API
 
 ```powershell
 uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 ```
 
-Useful endpoints:
+- API Health: `http://localhost:8000/api/health`
+- Database Readiness: `http://localhost:8000/api/ready`
+- Interactive OpenAPI Docs: `http://localhost:8000/docs`
 
-- `GET /api/health` — liveness
-- `GET /api/ready` — database readiness
-- `/docs` — generated OpenAPI documentation
+### 4. Start Next.js Frontend
 
-## Tests
-
-```powershell
-pytest -q
-```
-
-## Frontend demo
-
-With the API running, serve the dependency-free demo in a second terminal:
+In a separate terminal:
 
 ```powershell
-python -m http.server 5173 --directory frontend
+cd frontend
+npm install  # or bun install
+npm run dev  # or bun dev
 ```
 
-Open `http://localhost:5173`. Set backend `CORS_ALLOWED_ORIGINS` to include
-`http://localhost:5173` when it is not already allowed. See `docs/module20.md`
-for the supported workflows and verification notes.
+Open `http://localhost:3000` in your browser.
 
-## Container
+## Testing & Validation
 
-Build and run without embedding credentials:
+Run the full automated test suite:
 
 ```powershell
-docker build -t aristea-procure .
-docker run --rm --env-file .env -p 8000:8000 aristea-procure
+# Backend pytest suite (203 tests)
+python -m pytest -v
+
+# Ingestion provenance and dataset validation
+python scripts/validate_ingestion.py
+
+# Frontend unit tests
+cd frontend
+bun test
 ```
 
-Database migration and ingestion remain explicit operational steps outside
-container startup.
+## Future Innovation Roadmap (CONCEPT / NOT IMPLEMENTED)
+
+The following 7 concepts represent research roadmap directions and are strictly separate from implemented capabilities:
+1. Tender-to-Standard Traceability Graph
+2. Standard Change Impact Analyzer
+3. Procurement Contradiction Detector
+4. Evidence Coverage Intelligence
+5. Human-in-the-Loop Procurement Review
+6. Regulatory Change Simulation
+7. Requirement Ambiguity Resolution Loop

@@ -15,6 +15,8 @@ from sqlalchemy.orm import Session
 
 from backend.app.core.database import get_db
 from backend.app.models.standard import Standard
+from backend.app.models.compliance import ProductLicence
+from backend.app.models.department import MinistryProductMapping
 from backend.app.services.knowledge_graph.graph_models import ComplianceLinksResult
 from backend.app.services.relationship_engine.engine import RelationshipEngine
 from backend.app.services.relationship_engine.schemas import (
@@ -151,6 +153,104 @@ def batch_evaluate_compliance(
     """
     svc = ComplianceIntelligenceService(db)
     return svc.batch_evaluate_compliance(payload.identifiers)
+
+
+@router.get("/standards")
+def list_standards(
+    q: Optional[str] = Query(None, description="Search term matching standard ID, number, or title"),
+    category: Optional[str] = Query(None, description="Filter by category"),
+    status: Optional[str] = Query(None, description="Filter by status (e.g. CURRENT, SUPERSEDED)"),
+    limit: int = Query(50, ge=1, le=200, description="Page limit"),
+    offset: int = Query(0, ge=0, description="Page offset"),
+    db: Session = Depends(get_db),
+):
+    """
+    Read-only endpoint exposing already-ingested standards catalog.
+    Preserves existing records without performing recommendation or retrieval logic.
+    """
+    query = db.query(Standard)
+    if q and q.strip():
+        term = f"%{q.strip()}%"
+        query = query.filter(
+            (Standard.standard_id.ilike(term)) |
+            (Standard.is_number.ilike(term)) |
+            (Standard.title.ilike(term))
+        )
+    if category and category.strip():
+        query = query.filter(Standard.category == category.strip())
+    if status and status.strip():
+        query = query.filter(Standard.status == status.strip().upper())
+
+    total = query.count()
+    records = query.order_by(Standard.is_number.asc()).offset(offset).limit(limit).all()
+    return {
+        "total": total,
+        "offset": offset,
+        "limit": limit,
+        "standards": [
+            {
+                "id": s.id,
+                "standard_id": s.standard_id,
+                "is_number": s.is_number,
+                "title": s.title,
+                "status": s.status,
+                "category": s.category,
+                "subject_area": s.subject_area,
+                "publication_year": s.publication_year,
+                "source_file": s.source_file,
+            }
+            for s in records
+        ],
+    }
+
+
+@router.get("/licences")
+def list_product_licences(
+    category: Optional[str] = Query(None, description="Filter by product category substring"),
+    db: Session = Depends(get_db),
+):
+    """
+    Read-only endpoint exposing existing product licence count records from productlicence.csv.
+    """
+    query = db.query(ProductLicence)
+    if category and category.strip():
+        query = query.filter(ProductLicence.product_category.ilike(f"%{category.strip()}%"))
+    records = query.order_by(ProductLicence.licence_count.desc()).all()
+    return [
+        {
+            "id": r.id,
+            "product_category": r.product_category,
+            "licence_count": r.licence_count,
+            "raw_count_str": r.raw_count_str,
+            "source_dataset": r.source_dataset,
+        }
+        for r in records
+    ]
+
+
+@router.get("/ministry-mappings")
+def list_ministry_mappings(
+    ministry: Optional[str] = Query(None, description="Filter by ministry or department name"),
+    db: Session = Depends(get_db),
+):
+    """
+    Read-only endpoint exposing existing 28 ministry-product mappings from upcomming.csv.
+    """
+    query = db.query(MinistryProductMapping)
+    if ministry and ministry.strip():
+        query = query.filter(MinistryProductMapping.ministry_department.ilike(f"%{ministry.strip()}%"))
+    records = query.order_by(MinistryProductMapping.ministry_department.asc()).all()
+    return [
+        {
+            "id": r.id,
+            "ministry_department": r.ministry_department,
+            "product_name": r.product_name,
+            "standard_number": r.standard_number,
+            "standard_id": r.standard_id,
+            "source_dataset": r.source_dataset,
+        }
+        for r in records
+    ]
 
 
 @router.get("/standards/{standard_id}")

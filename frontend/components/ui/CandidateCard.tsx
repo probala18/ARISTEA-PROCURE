@@ -13,8 +13,8 @@ interface CandidateCardProps {
 export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, onExplore }) => {
   const [showEvidence, setShowEvidence] = useState(false);
 
-  const role = candidate.role?.toUpperCase() || (rank === 1 ? 'PRIMARY' : 'ALLIED');
-  const scorePercent = Math.round((candidate.score || 0) * 100);
+  const role = candidate.role ? candidate.role.toUpperCase() : undefined;
+  const scorePercent = candidate.score !== undefined ? Math.round(candidate.score * 100) : null;
 
   const getRoleBadgeClass = () => {
     switch (role) {
@@ -73,7 +73,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
             >
               {candidate.standard_id}
             </span>
-            <span className={`badge ${getRoleBadgeClass()}`}>{role}</span>
+            {role && <span className={`badge ${getRoleBadgeClass()}`}>{role}</span>}
             {candidate.status && (
               <span
                 style={{
@@ -144,13 +144,13 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, rank, o
                 fontSize: '1.25rem',
                 fontWeight: 800,
                 fontFamily: 'var(--font-mono)',
-                color: scorePercent >= 70 ? 'var(--accent-primary)' : scorePercent >= 50 ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+                color: scorePercent !== null && scorePercent >= 70 ? 'var(--accent-primary)' : scorePercent !== null && scorePercent >= 50 ? 'var(--accent-cyan)' : 'var(--text-secondary)',
               }}
             >
-              {scorePercent}%
+              {scorePercent !== null ? `${scorePercent}%` : 'UNKNOWN'}
             </div>
             <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Confidence
+              Decision Support Score
             </span>
           </div>
 

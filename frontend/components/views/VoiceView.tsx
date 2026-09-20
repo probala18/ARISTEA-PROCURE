@@ -112,7 +112,7 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
         setPlaybackAudioUrl(URL.createObjectURL(blob));
       }
 
-      onToast(`Speech transcribed: "${res.transcription.transcription}"`, 'success');
+      onToast(`Speech transcribed: "${res.transcription.transcript || res.transcription.transcription}"`, 'success');
     } catch (err: any) {
       onToast(err.message || 'Voice query processing failed.', 'error');
     } finally {
@@ -263,12 +263,12 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
                 TRANSCRIPTION (Confidence: {Math.round(voiceResult.transcription.confidence * 100)}%)
               </span>
               <span className="badge badge-indigo">
-                Language: {voiceResult.transcription.detected_language || language}
+                Language: {voiceResult.transcription.language || voiceResult.transcription.detected_language || language}
               </span>
             </div>
 
             <p style={{ fontSize: '1.15rem', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.5 }}>
-              "{voiceResult.transcription.transcription}"
+              "{voiceResult.transcription.transcript || voiceResult.transcription.transcription}"
             </p>
 
             {voiceResult.transcription.repetition_needed && (

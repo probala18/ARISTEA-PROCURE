@@ -7,6 +7,8 @@ import { TabKey } from './TabNav';
 interface HeaderProps {
   activeTab?: TabKey;
   onExploreStandard?: (stdId: string) => void;
+  onNavigateTab?: (tab: TabKey) => void;
+  onSearchQuery?: (query: string) => void;
 }
 
 const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
@@ -17,6 +19,14 @@ const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
   standard: {
     title: 'Standards Directory & Metadata',
     desc: 'Authoritative IS catalog records, publication years, ICS codes, and normative references',
+  },
+  services: {
+    title: 'BIS Service Hub & Regulatory Directory',
+    desc: 'Verified product licences, ministry alignments, and conformity assessment schemes',
+  },
+  simplify: {
+    title: 'Clause Explainer & Simplifier',
+    desc: 'Plain-language procurement translation grounded in verified standard scope & metadata',
   },
   graph: {
     title: 'Knowledge Graph Topology',
@@ -44,9 +54,15 @@ const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
   },
 };
 
-export const Header: React.FC<HeaderProps> = ({ activeTab = 'recommend' }) => {
+export const Header: React.FC<HeaderProps> = ({
+  activeTab = 'recommend',
+  onExploreStandard,
+  onNavigateTab,
+  onSearchQuery,
+}) => {
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [isOnline, setIsOnline] = useState<boolean | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const fetchHealth = async () => {
     try {
@@ -64,10 +80,40 @@ export const Header: React.FC<HeaderProps> = ({ activeTab = 'recommend' }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleGlobalSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (!q) return;
+
+    // RULE 7: Deterministic Global Search Routing
+    // 1. Exact IS standard pattern (e.g., IS 12615:2018, IS 694, IS-302)
+    const isPattern = /^IS[\s\-_]*\d+/i;
+    if (isPattern.test(q)) {
+      if (onExploreStandard) onExploreStandard(q.toUpperCase());
+      if (onNavigateTab) onNavigateTab('standard');
+      setSearchQuery('');
+      return;
+    }
+
+    // 2. Explicit service command
+    const serviceKeywords = ['service', 'services', 'licence', 'license', 'ministry', 'crs', 'isi', 'hallmark', 'huid', 'schemes'];
+    const isService = serviceKeywords.some((kw) => q.toLowerCase().includes(kw));
+    if (isService) {
+      if (onNavigateTab) onNavigateTab('services');
+      setSearchQuery('');
+      return;
+    }
+
+    // 3. Everything else -> Existing Recommendation API
+    if (onSearchQuery) onSearchQuery(q);
+    if (onNavigateTab) onNavigateTab('recommend');
+    setSearchQuery('');
+  };
+
   const currentTabInfo = TAB_TITLES[activeTab] || TAB_TITLES.recommend;
 
   return (
-    <header className="dashboard-header">
+    <header className="dashboard-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
       {/* Left: Breadcrumbs & Current Workspace */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -80,6 +126,43 @@ export const Header: React.FC<HeaderProps> = ({ activeTab = 'recommend' }) => {
           </span>
         </div>
       </div>
+
+      {/* Middle: Unified Global Search Bar (Rule 7) */}
+      <form onSubmit={handleGlobalSearch} style={{ flex: '1 1 320px', maxWidth: '500px', display: 'flex', alignItems: 'center', position: 'relative' }}>
+        <input
+          type="text"
+          placeholder="Global Search (e.g. 'IS 12615', 'services', 'PVC cables')..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '7px 36px 7px 12px',
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid var(--border-subtle)',
+            background: '#ffffff',
+            fontSize: '0.8rem',
+            outline: 'none',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+            transition: 'border-color 0.15s ease',
+          }}
+        />
+        <button
+          type="submit"
+          style={{
+            position: 'absolute',
+            right: '6px',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            color: 'var(--text-muted)',
+            padding: '4px',
+          }}
+          title="Search"
+        >
+          🔍
+        </button>
+      </form>
 
       {/* Right: Live Status, BIS Certification Pill & Docs */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

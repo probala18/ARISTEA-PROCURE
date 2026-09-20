@@ -10,6 +10,8 @@ export type TabKey =
   | 'compliance'
   | 'tender'
   | 'spec'
+  | 'services'
+  | 'simplify'
   | 'voice'
   | 'history';
 
@@ -27,7 +29,9 @@ interface TabItem {
 
 const TABS: TabItem[] = [
   { key: 'recommend', label: 'Semantic Matcher', icon: '⚡' },
-  { key: 'standard', label: 'Standards Directory', icon: '🏛️' },
+  { key: 'standard', label: 'Standards Directory', icon: '📚' },
+  { key: 'services', label: 'BIS Service Hub', badge: 'Hub', icon: '🏛️' },
+  { key: 'simplify', label: 'Clause Explainer', icon: '📖' },
   { key: 'graph', label: 'Knowledge Graph', icon: '🕸️' },
   { key: 'compliance', label: 'QCO Compliance', badge: 'GFR', icon: '🛡️' },
   { key: 'tender', label: 'Document Auditor', badge: 'Audit', icon: '📋' },

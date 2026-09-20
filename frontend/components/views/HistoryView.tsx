@@ -52,39 +52,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
       if (stored) {
         setHistoryItems(JSON.parse(stored));
       } else {
-        // Populate helpful default demo history
-        const initialDemo: HistoryItem[] = [
-          {
-            id: 'demo-1',
-            type: 'query',
-            title: 'Energy efficient induction motors for industrial water pumping installations',
-            subtitle: 'Matched with IS 12615:2018 (Primary)',
-            timestamp: 'Recent',
-          },
-          {
-            id: 'demo-2',
-            type: 'standard',
-            title: 'IS 12615:2018',
-            subtitle: 'Energy Efficient Induction Motors (IE Code)',
-            timestamp: 'Recent',
-          },
-          {
-            id: 'demo-3',
-            type: 'standard',
-            title: 'IS 694:2010',
-            subtitle: 'PVC Insulated Cables for Working Voltages up to 1100 V',
-            timestamp: 'Recent',
-          },
-          {
-            id: 'demo-4',
-            type: 'tender',
-            title: 'CPWD_Pumping_Machinery_Tender.txt',
-            subtitle: 'Audit Completed · 75% Coverage · 2 Outdated Citations',
-            timestamp: 'Recent',
-          },
-        ];
-        setHistoryItems(initialDemo);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialDemo));
+        setHistoryItems([]);
       }
     } catch {
       setHistoryItems([]);
@@ -120,10 +88,10 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
           <div style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--text-muted)' }}>
             <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🕒</div>
             <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
-              No Session History Recorded
+              No recent activity in this session.
             </h4>
             <p style={{ fontSize: '0.84rem' }}>
-              Queries run in the Semantic Matcher or standards explored will appear here for fast one-click access.
+              Genuine queries run in the Semantic Matcher, standards opened, or tenders audited will be recorded here.
             </p>
           </div>
         ) : (

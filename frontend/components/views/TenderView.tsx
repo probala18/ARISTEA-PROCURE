@@ -382,9 +382,12 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                 auditReport.gaps.map((gap, i) => <GapCard key={i} gap={gap} index={i} />)
               ) : (
                 <p style={{ color: 'var(--status-success)', fontSize: '0.85rem' }}>
-                  ✅ No gaps or non-compliant standard citations detected in this document.
+                  ✅ No potential compliance gaps or outdated standard citations detected in this document.
                 </p>
               )}
+              <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '8px', fontStyle: 'italic' }}>
+                Note: Absence of a standard citation in a tender clause must never automatically be treated as proof of non-compliance.
+              </p>
             </div>
 
             {/* One-Click Spec Generation Trigger */}
@@ -407,7 +410,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                   Generate Grounded Procurement Specification
                 </h4>
                 <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                  Automatically rectifies superseded standards (e.g. replaces IS 325 with IS 12615) and appends mandatory compliance clauses.
+                  Automatically rectifies superseded standards (e.g. replaces IS 325 with IS 12615) and appends evidence-backed compliance clauses.
                 </p>
               </div>
 

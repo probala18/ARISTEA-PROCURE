@@ -175,8 +175,8 @@ export async function analyzeRequirement(params: {
     standard_id: c.standard_id,
     is_number: c.is_number,
     title: c.title,
-    score: c.confidence_score ?? c.relevance_score ?? 0,
-    role: c.role || 'PRIMARY',
+    score: c.confidence_score !== undefined ? c.confidence_score : c.relevance_score !== undefined ? c.relevance_score : undefined,
+    role: c.role ? c.role.toUpperCase() : undefined,
     status: c.status || 'ACTIVE',
     category: c.category || c.technical_department,
     match_reasons: c.match_reasons || c.rationale || [],
@@ -195,8 +195,8 @@ export async function analyzeRequirement(params: {
         standard_id: raw.primary_standards[0].standard_id,
         is_number: raw.primary_standards[0].is_number,
         title: raw.primary_standards[0].title,
-        score: raw.primary_standards[0].confidence_score ?? 0.95,
-        role: 'PRIMARY',
+        score: raw.primary_standards[0].confidence_score !== undefined ? raw.primary_standards[0].confidence_score : undefined,
+        role: raw.primary_standards[0].role ? raw.primary_standards[0].role.toUpperCase() : 'PRIMARY',
         status: raw.primary_standards[0].status || 'ACTIVE',
         category: raw.primary_standards[0].category,
         match_reasons: raw.primary_standards[0].match_reasons || [],
@@ -211,14 +211,12 @@ export async function analyzeRequirement(params: {
     total_candidates: normalizedRecommendations.length,
     primary_standard: primary,
     recommendations: normalizedRecommendations,
-    overall_confidence_score: primary ? primary.score : 0,
-    execution_time_ms: raw.execution_time_ms ?? 14.2,
-    summary_recommendation: primary
-      ? `Procurement requirements align with ${primary.standard_id} (${primary.title}). Adherence ensures conformity with Bureau of Indian Standards mandates.`
-      : undefined,
-    tender_clause: primary
-      ? `TENDER CLAUSE (GFR 2017 & BIS COMPLIANT): The equipment/materials supplied under this contract shall strictly conform to Indian Standard ${primary.standard_id} (Title: ${primary.title}), along with all relevant normative amendments. Bidders must furnish authentic test reports or BIS certification marks (ISI / CRS) from NABL accredited laboratories.`
-      : undefined,
+    overall_confidence_score: primary ? primary.score : undefined,
+    execution_time_ms: raw.execution_time_ms !== undefined ? raw.execution_time_ms : undefined,
+    summary_recommendation: raw.summary || (primary
+      ? `Procurement requirements align with verified standard ${primary.standard_id} (${primary.title}).`
+      : undefined),
+    tender_clause: raw.tender_clause || undefined,
   };
 }
 
@@ -241,6 +239,66 @@ export interface StandardDetail {
   is_mandatory?: boolean;
   technical_department?: string;
   source_file?: string;
+}
+
+export interface StandardsListResponse {
+  total: number;
+  offset: number;
+  limit: number;
+  standards: StandardDetail[];
+}
+
+export interface ProductLicenceRecord {
+  id: number;
+  product_category: string;
+  licence_count: number;
+  raw_count_str?: string;
+  source_dataset: string;
+}
+
+export interface MinistryMappingRecord {
+  id: number;
+  ministry_department: string;
+  product_name: string;
+  standard_number: string;
+  standard_id?: number | null;
+  source_dataset: string;
+}
+
+export async function listStandards(params?: {
+  q?: string;
+  category?: string;
+  status?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<StandardsListResponse> {
+  const query = new URLSearchParams();
+  if (params?.q) query.set('q', params.q);
+  if (params?.category) query.set('category', params.category);
+  if (params?.status) query.set('status', params.status);
+  if (params?.limit) query.set('limit', String(params.limit));
+  if (params?.offset) query.set('offset', String(params.offset));
+
+  const qs = query.toString();
+  const url = qs ? `${API_BASE}/api/standards?${qs}` : `${API_BASE}/api/standards`;
+  const res = await fetch(url, { cache: 'no-store' });
+  return handleResponse<StandardsListResponse>(res);
+}
+
+export async function getProductLicences(category?: string): Promise<ProductLicenceRecord[]> {
+  const url = category
+    ? `${API_BASE}/api/licences?category=${encodeURIComponent(category)}`
+    : `${API_BASE}/api/licences`;
+  const res = await fetch(url, { cache: 'no-store' });
+  return handleResponse<ProductLicenceRecord[]>(res);
+}
+
+export async function getMinistryMappings(ministry?: string): Promise<MinistryMappingRecord[]> {
+  const url = ministry
+    ? `${API_BASE}/api/ministry-mappings?ministry=${encodeURIComponent(ministry)}`
+    : `${API_BASE}/api/ministry-mappings`;
+  const res = await fetch(url, { cache: 'no-store' });
+  return handleResponse<MinistryMappingRecord[]>(res);
 }
 
 export interface VersionReport {
@@ -509,7 +567,7 @@ export async function getTenderAudit(tenderId: number, forceRecompute = false): 
     ...gap,
     gap_category: gap.gap_category || gap.gap_type || 'GAP_OBSERVATION',
     gap_type: gap.gap_category || gap.gap_type || 'GAP_OBSERVATION',
-    severity: (gap.severity || 'INFO').toUpperCase(),
+    severity: gap.severity ? gap.severity.toUpperCase() : 'UNKNOWN',
     cited_standard: gap.standard_id || gap.cited_standard || '',
     expected_standard: gap.successor_standard_id || gap.expected_standard || '',
     recommendation_notes: gap.recommendation || gap.issue_description || gap.recommendation_notes || '',
@@ -539,12 +597,12 @@ export async function getTenderAudit(tenderId: number, forceRecompute = false): 
     tender_number: raw.tender_number,
     filename: raw.filename || 'tender_document',
     coverage_score: coverageScore,
-    coverage_percentage: raw.coverage_percentage ?? coverageScore * 100,
+    coverage_percentage: raw.coverage_percentage ?? (coverageScore !== undefined ? coverageScore * 100 : undefined),
     audit_summary: raw.audit_summary || 'Evidence-grounded audit completed.',
     total_gaps_found: raw.total_gaps_found ?? normalizedGaps.length,
-    critical_issues_count: raw.critical_issues_count ?? 0,
-    warnings_count: raw.warnings_count ?? 0,
-    advisories_count: raw.advisories_count ?? 0,
+    critical_issues_count: raw.critical_issues_count,
+    warnings_count: raw.warnings_count,
+    advisories_count: raw.advisories_count,
     gaps: normalizedGaps,
     expected_vs_present: expectedVsPresent,
     trust_disclaimer:

@@ -34,7 +34,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
       key: 'standard',
       label: 'Standards Directory',
       sublabel: 'Official BIS Catalog & Meta',
+      icon: '📚',
+    },
+    {
+      key: 'services',
+      label: 'BIS Service Hub',
+      sublabel: 'Licences & Ministries',
       icon: '🏛️',
+      badge: 'Hub',
+    },
+    {
+      key: 'simplify',
+      label: 'Clause Explainer',
+      sublabel: 'Plain Language Translator',
+      icon: '📖',
     },
     {
       key: 'graph',
@@ -268,7 +281,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             sih_bis.db (9.4 MB)
           </div>
           <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: '2px' }}>
-            2,100+ Standards · 14 Modules
+            268 Standards · 710 QCOs · 75 Licences
           </div>
         </div>
 

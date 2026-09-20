@@ -79,27 +79,8 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
     navigator.clipboard.writeText(clauseText);
     setCopiedClause(true);
     setTimeout(() => setCopiedClause(false), 2500);
-    onToast('GFR 2017 Tender Clause copied to clipboard!', 'info');
+    onToast('Tender specification clause copied to clipboard!', 'info');
   };
-
-  // Requirement understanding extracted attributes
-  const extractedProduct = queryText.toLowerCase().includes('motor')
-    ? 'Three-Phase Induction Motor'
-    : queryText.toLowerCase().includes('cable')
-    ? 'PVC Insulated Electric Cable'
-    : queryText.toLowerCase().includes('water')
-    ? 'Drinking Water System'
-    : 'Industrial Equipment';
-
-  const extractedRating = queryText.toLowerCase().includes('415')
-    ? '415 V, 50 Hz'
-    : queryText.toLowerCase().includes('1100')
-    ? 'Up to 1100 V'
-    : 'Standard Operating Envelope';
-
-  const extractedDomain = queryText.toLowerCase().includes('cable') || queryText.toLowerCase().includes('motor') || queryText.toLowerCase().includes('electr')
-    ? 'Electrotechnical Department (ETD)'
-    : 'Civil / Mechanical Engineering';
 
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -304,37 +285,39 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
                   Requirement Understanding & Extracted Parameters
                 </h4>
               </div>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                Computed in {results.execution_time_ms?.toFixed(1) || 14.2} ms
-              </span>
+              {results.execution_time_ms !== undefined && (
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                  Computed in {results.execution_time_ms.toFixed(1)} ms
+                </span>
+              )}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
               <div style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: 'var(--radius-sm)', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>PRODUCT IDENTIFIED</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>PRODUCT CATEGORY</span>
                 <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: '3px' }}>
-                  {extractedProduct}
+                  {results.primary_standard?.category || 'General Procurement'}
                 </p>
               </div>
 
               <div style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: 'var(--radius-sm)', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>CAPACITY / OPERATING ENVELOPE</span>
-                <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--accent-primary-dark)', marginTop: '3px' }}>
-                  {extractedRating}
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>RECOMMENDED STANDARD</span>
+                <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--accent-primary-dark)', marginTop: '3px', fontFamily: 'monospace' }}>
+                  {results.primary_standard?.standard_id || 'N/A'}
                 </p>
               </div>
 
               <div style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: 'var(--radius-sm)', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>TECHNICAL DEPARTMENT</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>LIFECYCLE STATUS</span>
                 <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: '3px' }}>
-                  {extractedDomain}
+                  {results.primary_standard?.status || 'Active'}
                 </p>
               </div>
 
               <div style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: 'var(--radius-sm)', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>STATUTORY FRAMEWORK</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>DECISION SUPPORT SCORE</span>
                 <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--status-success)', marginTop: '3px' }}>
-                  GFR 2017 & BIS QCO
+                  {results.primary_standard?.score !== undefined ? `${Math.round(results.primary_standard.score * 100)}%` : 'Grounded'}
                 </p>
               </div>
             </div>
@@ -358,11 +341,13 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-primary-dark)' }}>
                       {results.primary_standard.standard_id}
                     </span>
-                    <span className="badge badge-indigo">PRIMARY STANDARD</span>
-                    <span className="badge badge-green">● Active & Enforceable</span>
-                    <span className="badge badge-amber">
-                      {Math.round((results.primary_standard.score || 0.95) * 100)}% Confidence Match
-                    </span>
+                    <span className="badge badge-indigo">RECOMMENDED STANDARD</span>
+                    <span className="badge badge-green">● {results.primary_standard.status || 'Active'}</span>
+                    {results.primary_standard.score !== undefined && (
+                      <span className="badge badge-amber">
+                        {Math.round(results.primary_standard.score * 100)}% Match Score
+                      </span>
+                    )}
                   </div>
 
                   <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: '8px' }}>
@@ -405,7 +390,7 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
               <div style={{ marginTop: '18px', background: '#f8fafc', borderRadius: 'var(--radius-md)', padding: '16px 18px', border: '1px solid #e2e8f0' }}>
                 <div
                   onClick={() => setShowReasoning(!showReasoning)}
-                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', select: 'none' }}
+                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
                 >
                   <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--accent-primary-dark)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     💡 Grounded AI Reasoning & Provenance
@@ -422,7 +407,7 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
                     </p>
                     <ul style={{ paddingLeft: '18px' }}>
                       <li>Direct technical alignment with operating envelope and performance requirements.</li>
-                      <li>Notified under statutory Quality Control Order. Bidders without valid BIS certification cannot participate under GFR 2017 Rule 144(i).</li>
+                      <li>Evaluates applicable statutory Quality Control Orders and mandatory certification guidelines.</li>
                       <li>Incorporates current normative test codes and energy efficiency classifications.</li>
                     </ul>
                   </div>
@@ -431,7 +416,7 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
             </div>
           )}
 
-          {/* Section 3: Mandatory GFR 2017 Tender Clause */}
+          {/* Section 3: Verified Specification Clause */}
           {results.tender_clause && (
             <div
               className="glass-panel"
@@ -446,7 +431,7 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '1.2rem' }}>📋</span>
                   <h4 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                    Mandatory GFR 2017 Tender Clause (Ready for GeM / RFP)
+                    Verified Procurement Specification Clause
                   </h4>
                 </div>
 

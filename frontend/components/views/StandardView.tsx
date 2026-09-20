@@ -382,12 +382,12 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                     )}
                   </div>
 
-                  {compliance.qco_orders && compliance.qco_orders.length > 0 ? (
+                  {compliance.qco_records && compliance.qco_records.length > 0 ? (
                     <div>
                       <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '8px' }}>
                         Active Quality Control Orders (QCOs):
                       </div>
-                      {compliance.qco_orders.map((qco, idx) => (
+                      {compliance.qco_records.map((qco, idx) => (
                         <div
                           key={idx}
                           style={{
@@ -399,8 +399,8 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                             fontSize: '0.82rem',
                           }}
                         >
-                          <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{qco.order_number}</div>
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', marginTop: '2px' }}>{qco.title}</div>
+                          <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{qco.order_number || qco.qco_id || 'QCO'}</div>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', marginTop: '2px' }}>{qco.title || qco.qco_title}</div>
                         </div>
                       ))}
                     </div>
@@ -410,7 +410,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                     </div>
                   )}
 
-                  {compliance.divergence_detected && (
+                  {compliance.regulatory_divergence_detected && (
                     <div
                       style={{
                         marginTop: '12px',

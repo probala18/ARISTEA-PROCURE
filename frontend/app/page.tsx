@@ -13,6 +13,8 @@ import { TenderView } from '@/components/views/TenderView';
 import { SpecView } from '@/components/views/SpecView';
 import { VoiceView } from '@/components/views/VoiceView';
 import { HistoryView } from '@/components/views/HistoryView';
+import { ServiceHubView } from '@/components/views/ServiceHubView';
+import { SimplifyView } from '@/components/views/SimplifyView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 import { animateHeroText } from '@/lib/gsap-animations';
 import { checkHealth } from '@/lib/api';
@@ -102,7 +104,12 @@ export default function Home() {
       {/* Main Workspace Stage */}
       <div className="dashboard-main">
         {/* Top App Bar */}
-        <Header activeTab={activeTab} onExploreStandard={handleExploreStandard} />
+        <Header
+          activeTab={activeTab}
+          onExploreStandard={handleExploreStandard}
+          onNavigateTab={setActiveTab}
+          onSearchQuery={handleSelectQueryFromHistory}
+        />
 
         {/* Content Container */}
         <main className="dashboard-content">
@@ -177,16 +184,16 @@ export default function Home() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--status-success)' }}>✓</span> 2,100+ Verified BIS Standards
+                <span style={{ color: 'var(--status-success)' }}>✓</span> 268 Verified BIS Standards
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--status-success)' }}>✓</span> Zero Spec Hallucinations
+                <span style={{ color: 'var(--status-success)' }}>✓</span> 710 Statutory QCO Records
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--status-success)' }}>✓</span> Statutory QCO Tracking
+                <span style={{ color: 'var(--status-success)' }}>✓</span> 75 Verified Product Licences
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--status-success)' }}>✓</span> Multilingual Speech AI
+                <span style={{ color: 'var(--status-success)' }}>✓</span> 100% Provenance Coverage
               </div>
             </div>
           </section>
@@ -265,6 +272,43 @@ export default function Home() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <TenderView onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'services' && (
+                <motion.div
+                  key="services"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <ServiceHubView
+                    onExploreStandard={handleExploreStandard}
+                    onSelectQuery={handleSelectQueryFromHistory}
+                    onToast={addToast}
+                  />
+                </motion.div>
+              )}
+
+              {activeTab === 'simplify' && (
+                <motion.div
+                  key="simplify"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <SimplifyView
+                    initialStandardId={explorerStandardId}
+                    onExploreStandard={handleExploreStandard}
+                    onGenerateSpec={(stdId) => {
+                      setExplorerStandardId(stdId);
+                      setActiveTab('spec');
+                      addToast(`Drafting procurement spec for ${stdId}`, 'info');
+                    }}
+                    onToast={addToast}
+                  />
                 </motion.div>
               )}
 
