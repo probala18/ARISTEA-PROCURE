@@ -26,7 +26,12 @@ async function handleResponse<T>(res: Response): Promise<T> {
     let errorDetail = `Request failed with status ${res.status}`;
     try {
       const errData = await res.json();
-      if (errData.detail) {
+      if (errData.fields && Array.isArray(errData.fields)) {
+        const fieldMsgs = errData.fields
+          .map((f: any) => `${f.loc ? f.loc.filter((x: any) => x !== 'body').join('.') : 'field'}: ${f.msg}`)
+          .join('; ');
+        errorDetail = fieldMsgs || errData.detail || errorDetail;
+      } else if (errData.detail) {
         errorDetail = typeof errData.detail === 'string' ? errData.detail : JSON.stringify(errData.detail);
       } else if (errData.error) {
         errorDetail = errData.error;
@@ -565,14 +570,21 @@ export async function getTenderAudit(tenderId: number, forceRecompute = false): 
 export interface GeneratedSpecificationResponse {
   id?: number;
   tender_id?: number;
+  analysis_id?: string;
   title: string;
-  specification_type: string;
+  generation_type?: string;
+  specification_type?: string;
+  generated_text?: string;
   specification_text: string;
+  structured_content?: any;
   sections?: Array<{ title: string; content: string }>;
   grounded_standards?: string[];
   total_standards_referenced?: number;
+  is_edited?: boolean;
+  version?: number;
   created_at?: string;
   updated_at?: string;
+  disclaimer?: string;
 }
 
 export async function generateSpecification(params: {
@@ -581,34 +593,69 @@ export async function generateSpecification(params: {
   title?: string;
   query_text?: string;
 }): Promise<GeneratedSpecificationResponse> {
+  let genType = params.generation_type || 'technical_specification';
+  if (genType === 'gfr_compliance_clause' || genType === 'clause' || genType === 'gfr_clause') {
+    genType = 'tender_clause';
+  } else if (genType === 'testing_schedule' || genType === 'checklist' || genType === 'inspection_schedule') {
+    genType = 'compliance_checklist';
+  } else if (genType === 'correction' || genType === 'audit_correction') {
+    genType = 'corrective_clause';
+  }
+
   const res = await fetch(`${API_BASE}/api/specifications/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       tender_id: params.tender_id,
-      generation_type: params.generation_type || 'technical_specification',
+      generation_type: genType,
       title: params.title || 'Draft Technical Specification',
       query_text: params.query_text,
     }),
   });
-  return handleResponse<GeneratedSpecificationResponse>(res);
+  const raw = await handleResponse<any>(res);
+  const text = raw.generated_text || raw.specification_text || '';
+  return {
+    ...raw,
+    specification_text: text,
+    generated_text: text,
+    specification_type: raw.generation_type || raw.specification_type || genType,
+  };
 }
 
 export async function getSpecification(specId: number): Promise<GeneratedSpecificationResponse> {
   const res = await fetch(`${API_BASE}/api/specifications/${specId}`, { cache: 'no-store' });
-  return handleResponse<GeneratedSpecificationResponse>(res);
+  const raw = await handleResponse<any>(res);
+  const text = raw.generated_text || raw.specification_text || '';
+  return {
+    ...raw,
+    specification_text: text,
+    generated_text: text,
+    specification_type: raw.generation_type || raw.specification_type || 'technical_specification',
+  };
 }
 
 export async function updateSpecification(
   specId: number,
-  data: { title?: string; specification_text?: string }
+  data: { title?: string; specification_text?: string; generated_text?: string }
 ): Promise<GeneratedSpecificationResponse> {
+  const text = data.generated_text || data.specification_text || '';
   const res = await fetch(`${API_BASE}/api/specifications/${specId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      title: data.title,
+      generated_text: text,
+      specification_text: text,
+    }),
   });
-  return handleResponse<GeneratedSpecificationResponse>(res);
+  const raw = await handleResponse<any>(res);
+  const updatedText = raw.generated_text || raw.specification_text || text;
+  return {
+    ...raw,
+    specification_text: updatedText,
+    generated_text: updatedText,
+    specification_type: raw.generation_type || raw.specification_type || 'technical_specification',
+  };
 }
 
 // ==========================================

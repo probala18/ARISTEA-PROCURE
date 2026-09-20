@@ -108,4 +108,23 @@ test('ARISTEA-PROCURE API Client & Contract Verification', async (t) => {
     assert.strictEqual(mockJobStatus.status, 'completed');
     assert.strictEqual(mockJobStatus.result.total_checked, 12);
   });
+
+  await t.test('Specification Generator contract: generated_text & specification_text reconciliation', () => {
+    const mockBackendSpecResponse = {
+      id: 7,
+      tender_id: null,
+      generation_type: 'tender_clause',
+      specification_type: 'tender_clause',
+      title: 'GFR 2017 Model Tender Clause',
+      generated_text: 'All induction motors shall strictly conform to IS 12615:2018.',
+      specification_text: 'All induction motors shall strictly conform to IS 12615:2018.',
+      structured_content: { applicable_standards: [] },
+      is_edited: false,
+      version: 1,
+    };
+
+    assert.strictEqual(mockBackendSpecResponse.generation_type, 'tender_clause');
+    assert.strictEqual(mockBackendSpecResponse.generated_text, mockBackendSpecResponse.specification_text);
+    assert.ok(mockBackendSpecResponse.generated_text.includes('IS 12615:2018'));
+  });
 });

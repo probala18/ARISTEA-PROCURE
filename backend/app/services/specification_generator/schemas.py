@@ -127,6 +127,23 @@ class SpecificationGenerationRequest(BaseModel):
     include_allied: bool = True
     include_checklists: bool = True
 
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_generation_type(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            gt = data.get("generation_type")
+            if gt:
+                gt_str = str(gt).lower().strip()
+                if gt_str in ("gfr_compliance_clause", "tender_clause", "clause", "gfr_clause"):
+                    data["generation_type"] = SpecificationType.TENDER_CLAUSE
+                elif gt_str in ("testing_schedule", "compliance_checklist", "checklist", "inspection_schedule"):
+                    data["generation_type"] = SpecificationType.COMPLIANCE_CHECKLIST
+                elif gt_str in ("corrective_clause", "audit_correction", "correction"):
+                    data["generation_type"] = SpecificationType.CORRECTIVE_CLAUSE
+                elif gt_str in ("technical_specification", "spec", "specification", "full_specification"):
+                    data["generation_type"] = SpecificationType.TECHNICAL_SPECIFICATION
+        return data
+
 
 class GeneratedSpecificationResponse(BaseModel):
     """Full API response for generated specification."""
@@ -134,8 +151,10 @@ class GeneratedSpecificationResponse(BaseModel):
     tender_id: Optional[int] = None
     analysis_id: Optional[str] = None
     generation_type: str
+    specification_type: Optional[str] = None
     title: str
     generated_text: str
+    specification_text: Optional[str] = None
     structured_content: Dict[str, Any] = Field(default_factory=dict)
     provenance_records: List[Dict[str, Any]] = Field(default_factory=list)
     is_edited: bool = False
@@ -147,9 +166,26 @@ class GeneratedSpecificationResponse(BaseModel):
         "BIS records and tender text. They do not constitute official statutory drafting or legal BIS certification."
     )
 
+    @model_validator(mode="after")
+    def sync_aliases(self) -> "GeneratedSpecificationResponse":
+        if not self.specification_text:
+            self.specification_text = self.generated_text
+        if not self.specification_type:
+            self.specification_type = self.generation_type
+        return self
+
 
 class SpecificationUpdateRequest(BaseModel):
     """Payload to edit or update a generated specification."""
     title: Optional[str] = None
     generated_text: Optional[str] = None
+    specification_text: Optional[str] = None
     structured_content: Optional[Dict[str, Any]] = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_generated_text(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if not data.get("generated_text") and data.get("specification_text"):
+                data["generated_text"] = data["specification_text"]
+        return data

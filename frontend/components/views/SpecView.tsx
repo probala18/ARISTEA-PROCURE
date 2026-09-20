@@ -38,7 +38,7 @@ export const SpecView: React.FC<SpecViewProps> = ({ onToast }) => {
         query_text: queryText,
       });
       setSpecResult(res);
-      setEditedText(res.specification_text || '');
+      setEditedText(res.specification_text || res.generated_text || '');
       onToast('Grounded specification generated successfully!', 'success');
     } catch (err: any) {
       onToast(err.message || 'Specification generation failed.', 'error');
@@ -57,6 +57,7 @@ export const SpecView: React.FC<SpecViewProps> = ({ onToast }) => {
       const res = await updateSpecification(specResult.id, {
         title: specTitle,
         specification_text: editedText,
+        generated_text: editedText,
       });
       setSpecResult(res);
       onToast('Specification saved to database!', 'success');
@@ -147,8 +148,9 @@ export const SpecView: React.FC<SpecViewProps> = ({ onToast }) => {
               </label>
               <select value={genType} onChange={(e) => setGenType(e.target.value)}>
                 <option value="technical_specification">Full Technical Specification (Sectional)</option>
-                <option value="gfr_compliance_clause">GFR 2017 Model Tender Clause</option>
-                <option value="testing_schedule">Inspection & Testing Quality Plan</option>
+                <option value="tender_clause">GFR 2017 Model Tender Clause</option>
+                <option value="compliance_checklist">Inspection & Testing Quality Plan</option>
+                <option value="corrective_clause">Audit Corrective Compliance Clause</option>
               </select>
             </div>
           </div>
