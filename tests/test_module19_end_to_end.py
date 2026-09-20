@@ -128,7 +128,7 @@ def test_operational_surface_and_openapi_are_exposed():
         assert ready.json()["status"] == "ready"
         assert openapi.status_code == 200
         paths = openapi.json()["paths"]
-        assert len(paths) == 33
+        assert len(paths) == 34
         assert "/api/health" in paths
         assert "/api/ready" in paths
         assert invalid.status_code == 422

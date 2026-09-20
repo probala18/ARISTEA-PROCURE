@@ -4,7 +4,7 @@ Registers all API routers and provides health checks.
 """
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,13 +13,14 @@ from starlette.middleware.base import BaseHTTPMiddleware
 import logging
 from sqlalchemy import text
 
-from backend.app.core.database import SessionLocal
+from backend.app.core.database import SessionLocal, get_db
 from backend.app.api.standards import standards_router, graph_router
 from backend.app.api.speech import speech_router
 from backend.app.api.tenders import tenders_router
 from backend.app.api.specifications import specifications_router
 from backend.app.api.jobs import jobs_router
 from backend.app.api.evaluations import evaluations_router
+from backend.app.services.recommendation import RecommendationEngine, RecommendationRequest, RecommendationResponse
 from backend.app.services.jobs import job_registry
 from backend.app.core.config import settings
 
@@ -66,6 +67,12 @@ app.include_router(tenders_router, prefix="/api")
 app.include_router(specifications_router, prefix="/api")
 app.include_router(jobs_router, prefix="/api")
 app.include_router(evaluations_router, prefix="/api")
+
+
+@app.post("/api/analyze", response_model=RecommendationResponse, tags=["Recommendation API"])
+def analyze_requirement(payload: RecommendationRequest, db=Depends(get_db)):
+    """Expose the existing recommendation engine for typed frontend queries."""
+    return RecommendationEngine(db).recommend(payload)
 
 
 @app.exception_handler(RequestValidationError)

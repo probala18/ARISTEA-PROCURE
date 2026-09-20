@@ -45,6 +45,18 @@ Useful endpoints:
 pytest -q
 ```
 
+## Frontend demo
+
+With the API running, serve the dependency-free demo in a second terminal:
+
+```powershell
+python -m http.server 5173 --directory frontend
+```
+
+Open `http://localhost:5173`. Set backend `CORS_ALLOWED_ORIGINS` to include
+`http://localhost:5173` when it is not already allowed. See `docs/module20.md`
+for the supported workflows and verification notes.
+
 ## Container
 
 Build and run without embedding credentials:
