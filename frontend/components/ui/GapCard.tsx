@@ -12,18 +12,21 @@ interface GapCardProps {
 export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
+  const severityUpper = (gap.severity || 'INFO').toUpperCase();
+
   useEffect(() => {
-    if (gap.severity === 'CRITICAL' && cardRef.current) {
+    if (severityUpper === 'CRITICAL' && cardRef.current) {
       pulseAttention(cardRef.current);
     }
-  }, [gap.severity]);
+  }, [severityUpper]);
 
   const getSeverityBadge = () => {
-    switch (gap.severity) {
+    switch (severityUpper) {
       case 'CRITICAL':
         return <span className="badge badge-red">CRITICAL GAP</span>;
       case 'WARNING':
         return <span className="badge badge-orange">WARNING</span>;
+      case 'ADVISORY':
       case 'INFO':
       default:
         return <span className="badge badge-blue">ADVISORY</span>;
@@ -31,16 +34,23 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
   };
 
   const getSeverityBorder = () => {
-    switch (gap.severity) {
+    switch (severityUpper) {
       case 'CRITICAL':
         return 'rgba(220, 38, 38, 0.4)';
       case 'WARNING':
         return 'rgba(217, 119, 6, 0.4)';
+      case 'ADVISORY':
       case 'INFO':
       default:
         return 'rgba(2, 132, 199, 0.35)';
     }
   };
+
+  const gapLabel = String(gap.gap_category || gap.gap_type || gap.issue_description || 'OBSERVATION').replace(/_/g, ' ');
+  const clauseLabel = gap.clause_reference || (gap.requirement_id !== undefined ? `#${gap.requirement_id}` : null);
+  const adviceNotes = gap.recommendation || gap.recommendation_notes || gap.issue_description || 'Review requirement and update to current Indian Standard.';
+  const citedStd = gap.standard_id || gap.cited_standard;
+  const expectedStd = gap.successor_standard_id || gap.expected_standard;
 
   return (
     <div
@@ -50,7 +60,7 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
         padding: '18px 20px',
         marginBottom: '14px',
         borderRadius: 'var(--radius-md)',
-        borderLeft: `4px solid ${gap.severity === 'CRITICAL' ? '#dc2626' : gap.severity === 'WARNING' ? '#d97706' : '#0284c7'}`,
+        borderLeft: `4px solid ${severityUpper === 'CRITICAL' ? '#dc2626' : severityUpper === 'WARNING' ? '#d97706' : '#0284c7'}`,
         borderColor: getSeverityBorder(),
       }}
     >
@@ -65,18 +75,18 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
               color: 'var(--text-primary)',
             }}
           >
-            {gap.gap_type.replace(/_/g, ' ')}
+            {gapLabel}
           </span>
         </div>
-        {gap.requirement_id && (
+        {clauseLabel && (
           <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-            Clause #{gap.requirement_id}
+            Clause {clauseLabel}
           </span>
         )}
       </div>
 
       {/* Cited vs Expected standards comparison if available */}
-      {(gap.cited_standard || gap.expected_standard) && (
+      {(citedStd || expectedStd) && (
         <div
           style={{
             display: 'flex',
@@ -89,19 +99,19 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
             fontSize: '0.85rem',
           }}
         >
-          {gap.cited_standard && (
+          {citedStd && (
             <div>
               <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', display: 'block' }}>CITED IN TENDER:</span>
               <span style={{ color: 'var(--status-danger)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
-                {gap.cited_standard}
+                {citedStd}
               </span>
             </div>
           )}
-          {gap.expected_standard && (
+          {expectedStd && (
             <div>
               <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem', display: 'block' }}>EXPECTED / CURRENT:</span>
               <span style={{ color: 'var(--status-success)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
-                {gap.expected_standard}
+                {expectedStd}
               </span>
             </div>
           )}
@@ -137,7 +147,7 @@ export const GapCard: React.FC<GapCardProps> = ({ gap, index }) => {
         }}
       >
         <strong style={{ color: 'var(--accent-teal-dark)' }}>Grounding Advice: </strong>
-        {gap.recommendation_notes}
+        {adviceNotes}
       </div>
     </div>
   );
