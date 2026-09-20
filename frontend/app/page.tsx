@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
-import { TabNav, TabKey } from '@/components/TabNav';
+import { TabKey } from '@/components/TabNav';
 import { RecommendView } from '@/components/views/RecommendView';
 import { StandardView } from '@/components/views/StandardView';
 import { GraphView } from '@/components/views/GraphView';
@@ -190,11 +190,6 @@ export default function Home() {
               </div>
             </div>
           </section>
-
-          {/* Mobile / Tablet Tab Switcher */}
-          <div className="lg:hidden" style={{ display: 'flex', justifyContent: 'center' }}>
-            <TabNav activeTab={activeTab} onChange={setActiveTab} />
-          </div>
 
           {/* Animated Dynamic Workspace Container */}
           <div style={{ marginTop: '16px' }}>

@@ -359,11 +359,15 @@ code, pre {
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
+  width: 100%;
   background-color: var(--bg-primary);
+  position: relative;
 }
 
 .dashboard-sidebar {
-  width: 270px;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
   flex-shrink: 0;
   background: #ffffff;
   border-right: 1px solid var(--border-subtle);
@@ -374,61 +378,73 @@ code, pre {
   top: 0;
   bottom: 0;
   height: 100vh;
-  z-index: 40;
-  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.02);
+  z-index: 50;
+  box-shadow: 2px 0 8px rgba(15, 23, 42, 0.03);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .dashboard-main {
-  flex: 1;
+  margin-left: 260px;
+  width: calc(100% - 260px);
   min-width: 0;
   display: flex;
   flex-direction: column;
-  margin-left: 270px;
-  width: calc(100% - 270px);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .dashboard-header {
-  height: 68px;
-  background: rgba(255, 255, 255, 0.85);
+  height: 64px;
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
+  padding: 0 28px;
   position: sticky;
   top: 0;
   z-index: 30;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .dashboard-content {
   flex: 1;
-  padding: 28px 32px 48px;
-  max-width: 1400px;
+  padding: 24px 28px 48px;
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
-@media (max-width: 1024px) {
-  .dashboard-layout {
-    flex-direction: column;
-  }
+@media (max-width: 860px) {
   .dashboard-sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
+    width: 64px;
+    min-width: 64px;
+    max-width: 64px;
+  }
+  .dashboard-sidebar .sidebar-brand-text,
+  .dashboard-sidebar .sidebar-nav-text,
+  .dashboard-sidebar .sidebar-footer-text,
+  .dashboard-sidebar .sidebar-section-heading {
+    display: none !important;
+  }
+  .dashboard-sidebar button {
+    justify-content: center !important;
+    padding: 10px 0 !important;
   }
   .dashboard-main {
-    margin-left: 0;
-    width: 100%;
+    margin-left: 64px;
+    width: calc(100% - 64px);
   }
   .dashboard-header {
-    padding: 0 20px;
+    padding: 0 16px;
   }
   .dashboard-content {
-    padding: 20px 16px 36px;
+    padding: 16px 14px 32px;
   }
 }

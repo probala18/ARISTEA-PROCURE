@@ -108,7 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           A
         </div>
-        <div>
+        <div className="sidebar-brand-text">
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span
               style={{
@@ -141,8 +141,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Navigation Links */}
-      <div style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: '4px', overflowY: 'auto' }}>
+      <div style={{ flex: 1, padding: '16px 10px', display: 'flex', flexDirection: 'column', gap: '4px', overflowY: 'auto' }}>
         <div
+          className="sidebar-section-heading"
           style={{
             fontSize: '0.68rem',
             fontWeight: 800,
@@ -189,7 +190,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               >
                 {item.icon}
               </span>
-              <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="sidebar-nav-text" style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
                     fontSize: '0.84rem',
@@ -236,6 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* System Status Footer */}
       <div
+        className="sidebar-footer-text"
         style={{
           padding: '14px 16px',
           borderTop: '1px solid var(--border-subtle)',
