@@ -124,8 +124,8 @@ export const VoiceView: React.FC<VoiceViewProps> = ({ onExploreStandard, onToast
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
       <Panel
         title="Voice Procurement Assistant"
-        subtitle="End-to-End Multilingual Speech AI (Module 10) supporting English, Hindi, and Tamil with calibrated confidence scoring."
-        badge="Module 10 Speech AI"
+        subtitle="End-to-End Multilingual Speech AI supporting English, Hindi, and Tamil with calibrated confidence scoring."
+        badge="Multilingual Speech AI"
       >
         {/* Language Selector */}
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap' }}>

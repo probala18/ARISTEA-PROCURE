@@ -107,7 +107,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
       <Panel
         title="Standards Intelligence Explorer"
         subtitle="Canonical Bureau of Indian Standards lifecycle tracing, multi-version lineage, compliance mandates, and graph edges."
-        badge="Module 4-6"
+        badge="Standards Explorer"
       >
         {/* Search Input & Quick Select */}
         <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>

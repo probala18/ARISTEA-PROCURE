@@ -87,7 +87,7 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
       <Panel
         title="Semantic Procurement Matcher"
         subtitle="Hybrid vector embeddings and BIS ontology graph mapping to identify primary, allied, testing, and safety standards."
-        badge="Module 7-9"
+        badge="AI Matcher"
       >
         <form onSubmit={handleSubmit}>
           {/* Quick preset chips */}

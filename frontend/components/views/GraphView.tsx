@@ -139,7 +139,7 @@ export const GraphView: React.FC<GraphViewProps> = ({
       <Panel
         title="Knowledge Graph & Relationship Topology"
         subtitle="Deterministic graph traversal exploring normative references, testing methods, safety standards, and supersession lineage."
-        badge="Module 5 Graph"
+        badge="Knowledge Graph"
       >
         {/* Search & Traversal Controls */}
         <form onSubmit={handleSubmit} style={{ marginBottom: '18px' }}>

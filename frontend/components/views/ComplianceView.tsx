@@ -76,7 +76,7 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
       <Panel
         title="Compliance & Quality Control Orders (QCO) Matrix"
         subtitle="Authoritative regulatory status, ministry Quality Control Orders, mandatory BIS certification schemes, and divergence detection."
-        badge="Module 9 Compliance"
+        badge="QCO & Compliance"
       >
         {/* Search Input */}
         <form onSubmit={handleSubmit} style={{ marginBottom: '18px' }}>

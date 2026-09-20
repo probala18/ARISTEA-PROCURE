@@ -93,7 +93,7 @@ export const SpecView: React.FC<SpecViewProps> = ({ onToast }) => {
       <Panel
         title="Grounded Specification Drafting Workspace"
         subtitle="Generates legally rigorous procurement specifications and tender clauses grounded strictly in Bureau of Indian Standards specifications."
-        badge="Module 13 Spec"
+        badge="Specification Drafter"
       >
         <form onSubmit={handleGenerate}>
           {/* Preset Prompts */}

@@ -139,7 +139,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
       <Panel
         title="Tender Document Engine & Grounded Audit"
         subtitle="Upload RFP/tender documents (PDF, DOCX, TXT) to extract technical clauses, detect outdated BIS citations, and generate compliant procurement specs."
-        badge="Module 11-13"
+        badge="Tender Auditor"
       >
         {/* Upload Zone */}
         <div
@@ -432,7 +432,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
           <Panel
             title={generatedSpec.title || 'Draft Technical Procurement Specification'}
             subtitle={`Type: ${generatedSpec.specification_type} | Grounded in BIS ontology`}
-            badge="Module 13 Spec"
+            badge="Generated Specification"
             action={
               <button onClick={handleCopySpec} className="btn-secondary" style={{ fontSize: '0.8rem' }}>
                 Copy Text 📋
