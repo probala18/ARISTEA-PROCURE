@@ -140,30 +140,44 @@ export const SimplifyView: React.FC<SimplifyViewProps> = ({
         style={{
           padding: '24px 28px',
           borderRadius: 'var(--radius-lg)',
-          background: 'linear-gradient(135deg, #1e1b4b, #0f172a)',
-          color: '#ffffff',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          background: '#ffffff',
+          color: 'var(--text-primary)',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: 'var(--shadow-card)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
               <span style={{ fontSize: '1.4rem' }}>📖</span>
-              <span className="badge badge-indigo" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+              <span
+                style={{
+                  background: '#ffffff',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-subtle)',
+                  padding: '3px 10px',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+              >
                 SIMPLIFY & CLAUSE EXPLAINER
               </span>
             </div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '4px 0 8px 0', letterSpacing: '-0.02em' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '4px 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
               Technical Standard to Procurement Translator
             </h2>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', maxWidth: '780px', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', maxWidth: '780px', lineHeight: 1.5 }}>
               Bridge the communication gap between dense BIS engineering specifications and plain-language public procurement requirements.
               Explains only verified scope and metadata from authoritative local records.
             </p>
           </div>
-          <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '12px 18px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-            <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '2px' }}>Standard Selector</div>
-            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#38bdf8', fontFamily: 'monospace' }}>
+          <div style={{ background: '#f8fafc', padding: '12px 18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '2px', fontWeight: 600 }}>Standard Selector</div>
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--accent-primary)', fontFamily: 'monospace' }}>
               {selectedStandardId}
             </div>
           </div>

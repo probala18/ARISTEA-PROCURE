@@ -79,23 +79,37 @@ export const ServiceHubView: React.FC<ServiceHubViewProps> = ({
         style={{
           padding: '24px 28px',
           borderRadius: 'var(--radius-lg)',
-          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98))',
-          color: '#ffffff',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          background: '#ffffff',
+          color: 'var(--text-primary)',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: 'var(--shadow-card)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
               <span style={{ fontSize: '1.4rem' }}>🏛️</span>
-              <span className="badge badge-cyan" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+              <span
+                style={{
+                  background: '#ffffff',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-subtle)',
+                  padding: '3px 10px',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+              >
                 REGULATORY & SERVICE DIRECTORY
               </span>
             </div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '4px 0 8px 0', letterSpacing: '-0.02em' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '4px 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
               BIS Service Hub & Public Procurement Portal
             </h2>
-            <p style={{ fontSize: '0.88rem', color: '#94a3b8', maxWidth: '750px', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', maxWidth: '750px', lineHeight: 1.5 }}>
               Access verified Bureau of Indian Standards (BIS) regulatory frameworks, product licence categories,
               and ministry procurement mappings from the authoritative local repository.
             </p>
@@ -103,33 +117,33 @@ export const ServiceHubView: React.FC<ServiceHubViewProps> = ({
           <div style={{ display: 'flex', gap: '10px' }}>
             <div
               style={{
-                background: 'rgba(255, 255, 255, 0.06)',
+                background: '#f8fafc',
                 padding: '10px 16px',
                 borderRadius: 'var(--radius-md)',
                 textAlign: 'center',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1px solid var(--border-subtle)',
               }}
             >
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38bdf8' }}>75</div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase' }}>Verified Licences</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-primary)' }}>75</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Verified Licences</div>
             </div>
             <div
               style={{
-                background: 'rgba(255, 255, 255, 0.06)',
+                background: '#f8fafc',
                 padding: '10px 16px',
                 borderRadius: 'var(--radius-md)',
                 textAlign: 'center',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1px solid var(--border-subtle)',
               }}
             >
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#34d399' }}>28</div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase' }}>Ministry Mappings</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--status-success)' }}>28</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Ministry Mappings</div>
             </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div style={{ display: 'flex', gap: '8px', marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', gap: '8px', marginTop: '20px', borderTop: '1px solid var(--border-subtle)', paddingTop: '16px', overflowX: 'auto' }}>
           {[
             { id: 'overview', label: 'Service Catalog & Guidance', icon: '📋' },
             { id: 'licences', label: `Product Licences (${licences.length})`, icon: '📜' },
@@ -140,9 +154,9 @@ export const ServiceHubView: React.FC<ServiceHubViewProps> = ({
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               style={{
-                background: activeTab === tab.id ? 'var(--brand-primary, #3b82f6)' : 'rgba(255,255,255,0.06)',
-                color: activeTab === tab.id ? '#ffffff' : '#94a3b8',
-                border: 'none',
+                background: activeTab === tab.id ? 'var(--accent-primary)' : '#f8fafc',
+                color: activeTab === tab.id ? '#ffffff' : 'var(--text-secondary)',
+                border: activeTab === tab.id ? '1px solid var(--accent-primary)' : '1px solid var(--border-subtle)',
                 padding: '8px 16px',
                 borderRadius: 'var(--radius-md)',
                 fontSize: '0.82rem',

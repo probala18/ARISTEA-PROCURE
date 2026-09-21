@@ -446,8 +446,9 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
 
               <div
                 style={{
-                  background: '#090d16',
-                  color: '#f8fafc',
+                  background: '#f8fafc',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border-subtle)',
                   padding: '16px 18px',
                   borderRadius: 'var(--radius-md)',
                   fontFamily: 'var(--font-mono)',
