@@ -16,6 +16,7 @@ Strictly enforces:
 10. Dual lookup: canonical standard ID, normalized standard number, or integer DB PK.
 11. Historical/uncatalogued references are handled safely without manufacturing synthetic Standard rows.
 """
+import json
 from typing import List, Dict, Any, Optional, Union
 from sqlalchemy.orm import Session
 
@@ -76,6 +77,13 @@ class VersionIntelligenceService:
 
         records: List[AmendmentRecord] = []
         for r in rows:
+            prov = r.source_provenance
+            if isinstance(prov, str):
+                try:
+                    prov = json.loads(prov)
+                except Exception:
+                    prov = {"raw": prov}
+
             # An amendment record must have at least one amendment signal or change description
             records.append(
                 AmendmentRecord(
@@ -87,7 +95,7 @@ class VersionIntelligenceService:
                     change_description=r.change_description,
                     current_state=r.current_state or "CURRENT",
                     source_dataset=r.source_dataset or "standards.csv",
-                    source_provenance=r.source_provenance,
+                    source_provenance=prov,
                 )
             )
         return records

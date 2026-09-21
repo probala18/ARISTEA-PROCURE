@@ -9,6 +9,7 @@ Enforces:
 5. Grounded shortest path computation based on actual graph connectivity only.
 """
 from typing import List, Dict, Any, Optional, Union
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 
 from backend.app.models.standard import Standard
@@ -47,18 +48,42 @@ class RelationshipEngine:
             if std:
                 return std
 
-        # 2. Match standard_id or is_number directly
+        # 2. Match standard_id or is_number directly (case-insensitive)
+        ident_upper = ident_str.upper()
         std = self.session.query(Standard).filter(
-            (Standard.standard_id == ident_str) | (Standard.is_number == ident_str)
+            or_(
+                func.upper(Standard.standard_id) == ident_upper,
+                func.upper(Standard.is_number) == ident_upper,
+            )
         ).first()
         if std:
             return std
 
         # 3. Use Module 4 reference resolver
         res = self.kg_service.resolve_standard_reference(ident_str)
-        if res.standard_id and res.standard_id.startswith("std:"):
-            raw_id = int(res.standard_id.replace("std:", ""))
-            return self.session.get(Standard, raw_id)
+        if res.standard_id:
+            raw_id_str = res.standard_id.replace("std:", "").strip()
+            if raw_id_str.isdigit():
+                std = self.session.get(Standard, int(raw_id_str))
+                if std:
+                    return std
+
+        if res.canonical_id:
+            std = self.session.query(Standard).filter(
+                func.upper(Standard.standard_id) == res.canonical_id.strip().upper()
+            ).first()
+            if std:
+                return std
+
+        # 4. Prefix match (e.g. 'IS 2029' matches 'IS 2029:1998')
+        std = self.session.query(Standard).filter(
+            or_(
+                Standard.standard_id.ilike(f"{ident_str}%"),
+                Standard.is_number.ilike(f"{ident_str}%"),
+            )
+        ).first()
+        if std:
+            return std
 
         return None
 

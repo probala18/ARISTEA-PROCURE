@@ -105,21 +105,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div
           style={{
-            width: '38px',
-            height: '38px',
+            width: '40px',
+            height: '40px',
             borderRadius: '10px',
-            background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)',
+            overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#ffffff',
-            fontSize: '1.2rem',
-            fontWeight: 800,
-            boxShadow: '0 4px 12px rgba(79, 70, 229, 0.35)',
+            background: '#ffffff',
+            border: '1px solid var(--border-subtle)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
             flexShrink: 0,
           }}
         >
-          A
+          <img
+            src="/logo.png"
+            alt="The BOLD Si6X Logo"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              display: 'block',
+            }}
+          />
         </div>
         <div className="sidebar-brand-text">
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>

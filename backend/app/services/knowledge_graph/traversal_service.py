@@ -8,6 +8,7 @@ Supports:
 - Explicit vs Derived edge segregation
 - Representation of unresolved targets as UNRESOLVED_STANDARD_REFERENCE nodes
 """
+import json
 from typing import List, Dict, Set, Optional, Any
 from sqlalchemy.orm import Session
 
@@ -239,6 +240,13 @@ class GraphTraversalService:
         except ValueError:
             rel_type = RelationType.OTHER
 
+        prov = r.source_provenance
+        if isinstance(prov, str):
+            try:
+                prov = json.loads(prov)
+            except Exception:
+                prov = {"raw": prov}
+
         return GraphEdge(
             source_id=src_id,
             target_id=tgt_id,
@@ -246,7 +254,7 @@ class GraphTraversalService:
             source_relationship_label=r.relationship_type,
             is_explicit_source=r.is_explicit_source,
             source_dataset=r.source_dataset,
-            source_provenance=r.source_provenance,
+            source_provenance=prov,
             confidence=r.confidence,
             properties={
                 "relationship_category": r.relationship_category,
