@@ -14,6 +14,8 @@ import logging
 import hashlib
 import numpy as np
 
+from backend.app.core.config import settings
+
 logger = logging.getLogger("retrieval.embedding")
 
 
@@ -182,8 +184,8 @@ class SentenceTransformerEmbeddingProvider(BaseEmbeddingProvider):
     (e.g., 'all-MiniLM-L6-v2' or 'paraphrase-multilingual-MiniLM-L12-v2', producing 384-dim vectors).
     """
 
-    def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
-        self._model_name = model_name
+    def __init__(self, model_name: Optional[str] = None):
+        self._model_name = model_name or f"sentence-transformers/{settings.EMBEDDING_MODEL_NAME}"
         self._model = None
         self._load_model()
 
@@ -225,17 +227,25 @@ class SentenceTransformerEmbeddingProvider(BaseEmbeddingProvider):
         return [e.tolist() for e in embs]
 
 
+_pretrained_provider: Optional[SentenceTransformerEmbeddingProvider] = None
+
+
 def get_embedding_provider(prefer_pretrained: bool = True) -> BaseEmbeddingProvider:
     """
     Factory to retrieve embedding provider.
     Attempts pretrained SentenceTransformer first if prefer_pretrained is True and available;
     falls back cleanly to DeterministicSemanticEmbeddingProvider.
+    The pretrained model is loaded once per process and reused across requests.
     """
+    global _pretrained_provider
     if prefer_pretrained:
+        if _pretrained_provider is not None:
+            return _pretrained_provider
         try:
             import sentence_transformers
             provider = SentenceTransformerEmbeddingProvider()
             if provider._model is not None:
+                _pretrained_provider = provider
                 return provider
         except Exception:
             pass

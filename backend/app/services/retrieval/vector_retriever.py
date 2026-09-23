@@ -2,12 +2,19 @@
 Vector Semantic Retriever for Module 5.
 Computes cosine similarity over 384-dimensional standard vectors.
 """
+import logging
 from typing import List, Dict, Any, Optional
 import numpy as np
 from sqlalchemy.orm import Session
 
 from backend.app.models.standard import Standard
-from backend.app.services.retrieval.embedding_provider import BaseEmbeddingProvider, get_embedding_provider
+from backend.app.services.retrieval.embedding_provider import (
+    BaseEmbeddingProvider,
+    EmbeddingTextBuilder,
+    get_embedding_provider,
+)
+
+logger = logging.getLogger("retrieval.vector")
 
 
 class VectorRetriever:
@@ -36,6 +43,17 @@ class VectorRetriever:
             valid_ids.append(s.id)
             vectors.append(vec)
 
+        # Guard against stored vectors produced by a different model (e.g. the offline
+        # fallback): mixing vector spaces makes cosine ranking effectively random.
+        if vectors and self.provider.is_pretrained and not self._stored_vectors_match(stds[0], vectors[0]):
+            logger.warning(
+                "Stored standard embeddings do not match %s; re-embedding in memory. "
+                "Run scripts/generate_embeddings.py --force to persist.",
+                self.provider.model_name,
+            )
+            texts = [EmbeddingTextBuilder.build_standard_embedding_text(s) for s in stds]
+            vectors = self.provider.embed_batch(texts)
+
         self.indexed_ids = np.array(valid_ids, dtype=np.int64)
         if vectors:
             self.matrix = np.array(vectors, dtype=np.float32)
@@ -45,6 +63,12 @@ class VectorRetriever:
             self.matrix = self.matrix / norms
         else:
             self.matrix = np.empty((0, self.provider.dimension), dtype=np.float32)
+
+    def _stored_vectors_match(self, standard: Standard, stored_vec) -> bool:
+        fresh = np.array(self.provider.embed_standard(standard), dtype=np.float32)
+        stored = np.array(stored_vec, dtype=np.float32)
+        denom = float(np.linalg.norm(fresh) * np.linalg.norm(stored)) or 1.0
+        return float(np.dot(fresh, stored)) / denom > 0.95
 
     def search(self, query: str, top_k: int = 20) -> List[Dict[str, Any]]:
         """Vector semantic search using cosine similarity."""
