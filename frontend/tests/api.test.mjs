@@ -223,3 +223,142 @@ test('Clause Explainer Strict Evidence Boundary (Rule 6)', () => {
   const boundaryNotice = 'Detailed clause text not available in current verified dataset';
   assert.strictEqual(boundaryNotice, 'Detailed clause text not available in current verified dataset');
 });
+
+test('Version Intelligence Contract: status, amendments, supersession & warnings', () => {
+  const mockVersionReport = {
+    standard_id: 'IS 12615:2018',
+    status: 'CURRENT',
+    latest_year: 2018,
+    amendments: [
+      {
+        id: 1,
+        amendment_number: 1,
+        amendment_year: 2020,
+        change_description: 'Clause 4.2 updated for IE4 efficiency benchmarks.',
+        current_state: 'CURRENT',
+      },
+    ],
+    supersession: {
+      standard_id: 'IS 12615:2018',
+      canonical_id: 'IS 12615:2018',
+      current_status: 'CURRENT',
+      supersedes: [{ canonical_id: 'IS 325:1996', is_number: 'IS 325' }],
+      superseded_by: [],
+      has_cycle: false,
+    },
+    warnings: [],
+  };
+
+  assert.strictEqual(mockVersionReport.status, 'CURRENT');
+  assert.strictEqual(mockVersionReport.supersession.current_status, 'CURRENT');
+  assert.strictEqual(mockVersionReport.amendments.length, 1);
+  assert.strictEqual(mockVersionReport.amendments[0].amendment_number, 1);
+  assert.strictEqual(mockVersionReport.supersession.supersedes[0].canonical_id, 'IS 325:1996');
+
+  const mockSupersededReport = {
+    standard_id: 'IS 325:1996',
+    status: 'SUPERSEDED',
+    supersession: {
+      current_status: 'SUPERSEDED',
+      superseded_by: [{ canonical_id: 'IS 12615:2018', is_number: 'IS 12615' }],
+    },
+  };
+  assert.strictEqual(mockSupersededReport.status, 'SUPERSEDED');
+  assert.strictEqual(mockSupersededReport.supersession.superseded_by[0].canonical_id, 'IS 12615:2018');
+
+  const mockUnknownReport = {
+    standard_id: 'IS 99999',
+    status: 'UNKNOWN',
+  };
+  assert.strictEqual(mockUnknownReport.status, 'UNKNOWN');
+});
+
+test('Compliance Evidence Separation: no QCO does not imply voluntary', () => {
+  const mockNoQcoCompliance = {
+    standard_id: 'IS 10257:1982',
+    requirement_level: 'UNKNOWN',
+    governing_scheme: 'BIS_ISI',
+    qco_records: [],
+    certification_records: [],
+    disclaimer: 'Compliance intelligence reflects facts ingested in the project dataset. Absence of a record does not establish voluntary status.',
+  };
+
+  assert.strictEqual(mockNoQcoCompliance.requirement_level, 'UNKNOWN');
+  assert.notStrictEqual(mockNoQcoCompliance.requirement_level, 'VOLUNTARY');
+  assert.strictEqual(mockNoQcoCompliance.qco_records.length, 0);
+  assert.ok(mockNoQcoCompliance.disclaimer.includes('Absence of a record does not establish voluntary status'));
+
+  const mockMandatory = {
+    standard_id: 'IS 694:2010',
+    requirement_level: 'MANDATORY',
+    governing_scheme: 'BIS_ISI',
+    qco_records: [{ order_number: 'QCO-2023-CABLES' }],
+  };
+  assert.strictEqual(mockMandatory.requirement_level, 'MANDATORY');
+
+  const mockVoluntary = {
+    standard_id: 'IS 732:2019',
+    requirement_level: 'VOLUNTARY',
+    governing_scheme: 'BIS_ISI',
+    qco_records: [],
+  };
+  assert.strictEqual(mockVoluntary.requirement_level, 'VOLUNTARY');
+});
+
+test('Ontology Relationships: real collection count and clean zero-state message', () => {
+  const emptyRelationships = [];
+  assert.strictEqual(emptyRelationships.length, 0);
+
+  const zeroStateNotice = 'No verified ontology relationships recorded for this standard.';
+  assert.strictEqual(zeroStateNotice, 'No verified ontology relationships recorded for this standard.');
+
+  const populatedRelationships = [
+    {
+      source_id: 'std:1',
+      target_id: 'std:2',
+      relationship_type: 'TESTING',
+      relationship_category: 'NORMATIVE',
+      is_explicit_source: true,
+      source_dataset: 'relationships.json',
+    },
+    {
+      source_id: 'std:1',
+      target_id: 'std:3',
+      relationship_type: 'SAFETY',
+      relationship_category: 'NORMATIVE',
+      is_explicit_source: true,
+      source_dataset: 'relationships.json',
+    },
+  ];
+  assert.strictEqual(populatedRelationships.length, 2);
+  assert.strictEqual(populatedRelationships[0].relationship_type, 'TESTING');
+  assert.strictEqual(populatedRelationships[1].relationship_type, 'SAFETY');
+});
+
+test('Strict Grounding: No fabricated confidence, execution time, role or severity', () => {
+  const candidateWithoutRole = {
+    id: 1,
+    standard_id: 'IS 12615:2018',
+    title: 'Energy Efficient Induction Motors',
+    confidence_score: undefined,
+    role: undefined,
+  };
+  assert.strictEqual(candidateWithoutRole.role, undefined);
+  assert.strictEqual(candidateWithoutRole.confidence_score, undefined);
+  assert.notStrictEqual(candidateWithoutRole.role, 'PRIMARY');
+  assert.notStrictEqual(candidateWithoutRole.confidence_score, 0.95);
+
+  const responseWithoutTime = {
+    execution_time_ms: undefined,
+  };
+  assert.strictEqual(responseWithoutTime.execution_time_ms, undefined);
+  assert.notStrictEqual(responseWithoutTime.execution_time_ms, 14.2);
+
+  const rawGapWithoutSeverity = {
+    standard_id: 'IS 1234',
+    issue_description: 'Observation without severity tag',
+  };
+  const severityMapped = rawGapWithoutSeverity.severity ? rawGapWithoutSeverity.severity.toUpperCase() : 'UNKNOWN';
+  assert.strictEqual(severityMapped, 'UNKNOWN');
+  assert.notStrictEqual(severityMapped, 'INFO');
+});

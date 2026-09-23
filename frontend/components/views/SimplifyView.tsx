@@ -118,15 +118,20 @@ export const SimplifyView: React.FC<SimplifyViewProps> = ({
 
     return {
       overview: `This Indian Standard establishes technical requirements, tolerances, and quality benchmarks for ${title.toLowerCase()}. It falls under the ${cat} category.`,
-      procurementAdvice: isMandatory
-        ? `MANDATORY COMPLIANCE: Covered by Quality Control Order (QCO). Tenders specifying these goods must require ISI Certification Mark license as an eligibility criterion.`
-        : `Voluntary standard unless specifically referenced in the procurement tender or departmental schedule of rates.`,
+      procurementAdvice:
+        det.compliance?.requirement_level === 'MANDATORY'
+          ? 'MANDATORY COMPLIANCE: Covered by Quality Control Order (QCO). Tenders specifying these goods must require ISI Certification Mark license as an eligibility criterion.'
+          : det.compliance?.requirement_level === 'VOLUNTARY'
+          ? 'VOLUNTARY: Governed by voluntary BIS certification schemes unless specifically mandated in tender specifications.'
+          : det.compliance?.requirement_level === 'CONDITIONAL'
+          ? 'CONDITIONAL: Statutory compliance depends on specific voltage ratings, sizes, or end-use applications.'
+          : 'Compliance requirement level not available in current verified dataset (UNKNOWN). Absence of record does not establish voluntary status.',
       scopeExplanation: scope
         ? `Scope highlights: ${scope.slice(0, 300)}${scope.length > 300 ? '...' : ''}`
         : 'Detailed scope text not explicitly detailed in standard header.',
       qcoNotice: qcoCount > 0
         ? `Backed by ${qcoCount} verified Quality Control Order(s) enforced by ministry notification.`
-        : 'No specific QCO mandate recorded in verified database.',
+        : 'No QCO record available in the current verified dataset.',
     };
   };
 
@@ -297,7 +302,7 @@ export const SimplifyView: React.FC<SimplifyViewProps> = ({
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
                     <span style={{ fontSize: '1.1rem' }}>📐</span>
                     <h4 style={{ fontSize: '0.94rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                      Official Technical Specifications (Verified)
+                      Verified Source Content
                     </h4>
                   </div>
 
@@ -355,7 +360,7 @@ export const SimplifyView: React.FC<SimplifyViewProps> = ({
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
                     <span style={{ fontSize: '1.1rem' }}>💡</span>
                     <h4 style={{ fontSize: '0.94rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                      Plain-Language Procurement Translation
+                      Plain-Language Explanation (Derived Guidance)
                     </h4>
                   </div>
 

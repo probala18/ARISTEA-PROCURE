@@ -63,7 +63,7 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
         type: 'query',
         title: queryText,
         subtitle: data.primary_standard
-          ? `Matched with ${data.primary_standard.standard_id} (${Math.round((data.primary_standard.score || 0.95) * 100)}% match)`
+          ? `Matched with ${data.primary_standard.standard_id}${data.primary_standard.score !== undefined ? ` (${Math.round(data.primary_standard.score * 100)}% match)` : ''}`
           : 'Analyzed procurement requirements',
       });
 
@@ -86,7 +86,7 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
       <Panel
         title="Semantic Procurement Matcher"
-        subtitle="Hybrid vector embeddings and BIS ontology graph mapping to identify primary, allied, testing, and safety standards."
+        subtitle="Dense semantic vector embeddings and BIS ontology graph mapping to identify primary, allied, testing, and safety standards."
         badge="AI Matcher"
       >
         <form onSubmit={handleSubmit}>
@@ -233,33 +233,32 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
       {/* Results Section */}
       {!isLoading && results && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}>
-          {/* Red Alert Banner for Superseded Standard Risk */}
+          {/* Banner for Superseded Standard Risk */}
           {isSupersededRisk && (
             <div
               className="glass-panel"
               style={{
                 padding: '18px 22px',
                 marginBottom: '20px',
-                background: 'rgba(220, 38, 38, 0.06)',
-                border: '2px solid var(--status-danger)',
+                background: 'rgba(245, 158, 11, 0.06)',
+                border: '2px solid rgba(245, 158, 11, 0.6)',
                 borderRadius: 'var(--radius-lg)',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <span style={{ fontSize: '1.4rem' }}>🚨</span>
+                <span style={{ fontSize: '1.4rem' }}>⚠️</span>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <span className="badge badge-red">CRITICAL RISK: SUPERSEDED STANDARD CITED</span>
-                    <strong style={{ color: 'var(--status-danger)', fontSize: '0.92rem' }}>
-                      GFR 2017 Rule 144(i) Non-Compliance Risk
+                    <span className="badge badge-amber">Potential compliance gap</span>
+                    <strong style={{ color: '#b45309', fontSize: '0.92rem' }}>
+                      Review required: Superseded standard reference
                     </strong>
                   </div>
                   <p style={{ fontSize: '0.86rem', color: 'var(--text-primary)', marginTop: '6px', lineHeight: 1.5 }}>
-                    Your requirement text cites <strong>IS 325</strong>, which has been formally withdrawn and superseded by <strong>IS 12615:2018</strong>.
-                    Issuing procurement tenders citing withdrawn standards violates statutory Quality Control Orders.
+                    Your requirement text cites <strong>IS 325</strong>. In the verified BIS dataset, IS 325 is recorded as superseded by <strong>IS 12615:2018</strong>.
                   </p>
                   <div style={{ marginTop: '8px', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                    <strong>Mandatory Action:</strong> Substitute IS 325 with current standard <strong>IS 12615:2018 (IE Code Energy Efficient Motors)</strong>.
+                    <strong>Evidence-backed finding:</strong> Consider verifying successor standard <strong>IS 12615:2018 (IE Code Energy Efficient Motors)</strong> for current applicability.
                   </div>
                 </div>
               </div>

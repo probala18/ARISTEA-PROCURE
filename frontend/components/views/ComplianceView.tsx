@@ -252,7 +252,7 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
               </div>
             ) : (
               <div style={{ padding: '20px', background: '#f8fafc', borderRadius: 'var(--radius-sm)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.86rem' }}>
-                No mandatory Quality Control Orders currently cataloged for this standard in the project dataset. Governed by voluntary certification schemes.
+                No QCO record available in the current verified dataset for this standard. Absence of a record does not establish voluntary status.
               </div>
             )}
           </div>

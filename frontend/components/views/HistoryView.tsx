@@ -74,8 +74,8 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
       <Panel
         title="Session Activity & Audit History"
-        subtitle="Chronological log of recent queries, explored standards, and audited tenders in this browser session."
-        badge="Session History"
+        subtitle="Browser-local activity log of recent queries, explored standards, and audited tenders for the current session only."
+        badge="Current Session"
         action={
           historyItems.length > 0 && (
             <button onClick={handleClear} className="btn-secondary" style={{ fontSize: '0.78rem', padding: '6px 14px' }}>

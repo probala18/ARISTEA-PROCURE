@@ -446,6 +446,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
 
               {compliance ? (
                 <div>
+                  {/* Status Badges */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
                     <span
                       className={`badge ${
@@ -453,48 +454,105 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                           ? 'badge-red'
                           : compliance.requirement_level === 'CONDITIONAL'
                           ? 'badge-amber'
+                          : compliance.requirement_level === 'VOLUNTARY'
+                          ? 'badge-emerald'
                           : 'badge-indigo'
                       }`}
                     >
-                      {compliance.requirement_level} COMPLIANCE
+                      {compliance.requirement_level || 'UNKNOWN'} COMPLIANCE
                     </span>
                     {compliance.governing_scheme && (
                       <span className="badge badge-cyan">{compliance.governing_scheme}</span>
                     )}
                   </div>
 
-                  {compliance.qco_records && compliance.qco_records.length > 0 ? (
-                    <div>
-                      <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                        Active Quality Control Orders (QCOs):
-                      </div>
-                      {compliance.qco_records.map((qco, idx) => (
-                        <div
-                          key={idx}
-                          style={{
-                            padding: '10px 14px',
-                            background: '#f8fafc',
-                            borderRadius: 'var(--radius-sm)',
-                            border: '1px solid #e2e8f0',
-                            marginBottom: '6px',
-                            fontSize: '0.82rem',
-                          }}
-                        >
-                          <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{qco.order_number || qco.qco_id || 'QCO'}</div>
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', marginTop: '2px' }}>{qco.title || qco.qco_title}</div>
-                        </div>
-                      ))}
+                  {/* Explicit Attribute Breakdown */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', marginBottom: '14px', fontSize: '0.82rem' }}>
+                    <div style={{ padding: '8px 12px', background: '#f8fafc', borderRadius: 'var(--radius-sm)', border: '1px solid #e2e8f0' }}>
+                      <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', fontWeight: 600 }}>
+                        Requirement Level
+                      </span>
+                      <strong style={{ color: 'var(--text-primary)' }}>{compliance.requirement_level || 'UNKNOWN'}</strong>
                     </div>
-                  ) : (
-                    <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                      No mandatory QCO orders cataloged. Governed by voluntary BIS certification schemes.
+                    <div style={{ padding: '8px 12px', background: '#f8fafc', borderRadius: 'var(--radius-sm)', border: '1px solid #e2e8f0' }}>
+                      <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', fontWeight: 600 }}>
+                        Governing Scheme
+                      </span>
+                      <strong style={{ color: 'var(--text-primary)' }}>{compliance.governing_scheme || 'UNKNOWN'}</strong>
                     </div>
-                  )}
+                  </div>
 
+                  {/* QCO Records */}
+                  <div style={{ marginBottom: '14px' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                      Quality Control Orders (QCOs):
+                    </div>
+                    {compliance.qco_records && compliance.qco_records.length > 0 ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {compliance.qco_records.map((qco, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              padding: '10px 14px',
+                              background: '#f8fafc',
+                              borderRadius: 'var(--radius-sm)',
+                              border: '1px solid #e2e8f0',
+                              fontSize: '0.82rem',
+                            }}
+                          >
+                            <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{qco.order_number || qco.qco_id || 'QCO'}</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', marginTop: '2px' }}>{qco.title || qco.qco_title}</div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic', padding: '6px 0' }}>
+                        No QCO record available in the current verified dataset.
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Certification Records */}
+                  <div style={{ marginBottom: '14px' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                      Certification Records:
+                    </div>
+                    {compliance.certification_records && compliance.certification_records.length > 0 ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {compliance.certification_records.map((cert, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              padding: '8px 12px',
+                              background: '#f8fafc',
+                              borderRadius: 'var(--radius-sm)',
+                              border: '1px solid #e2e8f0',
+                              fontSize: '0.8rem',
+                            }}
+                          >
+                            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+                              {cert.scheme_name || cert.certification_type || 'Certification Scheme'}
+                            </span>
+                            {cert.licence_number && (
+                              <span style={{ color: 'var(--text-muted)', marginLeft: '6px' }}>
+                                (Licence: {cert.licence_number})
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic', padding: '6px 0' }}>
+                        No certification record available in the current verified dataset.
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Regulatory Divergence */}
                   {compliance.regulatory_divergence_detected && (
                     <div
                       style={{
-                        marginTop: '12px',
+                        marginBottom: '14px',
                         padding: '10px 14px',
                         borderRadius: 'var(--radius-sm)',
                         background: 'rgba(220, 38, 38, 0.08)',
@@ -506,6 +564,23 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                       ⚠️ Regulatory Divergence Detected: Scope or harmonized international standard differs.
                     </div>
                   )}
+
+                  {/* Evidence-Backed Disclaimer */}
+                  <div
+                    style={{
+                      padding: '10px 12px',
+                      background: '#f1f5f9',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '0.74rem',
+                      color: 'var(--text-muted)',
+                      lineHeight: 1.45,
+                      borderLeft: '3px solid #94a3b8',
+                    }}
+                  >
+                    <strong style={{ color: 'var(--text-secondary)' }}>Disclaimer: </strong>
+                    {compliance.disclaimer ||
+                      'Compliance intelligence reflects facts ingested in the project dataset. Absence of a record does not establish voluntary status. For authoritative status, consult official Gazette notifications.'}
+                  </div>
                 </div>
               ) : (
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No compliance data found.</p>
@@ -582,7 +657,7 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                 })}
               </div>
             ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No direct ontology links recorded for this standard.</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No verified ontology relationships recorded for this standard.</p>
             )}
           </div>
         </motion.div>
