@@ -26,6 +26,7 @@ All standard records, relationships, and compliance rules preserve source file a
 - **Embedding Model**: Pretrained Sentence Transformers embedding model (`paraphrase-multilingual-MiniLM-L12-v2`)
 - **Retrieval Engine**: Semantic Retrieval using Pretrained Sentence Transformers (`paraphrase-multilingual-MiniLM-L12-v2`) and Dense Vector Similarity Search
 - **Frontend**: Next.js 14 (App Router), React 18, TypeScript, CSS Variables Design System
+- **Flagship — ARISTEA Autopilot** (`POST /api/autopilot/run`, SSE): describe a procurement need by text or voice in 9 languages and get a complete tender package. Autopilot parses the need, discovers primary and knowledge-graph-allied standards per component, checks QCO/certification mandates and standard currency, assesses supplier licence depth, drafts a tender where every clause cites its dataset record, then red-teams its own draft with the tender auditor, auto-fixes gaps and re-audits. Export via `POST /api/autopilot/export` (.docx with evidence annexure).
 - **Mounted Workspaces (10)**:
   1. **Requirement Recommendation**: Semantic requirement matching and primary/allied identification
   2. **Standards Explorer**: Hierarchical directory of 268 standards with scope and version history
