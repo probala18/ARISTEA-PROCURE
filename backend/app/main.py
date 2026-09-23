@@ -20,6 +20,7 @@ from backend.app.api.tenders import tenders_router
 from backend.app.api.specifications import specifications_router
 from backend.app.api.jobs import jobs_router
 from backend.app.api.evaluations import evaluations_router
+from backend.app.api.autopilot import autopilot_router
 from backend.app.services.recommendation import RecommendationEngine, RecommendationRequest, RecommendationResponse
 from backend.app.services.jobs import job_registry
 from backend.app.core.config import settings
@@ -86,6 +87,7 @@ app.include_router(tenders_router, prefix="/api")
 app.include_router(specifications_router, prefix="/api")
 app.include_router(jobs_router, prefix="/api")
 app.include_router(evaluations_router, prefix="/api")
+app.include_router(autopilot_router, prefix="/api")
 
 
 @app.post("/api/analyze", response_model=RecommendationResponse, tags=["Recommendation API"])
