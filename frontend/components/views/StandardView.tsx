@@ -345,8 +345,89 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
                     </div>
                   )}
 
-                  <div style={{ marginTop: '10px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    Total Amendments Recorded: {versions.total_amendments || 0}
+                  {/* Amendment Records */}
+                  <div style={{ marginTop: '16px', borderTop: '1px solid #e2e8f0', paddingTop: '14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                        Recorded Amendments ({versions.amendments?.length || 0})
+                      </span>
+                    </div>
+
+                    {versions.amendments && versions.amendments.length > 0 ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {versions.amendments.map((amd, idx) => {
+                          const amdNum = amd.amendment_number ?? amd.number ?? idx + 1;
+                          const amdYear = amd.amendment_year ?? amd.year;
+                          const desc = amd.change_description || amd.notes;
+                          const state = amd.current_state || 'RECORDED';
+
+                          return (
+                            <div
+                              key={amd.id || idx}
+                              style={{
+                                padding: '10px 12px',
+                                background: '#f8fafc',
+                                borderRadius: 'var(--radius-sm)',
+                                border: '1px solid #e2e8f0',
+                                fontSize: '0.82rem',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between',
+                                  marginBottom: desc ? '4px' : '0',
+                                }}
+                              >
+                                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+                                  Amendment {amdNum}
+                                  {amdYear ? (
+                                    <span style={{ fontWeight: 500, color: 'var(--text-muted)', marginLeft: '6px' }}>
+                                      ({amdYear})
+                                    </span>
+                                  ) : null}
+                                </span>
+                                {state && (
+                                  <span
+                                    style={{
+                                      fontSize: '0.7rem',
+                                      fontWeight: 600,
+                                      padding: '2px 8px',
+                                      borderRadius: '999px',
+                                      background:
+                                        state.toUpperCase() === 'CURRENT' || state.toUpperCase() === 'ACTIVE'
+                                          ? 'rgba(5, 150, 105, 0.1)'
+                                          : 'rgba(100, 116, 139, 0.1)',
+                                      color:
+                                        state.toUpperCase() === 'CURRENT' || state.toUpperCase() === 'ACTIVE'
+                                          ? 'var(--status-success)'
+                                          : 'var(--text-muted)',
+                                    }}
+                                  >
+                                    {state}
+                                  </span>
+                                )}
+                              </div>
+                              {desc && (
+                                <div style={{ color: 'var(--text-secondary)', fontSize: '0.78rem', lineHeight: 1.4 }}>
+                                  {desc}
+                                </div>
+                              )}
+                              {amd.source_dataset && (
+                                <div style={{ marginTop: '4px', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                                  Dataset: {amd.source_dataset}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                        No amendments cataloged for this standard in the supplied dataset.
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (

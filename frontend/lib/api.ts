@@ -301,15 +301,54 @@ export async function getMinistryMappings(ministry?: string): Promise<MinistryMa
   return handleResponse<MinistryMappingRecord[]>(res);
 }
 
+export interface AmendmentRecord {
+  id?: number;
+  standard_id?: number;
+  is_number?: string;
+  amendment_number?: number | null;
+  amendment_year?: number | null;
+  change_description?: string | null;
+  current_state?: string;
+  source_dataset?: string;
+  source_provenance?: Record<string, any> | null;
+  number?: number;
+  year?: number;
+  notes?: string;
+}
+
 export interface VersionReport {
   standard_id: string;
+  canonical_id?: string;
+  is_number?: string;
+  title?: string;
+  status?: string;
   current_status: string;
   is_current: boolean;
+  publication_year?: number;
+  latest_year?: number;
   active_version?: string;
   successor_standard_id?: string;
   predecessor_standard_id?: string;
-  total_amendments: number;
-  amendments?: Array<{ number: number; year?: number; notes?: string }>;
+  total_amendments?: number;
+  amendments: AmendmentRecord[];
+  warnings?: Array<{
+    warning_type: string;
+    message: string;
+    severity: string;
+    evidence?: any;
+    source_dataset?: string;
+  }>;
+  supersession?: {
+    standard_id?: string;
+    canonical_id?: string;
+    current_status?: string;
+    supersedes?: any[];
+    superseded_by?: any[];
+    has_cycle?: boolean;
+  };
+  version_records?: any[];
+  source_file?: string;
+  disclaimer?: string;
 }
 
 export interface RelationshipEdge {
@@ -352,7 +391,44 @@ export async function getStandardDetail(standardId: string): Promise<StandardDet
 
 export async function getStandardVersions(standardId: string): Promise<VersionReport> {
   const res = await fetch(`${API_BASE}/api/standards/${encodeURIComponent(standardId)}/versions`, { cache: 'no-store' });
-  return handleResponse<VersionReport>(res);
+  const data = await handleResponse<any>(res);
+  if (!data) return data;
+
+  const current_status = data.current_status || data.status || data.supersession?.current_status || 'CURRENT';
+  const is_current =
+    typeof data.is_current === 'boolean'
+      ? data.is_current
+      : current_status.toUpperCase() === 'CURRENT';
+
+  const successor_standard_id =
+    data.successor_standard_id ||
+    data.supersession?.superseded_by?.[0]?.canonical_id ||
+    data.supersession?.superseded_by?.[0]?.is_number ||
+    (typeof data.supersession?.superseded_by?.[0] === 'string' ? data.supersession.superseded_by[0] : undefined);
+
+  const predecessor_standard_id =
+    data.predecessor_standard_id ||
+    data.supersession?.supersedes?.[0]?.canonical_id ||
+    data.supersession?.supersedes?.[0]?.is_number ||
+    (typeof data.supersession?.supersedes?.[0] === 'string' ? data.supersession.supersedes[0] : undefined);
+
+  const rawAmendments = Array.isArray(data.amendments) ? data.amendments : [];
+  const amendments: AmendmentRecord[] = rawAmendments.map((a: any) => ({
+    ...a,
+    amendment_number: a.amendment_number ?? a.number ?? null,
+    amendment_year: a.amendment_year ?? a.year ?? null,
+    change_description: a.change_description ?? a.notes ?? null,
+  }));
+
+  return {
+    ...data,
+    current_status,
+    is_current,
+    successor_standard_id,
+    predecessor_standard_id,
+    amendments,
+    total_amendments: amendments.length,
+  };
 }
 
 export async function getStandardRelationships(standardId: string): Promise<RelationshipEdge[]> {
