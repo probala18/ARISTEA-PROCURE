@@ -7,9 +7,9 @@ AI-powered procurement decision support platform designed for SIH Problem Statem
 The local repository is grounded in the verified ARISTEA dataset:
 
 ```text
-268 standards
-111 relationships
-275 versions
+269 standards
+115 relationships
+276 versions
 710 QCO records
 1,573 certifications
 75 product licences
@@ -101,15 +101,16 @@ Open `http://localhost:3000` in your browser.
 Run the full automated test suite:
 
 ```powershell
-# Backend pytest suite (203 tests)
-python -m pytest -v
+# Backend pytest suite
+py -3.13 -m pytest -v
 
 # Ingestion provenance and dataset validation
-python scripts/validate_ingestion.py
+py -3.13 scripts/validate_ingestion.py
 
-# Frontend unit tests
+# Frontend unit tests and production build
 cd frontend
-bun test
+node --test tests/api.test.mjs
+npm run build
 ```
 
 ## Future Innovation Roadmap (CONCEPT / NOT IMPLEMENTED)
