@@ -12,6 +12,10 @@ interface HeaderProps {
 }
 
 const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
+  autopilot: {
+    title: 'ARISTEA Autopilot',
+    desc: 'Describe a need in any language — get a compliant, cited, red-teamed tender in minutes',
+  },
   recommend: {
     title: 'Semantic Requirement Matcher',
     desc: 'Neural matching & deterministic graph grounding against Bureau of Indian Standards catalog',

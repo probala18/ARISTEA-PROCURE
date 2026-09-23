@@ -878,3 +878,116 @@ export async function pollJob(jobId: string, intervalMs = 1000, timeoutMs = 3000
   }
   throw new Error(`Task ${jobId} timed out after ${timeoutMs}ms.`);
 }
+
+// ==========================================
+// ARISTEA Autopilot (need → cited tender)
+// ==========================================
+
+export type AutopilotStepStatus = 'pending' | 'running' | 'done' | 'blocked' | 'error';
+
+export interface AutopilotStepEvent {
+  type: 'step';
+  step: string;
+  title: string;
+  status: AutopilotStepStatus;
+  summary: string;
+  data: Record<string, any>;
+  elapsed_ms?: number | null;
+}
+
+export interface AutopilotClause {
+  text: string;
+  citations: string[];
+  kind: 'clause' | 'advisory' | 'autofix';
+}
+
+export interface AutopilotSection {
+  id: string;
+  heading: string;
+  clauses: AutopilotClause[];
+}
+
+export interface AutopilotCitation {
+  key: string;
+  source_type: string;
+  label: string;
+  source_dataset: string;
+  details: string;
+  provenance?: any;
+}
+
+export interface AutopilotFinding {
+  severity: string;
+  category: string;
+  issue: string;
+  fix: string;
+  auto_fixed: boolean;
+}
+
+export interface AutopilotResult {
+  run_id: string;
+  need: string;
+  readiness: 'READY_FOR_APPROVAL' | 'NEEDS_REVIEW' | 'BLOCKED';
+  facts: Record<string, any> | null;
+  standards: Record<string, any>[];
+  clarifications: { component: string; missing: string[] }[];
+  sections: AutopilotSection[];
+  tender_text: string;
+  redteam: {
+    findings?: AutopilotFinding[];
+    coverage_before?: number;
+    coverage_after?: number;
+    auto_fixes?: number;
+  };
+  citations: AutopilotCitation[];
+  disclaimer: string;
+}
+
+export type AutopilotEvent =
+  | { type: 'start'; run_id: string; need: string; steps: { step: string; title: string }[] }
+  | AutopilotStepEvent
+  | { type: 'result'; run_id: string; result: AutopilotResult }
+  | { type: 'error'; detail: string };
+
+/** Runs Autopilot and invokes onEvent for every streamed pipeline event. */
+export async function runAutopilot(
+  need: string,
+  onEvent: (event: AutopilotEvent) => void,
+  opts: { language?: string; signal?: AbortSignal } = {},
+): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/autopilot/run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
+    body: JSON.stringify({ need, language: opts.language }),
+    signal: opts.signal,
+  });
+  if (!res.ok || !res.body) {
+    await handleResponse(res);
+    throw new Error('Autopilot stream unavailable.');
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let sep: number;
+    while ((sep = buffer.indexOf('\n\n')) !== -1) {
+      const chunk = buffer.slice(0, sep);
+      buffer = buffer.slice(sep + 2);
+      const line = chunk.split('\n').find((l) => l.startsWith('data: '));
+      if (line) onEvent(JSON.parse(line.slice(6)) as AutopilotEvent);
+    }
+  }
+}
+
+export async function exportAutopilotDocx(result: AutopilotResult): Promise<Blob> {
+  const res = await fetch(`${API_BASE}/api/autopilot/export`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(result),
+  });
+  if (!res.ok) await handleResponse(res);
+  return res.blob();
+}

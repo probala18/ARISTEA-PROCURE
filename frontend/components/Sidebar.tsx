@@ -24,6 +24,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navItems: NavItem[] = [
     {
+      key: 'autopilot',
+      label: 'Autopilot',
+      sublabel: 'Need → Cited Tender',
+      icon: '🚀',
+      badge: 'New',
+    },
+    {
       key: 'recommend',
       label: 'Semantic Matcher',
       sublabel: 'Grounded IS Discovery',

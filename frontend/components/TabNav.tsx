@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export type TabKey =
+  | 'autopilot'
   | 'recommend'
   | 'standard'
   | 'graph'
@@ -28,6 +29,7 @@ interface TabItem {
 }
 
 const TABS: TabItem[] = [
+  { key: 'autopilot', label: 'Autopilot', badge: 'New', icon: '🚀' },
   { key: 'recommend', label: 'Semantic Matcher', icon: '⚡' },
   { key: 'standard', label: 'Standards Directory', icon: '📚' },
   { key: 'services', label: 'BIS Service Hub', badge: 'Hub', icon: '🏛️' },

@@ -15,12 +15,13 @@ import { VoiceView } from '@/components/views/VoiceView';
 import { HistoryView } from '@/components/views/HistoryView';
 import { ServiceHubView } from '@/components/views/ServiceHubView';
 import { SimplifyView } from '@/components/views/SimplifyView';
+import { AutopilotView } from '@/components/views/AutopilotView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 import { animateHeroText } from '@/lib/gsap-animations';
 import { checkHealth } from '@/lib/api';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabKey>('recommend');
+  const [activeTab, setActiveTab] = useState<TabKey>('autopilot');
   const [explorerStandardId, setExplorerStandardId] = useState<string>('IS 12615:2018');
   const [activeQuery, setActiveQuery] = useState<string>('');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -201,6 +202,18 @@ export default function Home() {
           {/* Animated Dynamic Workspace Container */}
           <div style={{ marginTop: '16px' }}>
             <AnimatePresence mode="wait">
+              {activeTab === 'autopilot' && (
+                <motion.div
+                  key="autopilot"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <AutopilotView onExploreStandard={handleExploreStandard} onToast={addToast} />
+                </motion.div>
+              )}
+
               {activeTab === 'recommend' && (
                 <motion.div
                   key="recommend"

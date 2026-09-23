@@ -448,3 +448,26 @@ code, pre {
     padding: 16px 14px 32px;
   }
 }
+
+/* Autopilot tender document + sticky evidence inspector */
+.autopilot-doc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 20px;
+  align-items: start;
+}
+
+.autopilot-inspector {
+  position: sticky;
+  top: 88px;
+}
+
+@media (max-width: 960px) {
+  .autopilot-doc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .autopilot-inspector {
+    position: static;
+  }
+}
