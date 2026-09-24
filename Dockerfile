@@ -14,7 +14,7 @@ COPY scripts ./scripts
 COPY alembic ./alembic
 COPY alembic.ini .
 COPY csvfiles ./csvfiles
-COPY sih_bis.d[b] ./
+COPY sih_bis.db ./
 
 # Ingest and validate if database is not present
 RUN if [ ! -f sih_bis.db ]; then \
