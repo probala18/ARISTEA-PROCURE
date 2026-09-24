@@ -45,3 +45,6 @@ ENV/
 # Antigravity artifacts / logs
 .gemini/
 .agents/
+
+.vercel
+.env*
