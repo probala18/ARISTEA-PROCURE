@@ -1031,16 +1031,50 @@ export async function runAutopilot(
   onEvent: (event: AutopilotEvent) => void,
   opts: { language?: string; signal?: AbortSignal } = {},
 ): Promise<void> {
-  const res = await fetch(`${API_BASE}/api/autopilot/run`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
-    body: JSON.stringify({ need, language: opts.language }),
-    signal: opts.signal,
-  });
-  if (!res.ok || !res.body) {
-    await handleResponse(res);
+  const MAX_RETRIES = 3;
+  const RETRY_DELAY_MS = [5000, 10000, 15000]; // escalating back-off
+
+  let res: Response | null = null;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      res = await fetch(`${API_BASE}/api/autopilot/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
+        body: JSON.stringify({ need, language: opts.language }),
+        signal: opts.signal,
+      });
+    } catch (err: any) {
+      // Network-level failure (e.g. DNS, connection refused)
+      if (err?.name === 'AbortError') throw err;
+      if (attempt < MAX_RETRIES) {
+        onEvent({
+          type: 'error',
+          detail: `Backend unreachable — retrying in ${RETRY_DELAY_MS[attempt] / 1000}s… (attempt ${attempt + 1}/${MAX_RETRIES})`,
+        } as AutopilotEvent);
+        await new Promise((r) => setTimeout(r, RETRY_DELAY_MS[attempt]));
+        continue;
+      }
+      throw new Error('Backend is unreachable. It may be sleeping on the free tier — please try again in a minute.');
+    }
+
+    // 502/503 = Render proxy error (cold start) — worth retrying
+    if (res && (res.status === 502 || res.status === 503) && attempt < MAX_RETRIES) {
+      onEvent({
+        type: 'error',
+        detail: `Backend is waking up (${res.status}) — retrying in ${RETRY_DELAY_MS[attempt] / 1000}s… (attempt ${attempt + 1}/${MAX_RETRIES})`,
+      } as AutopilotEvent);
+      await new Promise((r) => setTimeout(r, RETRY_DELAY_MS[attempt]));
+      continue;
+    }
+    break; // success or non-retryable error
+  }
+
+  if (!res || !res.ok || !res.body) {
+    if (res) await handleResponse(res);
     throw new Error('Autopilot stream unavailable.');
   }
+
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buffer = '';

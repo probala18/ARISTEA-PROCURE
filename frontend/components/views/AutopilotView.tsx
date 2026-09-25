@@ -150,6 +150,7 @@ export const AutopilotView: React.FC<AutopilotViewProps> = ({ onExploreStandard,
     setActiveCitation(null);
     setSteps(DEFAULT_STEPS.map((s) => ({ ...s })));
 
+    let gotResult = false;
     const handleEvent = (ev: AutopilotEvent) => {
       if (ev.type === 'step') {
         setSteps((prev) =>
@@ -160,6 +161,7 @@ export const AutopilotView: React.FC<AutopilotViewProps> = ({ onExploreStandard,
           ),
         );
       } else if (ev.type === 'result') {
+        gotResult = true;
         setResult(ev.result);
       } else if (ev.type === 'error') {
         onToast(ev.detail, 'error');
@@ -171,7 +173,11 @@ export const AutopilotView: React.FC<AutopilotViewProps> = ({ onExploreStandard,
         language: voiceLang.split('-')[0],
         signal: controller.signal,
       });
-      onToast('Autopilot finished — tender package ready.', 'success');
+      if (gotResult) {
+        onToast('Autopilot finished — tender package ready.', 'success');
+      } else {
+        onToast('Autopilot completed but produced no result. The backend may have been unavailable.', 'error');
+      }
     } catch (err: any) {
       if (err?.name !== 'AbortError') onToast(err.message || 'Autopilot run failed.', 'error');
     } finally {
