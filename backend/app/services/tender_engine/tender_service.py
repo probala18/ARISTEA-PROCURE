@@ -42,8 +42,7 @@ class TenderEngineService:
         if self.db:
             try:
                 from backend.app.core.database import Base
-                import backend.app.models.tender
-                import backend.app.models.specification
+                import backend.app.models
                 Base.metadata.create_all(bind=self.db.get_bind())
             except Exception as e:
                 logger.warning(f"Error ensuring tender tables exist: {e}")

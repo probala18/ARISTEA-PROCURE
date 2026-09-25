@@ -34,10 +34,7 @@ async def app_lifespan(application: FastAPI):
     """Manage shared asynchronous resources for the API process."""
     try:
         from backend.app.core.database import Base, engine
-        import backend.app.models.standard
-        import backend.app.models.relationship
-        import backend.app.models.tender
-        import backend.app.models.specification
+        import backend.app.models
         Base.metadata.create_all(bind=engine)
     except Exception as exc:
         logger.warning("Could not auto-create database tables: %s", exc)

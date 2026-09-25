@@ -20,6 +20,7 @@ from backend.app.models.analysis import (
     GeneratedSpecification,
 )
 from backend.app.models.evaluation import EvaluationQuery, EvaluationResult
+from backend.app.models import specification
 
 __all__ = [
     "Base",
@@ -45,4 +46,5 @@ __all__ = [
     "GeneratedSpecification",
     "EvaluationQuery",
     "EvaluationResult",
+    "specification",
 ]
