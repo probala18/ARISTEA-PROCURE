@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.encoders import jsonable_encoder
 from fastapi import HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 import logging
@@ -85,22 +86,21 @@ def analyze_requirement(payload: RecommendationRequest, db=Depends(get_db)):
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    errors = exc.errors()
     error_details = []
-    for err in errors:
+    for err in exc.errors():
         loc = " -> ".join(str(l) for l in err.get("loc", []))
-        msg = err.get("msg", "Invalid value")
+        msg = str(err.get("msg", "Invalid value"))
         error_details.append(f"{loc}: {msg}" if loc else msg)
     detailed_msg = "; ".join(error_details) if error_details else "Request validation failed."
     logger.warning("Request validation error on %s %s: %s", request.method, request.url.path, detailed_msg)
     return JSONResponse(
         status_code=422,
-        content={
+        content=jsonable_encoder({
             "error": "validation_error",
             "detail": "Request validation failed.",
             "message": detailed_msg,
-            "fields": errors,
-        },
+            "fields": exc.errors(),
+        }),
     )
 
 

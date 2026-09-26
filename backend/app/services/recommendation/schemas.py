@@ -127,8 +127,8 @@ class RecommendationRequest(BaseModel):
     @classmethod
     def populate_query_text(cls, data: Any) -> Any:
         if isinstance(data, dict):
-            if not data.get("query_text") and data.get("requirement_text"):
-                data["query_text"] = data["requirement_text"]
+            if not data.get("query_text"):
+                data["query_text"] = data.get("requirement_text") or data.get("query")
         return data
 
     @model_validator(mode="after")

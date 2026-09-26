@@ -11,21 +11,28 @@
  */
 
 function getApiBase(): string {
-  const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  let envUrl = (process.env.NEXT_PUBLIC_API_BASE_URL || '').trim();
+  if (envUrl.includes(',')) {
+    const urls = envUrl.split(',').map((u) => u.trim()).filter(Boolean);
+    envUrl = urls[0] || '';
+  }
+  envUrl = envUrl.replace(/\/+$/, '');
+
   if (typeof window !== 'undefined') {
     const isLocalhost =
       window.location.hostname === 'localhost' ||
       window.location.hostname === '127.0.0.1';
-    // If running in browser on localhost but configured with a remote URL (like suspended Render), prefer local backend
-    if (isLocalhost && (!envUrl || envUrl.includes('onrender.com'))) {
-      return 'http://localhost:8000';
+    if (isLocalhost) {
+      if (!envUrl || envUrl.includes('onrender.com') || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+        return 'http://localhost:8000';
+      }
     }
-    if (envUrl !== undefined && envUrl !== '') {
+    if (envUrl) {
       return envUrl;
     }
     return isLocalhost ? 'http://localhost:8000' : '';
   }
-  if (envUrl !== undefined && envUrl !== '') {
+  if (envUrl) {
     return envUrl;
   }
   return 'http://localhost:8000';
