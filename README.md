@@ -104,7 +104,7 @@ Run the full automated test suite:
 # Backend pytest suite
 py -3.13 -m pytest -v
 
-# Ingestion provenance and dataset validation
+# Ingestion provenance and dataset validation.
 py -3.13 scripts/validate_ingestion.py
 
 # Frontend unit tests and production build
