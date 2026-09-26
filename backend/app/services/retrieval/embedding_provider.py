@@ -3,7 +3,7 @@ Embedding Provider Abstraction for Module 5.
 Supports 384-dimensional vector embeddings for Indian Standards and search queries.
 
 Architectural Rule:
-The pretrained embedding provider is the primary semantic retrieval mechanism.
+The ONNX embedding provider is the primary neural semantic retrieval mechanism (Torch-free).
 The deterministic embedding provider is strictly an offline/testing fallback and
 must never be presented as equivalent to pretrained semantic embeddings.
 """
@@ -178,79 +178,168 @@ class DeterministicSemanticEmbeddingProvider(BaseEmbeddingProvider):
         return vec.tolist()
 
 
-class SentenceTransformerEmbeddingProvider(BaseEmbeddingProvider):
+class ONNXEmbeddingProvider(BaseEmbeddingProvider):
     """
-    Primary semantic retrieval provider using pretrained SentenceTransformer models
-    (e.g., 'all-MiniLM-L6-v2' or 'paraphrase-multilingual-MiniLM-L12-v2', producing 384-dim vectors).
+    Torch-free ONNX Runtime neural embedding provider for 384-dimensional vectors.
+    Uses 'sentence-transformers/all-MiniLM-L6-v2' ONNX artifacts with HuggingFace Tokenizers,
+    attention-masked mean pooling, and L2 unit normalization.
+    Runs entirely on CPU with zero PyTorch dependencies.
     """
+
+    _cached_session = None
+    _cached_tokenizer = None
+    _cached_model_path: Optional[str] = None
+    _cached_input_names: Optional[List[str]] = None
 
     def __init__(self, model_name: Optional[str] = None):
-        self._model_name = model_name or f"sentence-transformers/{settings.EMBEDDING_MODEL_NAME}"
-        self._model = None
+        self._model_name = model_name or settings.EMBEDDING_MODEL_NAME
+        self._session = None
+        self._tokenizer = None
+        self._input_names = []
         self._load_model()
 
+    def _resolve_model_and_tokenizer(self):
+        """Locates ONNX model and tokenizer from local resources or downloads via huggingface_hub."""
+        possible_dirs = [
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "resources", "models", self._model_name),
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "resources", "models", "all-MiniLM-L6-v2"),
+        ]
+        for pdir in possible_dirs:
+            model_file = os.path.join(pdir, "model.onnx")
+            tok_file = os.path.join(pdir, "tokenizer.json")
+            if os.path.exists(model_file) and os.path.exists(tok_file):
+                logger.info(f"Loaded ONNX model from local directory: {pdir}")
+                return model_file, tok_file
+
+        repo_id = self._model_name if "/" in self._model_name else f"sentence-transformers/{self._model_name}"
+        from huggingface_hub import hf_hub_download
+        model_file = hf_hub_download(repo_id=repo_id, filename="onnx/model.onnx")
+        tok_file = hf_hub_download(repo_id=repo_id, filename="tokenizer.json")
+        logger.info(f"Resolved ONNX model from Hugging Face Hub: {repo_id}")
+        return model_file, tok_file
+
     def _load_model(self):
+        """Loads ONNX Runtime session and tokenizer once per process."""
+        if ONNXEmbeddingProvider._cached_session is not None and ONNXEmbeddingProvider._cached_tokenizer is not None:
+            self._session = ONNXEmbeddingProvider._cached_session
+            self._tokenizer = ONNXEmbeddingProvider._cached_tokenizer
+            self._input_names = ONNXEmbeddingProvider._cached_input_names
+            return
+
         try:
-            from sentence_transformers import SentenceTransformer
-            self._model = SentenceTransformer(self._model_name)
-            logger.info(f"Loaded pretrained embedding model: {self._model_name}")
+            import onnxruntime as ort
+            from tokenizers import Tokenizer
+
+            model_file, tok_file = self._resolve_model_and_tokenizer()
+
+            opts = ort.SessionOptions()
+            opts.intra_op_num_threads = int(os.getenv("ONNX_NUM_THREADS", "2"))
+            opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+
+            session = ort.InferenceSession(model_file, sess_options=opts, providers=["CPUExecutionProvider"])
+            tokenizer = Tokenizer.from_file(tok_file)
+            tokenizer.enable_padding(pad_token="[PAD]")
+            tokenizer.enable_truncation(max_length=256)
+
+            input_names = [i.name for i in session.get_inputs()]
+
+            ONNXEmbeddingProvider._cached_session = session
+            ONNXEmbeddingProvider._cached_tokenizer = tokenizer
+            ONNXEmbeddingProvider._cached_model_path = model_file
+            ONNXEmbeddingProvider._cached_input_names = input_names
+
+            self._session = session
+            self._tokenizer = tokenizer
+            self._input_names = input_names
+            logger.info("Successfully initialized ONNX Runtime CPU embedding session.")
         except Exception as e:
-            logger.warning(f"Failed to load SentenceTransformer ({e}). Pretrained provider unavailable.")
-            self._model = None
+            logger.error(f"Failed to initialize ONNXEmbeddingProvider: {e}")
+            raise RuntimeError(
+                f"Failed to load ONNX embedding model '{self._model_name}': {e}. "
+                "Ensure onnxruntime and tokenizers are installed."
+            ) from e
 
     @property
     def dimension(self) -> int:
-        return 384
+        return settings.EMBEDDING_DIMENSION
 
     @property
     def model_name(self) -> str:
-        return self._model_name
+        return f"onnx/{self._model_name}"
 
     @property
     def is_pretrained(self) -> bool:
         return True
 
     def embed_query(self, text: str) -> List[float]:
-        if not self._model:
-            raise RuntimeError("SentenceTransformer model is not loaded.")
-        emb = self._model.encode(text, normalize_embeddings=True)
-        return emb.tolist()
+        return self.embed_batch([text])[0]
 
     def embed_standard(self, standard: Any) -> List[float]:
         text = EmbeddingTextBuilder.build_standard_embedding_text(standard)
         return self.embed_query(text)
 
-    def embed_batch(self, texts: List[str]) -> List[List[float]]:
-        if not self._model:
-            raise RuntimeError("SentenceTransformer model is not loaded.")
-        embs = self._model.encode(texts, batch_size=32, normalize_embeddings=True)
-        return [e.tolist() for e in embs]
+    def embed_batch(self, texts: List[str], batch_size: int = 32) -> List[List[float]]:
+        if not texts:
+            return []
+
+        all_embeddings: List[List[float]] = []
+
+        for i in range(0, len(texts), batch_size):
+            chunk = texts[i : i + batch_size]
+            encoded = self._tokenizer.encode_batch(chunk)
+
+            input_ids = np.array([e.ids for e in encoded], dtype=np.int64)
+            attention_mask = np.array([e.attention_mask for e in encoded], dtype=np.int64)
+            feeds = {"input_ids": input_ids, "attention_mask": attention_mask}
+            if "token_type_ids" in self._input_names:
+                feeds["token_type_ids"] = np.array([e.type_ids for e in encoded], dtype=np.int64)
+
+            outputs = self._session.run(None, feeds)
+            token_embeddings = outputs[0]
+
+            # Mean pooling with attention mask
+            input_mask_expanded = np.broadcast_to(
+                np.expand_dims(attention_mask, -1), token_embeddings.shape
+            ).astype(float)
+            sum_embeddings = np.sum(token_embeddings * input_mask_expanded, axis=1)
+            sum_mask = np.clip(input_mask_expanded.sum(axis=1), a_min=1e-9, a_max=None)
+            mean_pooled = sum_embeddings / sum_mask
+
+            # L2 unit normalization
+            norms = np.linalg.norm(mean_pooled, axis=1, keepdims=True)
+            normalized = mean_pooled / np.clip(norms, a_min=1e-12, a_max=None)
+            all_embeddings.extend(normalized.tolist())
+
+        return all_embeddings
 
 
-_pretrained_provider: Optional[SentenceTransformerEmbeddingProvider] = None
+# Backward compatibility alias
+SentenceTransformerEmbeddingProvider = ONNXEmbeddingProvider
+
+
+_cached_provider: Optional[BaseEmbeddingProvider] = None
 
 
 def get_embedding_provider(prefer_pretrained: Optional[bool] = None) -> BaseEmbeddingProvider:
     """
     Factory to retrieve embedding provider.
-    Attempts pretrained SentenceTransformer first if prefer_pretrained is True and available;
-    falls back cleanly to DeterministicSemanticEmbeddingProvider.
-    The pretrained model is loaded once per process and reused across requests.
+    Returns ONNXEmbeddingProvider for production neural semantic retrieval (torch-free).
+    Falls back to DeterministicSemanticEmbeddingProvider strictly if requested or in offline/test mode.
     """
-    global _pretrained_provider
+    global _cached_provider
+
+    backend = getattr(settings, "EMBEDDING_BACKEND", "onnx").lower()
+    if backend == "deterministic":
+        return DeterministicSemanticEmbeddingProvider()
+
     if prefer_pretrained is None:
-        prefer_pretrained = getattr(settings, "USE_PRETRAINED_EMBEDDINGS", False)
+        prefer_pretrained = getattr(settings, "USE_PRETRAINED_EMBEDDINGS", True)
 
     if prefer_pretrained:
-        if _pretrained_provider is not None:
-            return _pretrained_provider
-        try:
-            import sentence_transformers
-            provider = SentenceTransformerEmbeddingProvider()
-            if provider._model is not None:
-                _pretrained_provider = provider
-                return provider
-        except Exception:
-            pass
+        if _cached_provider is not None and isinstance(_cached_provider, ONNXEmbeddingProvider):
+            return _cached_provider
+        provider = ONNXEmbeddingProvider()
+        _cached_provider = provider
+        return provider
 
     return DeterministicSemanticEmbeddingProvider()

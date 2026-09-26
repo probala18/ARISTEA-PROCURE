@@ -6,6 +6,7 @@ from backend.app.services.retrieval.embedding_provider import (
     BaseEmbeddingProvider,
     DeterministicSemanticEmbeddingProvider,
     SentenceTransformerEmbeddingProvider,
+    ONNXEmbeddingProvider,
     EmbeddingTextBuilder,
     get_embedding_provider,
 )
@@ -23,6 +24,7 @@ __all__ = [
     "BaseEmbeddingProvider",
     "DeterministicSemanticEmbeddingProvider",
     "SentenceTransformerEmbeddingProvider",
+    "ONNXEmbeddingProvider",
     "EmbeddingTextBuilder",
     "get_embedding_provider",
     "VectorRetriever",

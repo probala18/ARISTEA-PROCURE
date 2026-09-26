@@ -53,12 +53,16 @@ def generate_and_store_embeddings(db_url: str = "sqlite:///./sih_bis.db", force:
         logging.info(f"Generating embeddings for {len(to_embed)} standards...")
         t0 = time.time()
 
-        for idx, s in enumerate(to_embed, start=1):
-            vec = provider.embed_standard(s)
-            s.embedding = vec
-            if idx % 50 == 0 or idx == len(to_embed):
-                session.commit()
-                logging.info(f"Embedded {idx}/{len(to_embed)} standards...")
+        batch_size = 32
+        for start_idx in range(0, len(to_embed), batch_size):
+            chunk = to_embed[start_idx : start_idx + batch_size]
+            texts = [EmbeddingTextBuilder.build_standard_embedding_text(s) for s in chunk]
+            vectors = provider.embed_batch(texts, batch_size=batch_size)
+            for s, vec in zip(chunk, vectors):
+                s.embedding = vec
+            session.commit()
+            processed = min(start_idx + batch_size, len(to_embed))
+            logging.info(f"Embedded {processed}/{len(to_embed)} standards...")
 
         session.commit()
         duration = time.time() - t0

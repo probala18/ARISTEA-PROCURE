@@ -75,11 +75,17 @@ class RelationshipEngine:
             if std:
                 return std
 
-        # 4. Prefix match (e.g. 'IS 2029' matches 'IS 2029:1998')
+        # 4. Delimiter-aware prefix match (e.g. 'IS 2029' matches 'IS 2029:1998' or 'IS 2029 (Part 1)', but 'IS 21' must NOT match 'IS 2185')
         std = self.session.query(Standard).filter(
             or_(
-                Standard.standard_id.ilike(f"{ident_str}%"),
-                Standard.is_number.ilike(f"{ident_str}%"),
+                Standard.standard_id.ilike(f"{ident_str}:%"),
+                Standard.standard_id.ilike(f"{ident_str} %"),
+                Standard.standard_id.ilike(f"{ident_str}(%"),
+                Standard.standard_id.ilike(f"{ident_str}-%"),
+                Standard.is_number.ilike(f"{ident_str}:%"),
+                Standard.is_number.ilike(f"{ident_str} %"),
+                Standard.is_number.ilike(f"{ident_str}(%"),
+                Standard.is_number.ilike(f"{ident_str}-%"),
             )
         ).first()
         if std:

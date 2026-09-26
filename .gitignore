@@ -48,3 +48,7 @@ ENV/
 
 .vercel
 .env*
+
+# ONNX model binaries (downloaded at runtime from HuggingFace Hub)
+backend/app/resources/models/
+*.onnx
