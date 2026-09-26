@@ -22,15 +22,35 @@ class AutopilotRunRequest(BaseModel):
     language: Optional[str] = None
 
 
+import queue
+import threading
+
 def _stream(need: str, language: Optional[str]) -> Iterator[str]:
-    db = SessionLocal()
-    try:
-        for event in AutopilotOrchestrator(db).run(need, language):
-            yield f"data: {json.dumps(event, default=str)}\n\n"
-    except Exception as exc:
-        yield f"data: {json.dumps({'type': 'error', 'detail': str(exc)})}\n\n"
-    finally:
-        db.close()
+    q: queue.Queue = queue.Queue()
+    stop_sentinel = object()
+
+    def worker():
+        db = SessionLocal()
+        try:
+            for event in AutopilotOrchestrator(db).run(need, language):
+                q.put(event)
+        except Exception as exc:
+            q.put({"type": "error", "detail": str(exc)})
+        finally:
+            q.put(stop_sentinel)
+            db.close()
+
+    t = threading.Thread(target=worker, daemon=True)
+    t.start()
+
+    while True:
+        try:
+            item = q.get(timeout=2.0)
+            if item is stop_sentinel:
+                break
+            yield f"data: {json.dumps(item, default=str)}\n\n"
+        except queue.Empty:
+            yield ": keep-alive\n\n"
 
 
 @router.post("/autopilot/run")

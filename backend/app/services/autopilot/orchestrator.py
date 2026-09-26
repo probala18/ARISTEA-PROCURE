@@ -264,15 +264,22 @@ class AutopilotOrchestrator:
         return (f"{superseded} superseded, {amended} with amendments to incorporate",
                 {"warnings": warnings_out, "superseded_count": superseded})
 
-    # 5 ------------------------------------------------------------------------
+_cached_licence_embeddings: Optional[Any] = None
+
     def _step_market(self, ctx: Dict[str, Any]):
+        global _cached_licence_embeddings
         licences = self.db.query(ProductLicence).all()
         findings = []
         if licences:
             provider = get_embedding_provider()
-            lic_vecs = np.array(provider.embed_batch([l.product_category for l in licences]), dtype=np.float32)
-            std_vecs = np.array(provider.embed_batch([s["title"] for s in ctx["standards"]]), dtype=np.float32)
-            sims = std_vecs @ lic_vecs.T
+            if _cached_licence_embeddings is not None and _cached_licence_embeddings[0] == len(licences):
+                lic_vecs = _cached_licence_embeddings[1]
+            else:
+                lic_vecs = np.array(provider.embed_batch([l.product_category for l in licences]), dtype=np.float32)
+                _cached_licence_embeddings = (len(licences), lic_vecs)
+            std_titles = [s["title"] for s in ctx["standards"]]
+            std_vecs = np.array(provider.embed_batch(std_titles), dtype=np.float32) if std_titles else np.empty((0, provider.dimension), dtype=np.float32)
+            sims = std_vecs @ lic_vecs.T if len(std_titles) else np.empty((0, len(licences)), dtype=np.float32)
         for idx, s in enumerate(ctx["standards"]):
             market: Dict[str, Any] = {"licence_category": None, "licence_count": None, "risk": "UNKNOWN"}
             if licences:

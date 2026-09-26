@@ -20,6 +20,9 @@ logger = logging.getLogger("retrieval.vector")
 class VectorRetriever:
     """Vector semantic similarity retriever over 384-dimensional standard embeddings."""
 
+    _cached_indexed_ids: Optional[np.ndarray] = None
+    _cached_matrix: Optional[np.ndarray] = None
+
     def __init__(self, session: Session, embedding_provider: Optional[BaseEmbeddingProvider] = None):
         self.session = session
         self.provider = embedding_provider or get_embedding_provider()
@@ -30,6 +33,16 @@ class VectorRetriever:
         stds = self.session.query(Standard).all()
         self.standards = stds
         self.standard_map = {s.id: s for s in stds}
+
+        # Reuse pre-computed matrix if available for the same standard count
+        if (
+            VectorRetriever._cached_matrix is not None
+            and VectorRetriever._cached_indexed_ids is not None
+            and len(VectorRetriever._cached_indexed_ids) == len(stds)
+        ):
+            self.indexed_ids = VectorRetriever._cached_indexed_ids
+            self.matrix = VectorRetriever._cached_matrix
+            return
 
         valid_ids = []
         vectors = []
@@ -63,6 +76,9 @@ class VectorRetriever:
             self.matrix = self.matrix / norms
         else:
             self.matrix = np.empty((0, self.provider.dimension), dtype=np.float32)
+
+        VectorRetriever._cached_indexed_ids = self.indexed_ids
+        VectorRetriever._cached_matrix = self.matrix
 
     def _stored_vectors_match(self, standard: Standard, stored_vec) -> bool:
         fresh = np.array(self.provider.embed_standard(standard), dtype=np.float32)

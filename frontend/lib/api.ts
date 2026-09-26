@@ -10,12 +10,28 @@
  * - Async Jobs: submit and poll
  */
 
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL !== undefined
-    ? process.env.NEXT_PUBLIC_API_BASE_URL
-    : typeof window !== 'undefined'
-    ? ''
-    : 'http://localhost:8000';
+function getApiBase(): string {
+  const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (typeof window !== 'undefined') {
+    const isLocalhost =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1';
+    // If running in browser on localhost but configured with a remote URL (like suspended Render), prefer local backend
+    if (isLocalhost && (!envUrl || envUrl.includes('onrender.com'))) {
+      return 'http://localhost:8000';
+    }
+    if (envUrl !== undefined && envUrl !== '') {
+      return envUrl;
+    }
+    return isLocalhost ? 'http://localhost:8000' : '';
+  }
+  if (envUrl !== undefined && envUrl !== '') {
+    return envUrl;
+  }
+  return 'http://localhost:8000';
+}
+
+export const API_BASE = getApiBase();
 
 // ==========================================
 // Base Response Handler
@@ -1078,17 +1094,55 @@ export async function runAutopilot(
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
-  for (;;) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    let sep: number;
-    while ((sep = buffer.indexOf('\n\n')) !== -1) {
-      const chunk = buffer.slice(0, sep);
-      buffer = buffer.slice(sep + 2);
-      const line = chunk.split('\n').find((l) => l.startsWith('data: '));
-      if (line) onEvent(JSON.parse(line.slice(6)) as AutopilotEvent);
+
+  const processChunk = (rawChunk: string) => {
+    // Normalise lines and trim trailing carriage returns
+    const lines = rawChunk.split('\n').map((l) => l.replace(/\r$/, ''));
+    // Filter out comments (e.g. ": keep-alive") and extract data lines
+    const dataLines = lines
+      .filter((l) => l.startsWith('data:'))
+      .map((l) => l.replace(/^data:\s?/, ''));
+
+    if (dataLines.length > 0) {
+      const payload = dataLines.join('\n').trim();
+      if (payload) {
+        try {
+          const ev = JSON.parse(payload) as AutopilotEvent;
+          onEvent(ev);
+        } catch (e) {
+          console.error('Failed to parse SSE payload:', e, payload);
+        }
+      }
     }
+  };
+
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (value) {
+        buffer += decoder.decode(value, { stream: !done });
+        // Normalize CRLF to LF
+        buffer = buffer.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        let sep: number;
+        while ((sep = buffer.indexOf('\n\n')) !== -1) {
+          const chunk = buffer.slice(0, sep).trim();
+          buffer = buffer.slice(sep + 2);
+          if (chunk) processChunk(chunk);
+        }
+      }
+      if (done) break;
+    }
+    // Flush remaining buffer upon completion
+    buffer += decoder.decode();
+    buffer = buffer.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+    if (buffer) {
+      const chunks = buffer.split('\n\n');
+      for (const c of chunks) {
+        if (c.trim()) processChunk(c.trim());
+      }
+    }
+  } finally {
+    reader.releaseLock();
   }
 }
 
