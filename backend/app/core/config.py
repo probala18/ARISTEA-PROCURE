@@ -24,7 +24,8 @@ class Settings(BaseSettings):
     )
     
     # Vector Embedding Settings
-    EMBEDDING_MODEL_NAME: str = "paraphrase-multilingual-MiniLM-L12-v2"
+    USE_PRETRAINED_EMBEDDINGS: bool = os.getenv("USE_PRETRAINED_EMBEDDINGS", "false").lower() in ("true", "1", "yes")
+    EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
     EMBEDDING_DIMENSION: int = 384
     
     # Data directory

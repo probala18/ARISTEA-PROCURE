@@ -230,7 +230,7 @@ class SentenceTransformerEmbeddingProvider(BaseEmbeddingProvider):
 _pretrained_provider: Optional[SentenceTransformerEmbeddingProvider] = None
 
 
-def get_embedding_provider(prefer_pretrained: bool = True) -> BaseEmbeddingProvider:
+def get_embedding_provider(prefer_pretrained: Optional[bool] = None) -> BaseEmbeddingProvider:
     """
     Factory to retrieve embedding provider.
     Attempts pretrained SentenceTransformer first if prefer_pretrained is True and available;
@@ -238,6 +238,9 @@ def get_embedding_provider(prefer_pretrained: bool = True) -> BaseEmbeddingProvi
     The pretrained model is loaded once per process and reused across requests.
     """
     global _pretrained_provider
+    if prefer_pretrained is None:
+        prefer_pretrained = getattr(settings, "USE_PRETRAINED_EMBEDDINGS", False)
+
     if prefer_pretrained:
         if _pretrained_provider is not None:
             return _pretrained_provider

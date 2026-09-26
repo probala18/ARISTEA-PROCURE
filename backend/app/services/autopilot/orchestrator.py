@@ -48,6 +48,7 @@ MAX_STANDARDS = 12
 ALLIED_ROLES_INCLUDED = {"TESTING", "SAFETY", "PERFORMANCE", "INSTALLATION", "NORMATIVE_REFERENCE"}
 LICENCE_MATCH_THRESHOLD = 0.62
 THIN_MARKET_LICENCES = 10
+_cached_licence_embeddings: Optional[Any] = None
 
 
 class AutopilotOrchestrator:
@@ -264,8 +265,7 @@ class AutopilotOrchestrator:
         return (f"{superseded} superseded, {amended} with amendments to incorporate",
                 {"warnings": warnings_out, "superseded_count": superseded})
 
-_cached_licence_embeddings: Optional[Any] = None
-
+    # 5 ------------------------------------------------------------------------
     def _step_market(self, ctx: Dict[str, Any]):
         global _cached_licence_embeddings
         licences = self.db.query(ProductLicence).all()
