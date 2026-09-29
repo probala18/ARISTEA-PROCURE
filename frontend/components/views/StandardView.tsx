@@ -16,6 +16,7 @@ import {
 } from '@/lib/api';
 import { Panel } from '@/components/ui/Panel';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
+import { StandardIntelligenceSuite } from './redline/StandardIntelligenceSuite';
 
 interface StandardViewProps {
   initialStandardId?: string;
@@ -272,6 +273,15 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
               </div>
             )}
           </div>
+
+          {/* Integrated Intelligence Features for Showing Standards */}
+          <StandardIntelligenceSuite
+            standardId={detail?.standard_id || selectedStandard}
+            standardTitle={detail?.title}
+            isCurrent={versions ? versions.is_current : true}
+            onToast={onToast}
+            onNavigateStandard={handleSelectQuick}
+          />
 
           {/* Bento-grid: Version Intelligence & Compliance */}
           <div
