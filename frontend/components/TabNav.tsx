@@ -10,6 +10,7 @@ export type TabKey =
   | 'graph'
   | 'compliance'
   | 'tender'
+  | 'redline'
   | 'spec'
   | 'services'
   | 'simplify'
@@ -37,6 +38,7 @@ const TABS: TabItem[] = [
   { key: 'graph', label: 'Knowledge Graph', icon: '🕸️' },
   { key: 'compliance', label: 'QCO Compliance', badge: 'GFR', icon: '🛡️' },
   { key: 'tender', label: 'Document Auditor', badge: 'Audit', icon: '📋' },
+  { key: 'redline', label: 'Redline Editor', badge: 'New', icon: '🔴' },
   { key: 'spec', label: 'Spec Workspace', icon: '📝' },
   { key: 'voice', label: 'Voice AI', badge: 'Speech', icon: '🎙️' },
   { key: 'history', label: 'Session History', icon: '🕒' },

@@ -16,6 +16,7 @@ import { HistoryView } from '@/components/views/HistoryView';
 import { ServiceHubView } from '@/components/views/ServiceHubView';
 import { SimplifyView } from '@/components/views/SimplifyView';
 import { AutopilotView } from '@/components/views/AutopilotView';
+import { RedlineView } from '@/components/views/RedlineView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 import { animateHeroText } from '@/lib/gsap-animations';
 import { checkHealth } from '@/lib/api';
@@ -285,6 +286,18 @@ export default function Home() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <TenderView onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'redline' && (
+                <motion.div
+                  key="redline"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <RedlineView onToast={addToast} />
                 </motion.div>
               )}
 

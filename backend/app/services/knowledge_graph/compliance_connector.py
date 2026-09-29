@@ -118,11 +118,15 @@ class ComplianceConnectorService:
         min_dicts = [
             {
                 "id": m.id,
-                "ministry_name": m.ministry_name,
-                "department_name": m.department_name,
-                "product_category": m.product_category,
-                "procurement_context": m.procurement_context,
+                "ministry_department": m.ministry_department,
+                "ministry_name": m.ministry_department,
+                "department_name": m.ministry_department,
+                "product_name": m.product_name,
+                "product_category": m.product_name,
+                "standard_number": m.standard_number,
+                "procurement_context": m.product_name,
                 "source_dataset": m.source_dataset,
+                "provenance": m.source_provenance,
             }
             for m in mappings
         ]

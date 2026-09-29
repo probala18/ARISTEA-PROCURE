@@ -78,6 +78,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: 'Audit',
     },
     {
+      key: 'redline',
+      label: 'Redline & AI Shield',
+      sublabel: 'Visual Editor + Hallucination Guard',
+      icon: '🔴',
+      badge: 'New',
+    },
+    {
       key: 'spec',
       label: 'Spec Workspace',
       sublabel: 'Grounded Clause Drafting',

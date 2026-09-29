@@ -1162,3 +1162,228 @@ export async function exportAutopilotDocx(result: AutopilotResult): Promise<Blob
   if (!res.ok) await handleResponse(res);
   return res.blob();
 }
+
+// ==========================================
+// Redline Document Editor
+// ==========================================
+
+export interface RedlineAutoFix {
+  fix_id: string;
+  old_text: string;
+  new_text: string;
+  old_standard_id: string;
+  new_standard_id: string;
+  new_standard_title?: string;
+  reason: string;
+  year_old?: number;
+  year_new?: number;
+  confidence: number;
+}
+
+export interface RedlineSegment {
+  segment_id: number;
+  text: string;
+  annotation_type: 'COMPLIANT' | 'OUTDATED' | 'UNRECOGNIZED' | 'AMENDED' | 'PLAIN';
+  standard_id?: string;
+  standard_title?: string;
+  status?: string;
+  publication_year?: number;
+  successor_id?: string;
+  successor_title?: string;
+  successor_year?: number;
+  tooltip?: string;
+  auto_fix?: RedlineAutoFix;
+  amendments_count?: number;
+  evidence?: Record<string, any>;
+}
+
+export interface RedlineSummary {
+  total_segments: number;
+  compliant_count: number;
+  outdated_count: number;
+  unrecognized_count: number;
+  amended_count: number;
+  auto_fixes_available: number;
+  compliance_score: number;
+}
+
+export interface RedlineAnalysisResponse {
+  segments: RedlineSegment[];
+  summary: RedlineSummary;
+  corrected_text?: string;
+  auto_fixes: RedlineAutoFix[];
+  disclaimer: string;
+}
+
+export async function analyzeRedline(documentText: string, autoFixAll = false): Promise<RedlineAnalysisResponse> {
+  const res = await fetch(`${API_BASE}/api/redline/analyze`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      document_text: documentText,
+      auto_fix_all: autoFixAll,
+    }),
+  });
+  return handleResponse<RedlineAnalysisResponse>(res);
+}
+
+export async function applyAllRedlineFixes(documentText: string): Promise<{
+  corrected_text: string;
+  fixes_applied: number;
+  auto_fixes: RedlineAutoFix[];
+  summary: RedlineSummary;
+}> {
+  const res = await fetch(`${API_BASE}/api/redline/apply-all-fixes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      document_text: documentText,
+      auto_fix_all: true,
+    }),
+  });
+  return handleResponse<any>(res);
+}
+
+// ==========================================
+// Adversarial Auditor AI
+// ==========================================
+
+export interface AuditorVerifiedStandard {
+  input_reference: string;
+  normalized_reference: string;
+  verdict: 'VERIFIED' | 'SUPERSEDED_VERIFIED' | 'SUSPICIOUS' | 'HALLUCINATION' | 'PARTIAL_MATCH' | 'FORMAT_INVALID';
+  confidence: number;
+  matched_standard_id?: string;
+  matched_title?: string;
+  matched_status?: string;
+  successor_id?: string;
+  closest_matches: Array<{
+    standard_id: string;
+    title: string;
+    status: string;
+    similarity: number;
+  }>;
+  reason: string;
+  blocked: boolean;
+  evidence?: Record<string, any>;
+}
+
+export interface AuditorVerificationResponse {
+  total_checked: number;
+  verified_count: number;
+  suspicious_count: number;
+  hallucination_count: number;
+  blocked_count: number;
+  results: AuditorVerifiedStandard[];
+  overall_trust_score: number;
+  auditor_warning?: string;
+  disclaimer: string;
+}
+
+export async function verifyStandards(
+  references: string[],
+  strictMode = true
+): Promise<AuditorVerificationResponse> {
+  const res = await fetch(`${API_BASE}/api/auditor/verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      references,
+      strict_mode: strictMode,
+      include_closest_matches: true,
+    }),
+  });
+  return handleResponse<AuditorVerificationResponse>(res);
+}
+
+export async function verifyStandardsInText(text: string, strictMode = true): Promise<AuditorVerificationResponse> {
+  const formData = new FormData();
+  formData.append('text', text);
+  formData.append('strict_mode', String(strictMode));
+
+  const res = await fetch(`${API_BASE}/api/auditor/verify-text`, {
+    method: 'POST',
+    body: formData,
+  });
+  return handleResponse<AuditorVerificationResponse>(res);
+}
+
+// ==========================================
+// Vision AI Table Reader
+// ==========================================
+
+export interface ExtractedCell {
+  row: number;
+  col: number;
+  text: string;
+  is_header: boolean;
+  numeric_value?: number;
+  unit?: string;
+}
+
+export interface ExtractedTable {
+  table_index: number;
+  title?: string;
+  headers: string[];
+  rows: string[][];
+  cells: ExtractedCell[];
+  row_count: number;
+  col_count: number;
+  standard_references: string[];
+  csv_text?: string;
+  confidence: number;
+}
+
+export interface ExtractedFormula {
+  formula_index: number;
+  raw_text: string;
+  latex?: string;
+  context?: string;
+  variables: string[];
+}
+
+export interface VisionTableResponse {
+  tables: ExtractedTable[];
+  formulas: ExtractedFormula[];
+  raw_text: string;
+  standard_references: string[];
+  total_tables: number;
+  total_formulas: number;
+  processing_method: string;
+  confidence: number;
+  disclaimer: string;
+}
+
+export async function extractTableFromImage(
+  file: File,
+  extractionMode = 'auto',
+  enhanceOcr = true,
+  detectStandards = true
+): Promise<VisionTableResponse> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('extraction_mode', extractionMode);
+  formData.append('enhance_ocr', String(enhanceOcr));
+  formData.append('detect_standards', String(detectStandards));
+
+  const res = await fetch(`${API_BASE}/api/vision/extract-table`, {
+    method: 'POST',
+    body: formData,
+  });
+  return handleResponse<VisionTableResponse>(res);
+}
+
+export async function extractTableFromText(
+  text: string,
+  detectStandards = true
+): Promise<VisionTableResponse> {
+  const formData = new FormData();
+  formData.append('text', text);
+  formData.append('detect_standards', String(detectStandards));
+
+  const res = await fetch(`${API_BASE}/api/vision/extract-from-text`, {
+    method: 'POST',
+    body: formData,
+  });
+  return handleResponse<VisionTableResponse>(res);
+}

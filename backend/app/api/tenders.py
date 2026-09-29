@@ -252,8 +252,9 @@ def get_tender_audit(
         return report
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
-    except Exception:
-        raise HTTPException(status_code=500, detail="Tender audit execution failed.")
+    except Exception as e:
+        logger.error("Tender audit execution failed for tender %s: %s", id, e, exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Tender audit execution failed: {str(e)}")
 
 
 @router.post("/{id}/generate")
