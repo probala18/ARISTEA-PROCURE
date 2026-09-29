@@ -41,7 +41,7 @@ const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
     desc: 'Quality Control Orders (QCO), mandatory vs voluntary schemes, and regulatory divergences',
   },
   tender: {
-    title: 'Tender Document Auditor & Redline',
+    title: 'Tender Document Auditor',
     desc: 'Multi-format RFP parsing, visual redline markup, measurements, comparison matrix & gap analysis',
   },
   spec: {

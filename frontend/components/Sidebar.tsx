@@ -73,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       key: 'tender',
-      label: 'Document Auditor & Redline',
+      label: 'Document Auditor',
       sublabel: 'Visual Redline, Measurements & Audit',
       icon: '📋',
       badge: 'Audit',

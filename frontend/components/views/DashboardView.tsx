@@ -59,7 +59,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
       color: 'linear-gradient(135deg, #4338ca 0%, #312e81 100%)',
     },
     {
-      title: 'Document Auditor & Visual Redline',
+      title: 'Document Auditor',
       description: 'Interactive visual document markup with green/red annotations, engineering measurements, eco tracking, and AI budget estimates.',
       icon: '📋',
       badge: 'Visual Redline',
