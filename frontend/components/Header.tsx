@@ -16,6 +16,10 @@ const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
     title: 'Procurement Command Center',
     desc: 'National public procurement intelligence dashboard, active KPI surveillance, and standard analytics',
   },
+  analytics: {
+    title: 'System Architecture & Procurement Analytics',
+    desc: 'Live interactive pipeline diagram, statutory compliance metrics, energy offset charts & departmental leaderboard',
+  },
   autopilot: {
     title: 'ARISTEA Autopilot',
     desc: 'Describe a need in any language — get a compliant, cited, red-teamed tender in minutes',

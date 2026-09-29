@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TabKey } from '@/components/TabNav';
 
 interface DashboardViewProps {
@@ -10,6 +10,10 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToast }) => {
+  // Interactive Redline Demo State
+  const [redlineSimFixed, setRedlineSimFixed] = useState(false);
+  const [selectedArchStage, setSelectedArchStage] = useState<number>(4);
+
   const kpis = [
     {
       label: 'Authoritative IS Standards',
@@ -49,38 +53,54 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
     },
   ];
 
-  const quickActions = [
+  const archStages = [
     {
-      title: 'Tender Autopilot',
-      description: 'End-to-end procurement generation: Describe your requirement and get a fully cited, compliant RFP clause package.',
-      icon: '🚀',
-      badge: 'Recommended',
-      tab: 'autopilot' as TabKey,
-      color: 'linear-gradient(135deg, #4338ca 0%, #312e81 100%)',
+      step: 1,
+      title: 'Intent & Intake',
+      icon: '📥',
+      badge: 'Input',
+      description: 'Upload PDF/DOCX or input natural language requirement in any Indic language.',
+      tech: 'PyMuPDF Plain-Text Extractor & Schema Normalizer',
     },
     {
-      title: 'Document Auditor',
-      description: 'Interactive visual document markup with green/red annotations, engineering measurements, eco tracking, and AI budget estimates.',
-      icon: '📋',
-      badge: 'Visual Redline',
-      tab: 'tender' as TabKey,
-      color: 'linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%)',
-    },
-    {
-      title: 'Semantic Standards Matcher',
-      description: 'Vector-powered neural search across all Indian Standards to discover governing specifications for any material or equipment.',
+      step: 2,
+      title: 'Semantic Matcher',
       icon: '⚡',
-      badge: 'AI Discovery',
-      tab: 'recommend' as TabKey,
-      color: 'linear-gradient(135deg, #7c2d12 0%, #451a03 100%)',
+      badge: 'Vector',
+      description: 'Neural matching against BIS catalog with cosine similarity and BM25 hybrid ranking.',
+      tech: 'MiniLM-L6-v2 Embeddings + SQLite Hybrid Index',
     },
     {
-      title: 'Statutory QCO Compliance',
-      description: 'Verify mandatory certification orders, DPIIT Make-in-India rules, and conformity assessment schemes.',
+      step: 3,
+      title: 'KG & QCO Guard',
+      icon: '🕸️',
+      badge: 'Statutory',
+      description: 'Verifies Ministry QCO Gazette orders, mandatory vs voluntary BIS certification schemes.',
+      tech: 'Deterministic Knowledge Graph & Gazette DB',
+    },
+    {
+      step: 4,
+      title: 'Redline Editor',
+      icon: '🖋️',
+      badge: 'Visual UI',
+      description: 'Green for active standards; Red for expired rules with 1-click legal auto-fixes.',
+      tech: 'Dynamic Regex Parser + Real-time DOM Diffing',
+    },
+    {
+      step: 5,
+      title: 'Vision AI Tables',
+      icon: '👁️',
+      badge: 'Vision',
+      description: 'Reads complex engineering tables, motor kW curves, and tolerances without broken columns.',
+      tech: 'Multi-Modal Vision Pipeline + Tabular OCR',
+    },
+    {
+      step: 6,
+      title: 'Adversarial Shield',
       icon: '🛡️',
-      badge: 'GFR Guard',
-      tab: 'compliance' as TabKey,
-      color: 'linear-gradient(135deg, #0369a1 0%, #075985 100%)',
+      badge: 'Safety',
+      description: 'Independent validator agent halts execution if citation cannot be verified deterministically.',
+      tech: 'Adversarial LLM Auditor + Citation Grounding',
     },
   ];
 
@@ -118,81 +138,167 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
   ];
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Hero Welcome Banner */}
+    <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px', paddingBottom: '40px' }}>
+      
+      {/* 1. Grand Hero Landing Banner */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.35 }}
         style={{
-          padding: '28px 32px',
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)',
-          borderRadius: 'var(--radius-lg, 14px)',
+          padding: '36px 40px',
+          background: 'linear-gradient(135deg, #090d16 0%, #171c38 45%, #2a2c6d 100%)',
+          borderRadius: '16px',
           color: '#ffffff',
-          boxShadow: '0 8px 24px rgba(15, 23, 42, 0.25)',
+          boxShadow: '0 12px 36px rgba(15, 23, 42, 0.28)',
           position: 'relative',
           overflow: 'hidden',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
         }}
       >
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '820px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', borderRadius: '999px', background: 'rgba(255, 255, 255, 0.12)', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.8rem' }}>🏛️</span>
-            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#e0e7ff', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-              National Public Procurement Intelligence Platform • PS 26108
+        {/* Subtle Background Glow Elements */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '-60px',
+            right: '-60px',
+            width: '280px',
+            height: '280px',
+            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%)',
+            borderRadius: '50%',
+            pointerEvents: 'none',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '-40px',
+            left: '30%',
+            width: '240px',
+            height: '240px',
+            background: 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)',
+            borderRadius: '50%',
+            pointerEvents: 'none',
+          }}
+        />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px' }}>
+          {/* Initiative Badge */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '6px 14px',
+              borderRadius: '999px',
+              background: 'rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              marginBottom: '16px',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            <span style={{ fontSize: '0.85rem' }}>🇮🇳</span>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#e0e7ff', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              Problem Statement 26108 · Smart India Hackathon
             </span>
           </div>
 
-          <h1 style={{ margin: '0 0 10px 0', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.2 }}>
-            Procurement Command Center
+          <h1
+            style={{
+              margin: '0 0 14px 0',
+              fontSize: '2.3rem',
+              fontWeight: 900,
+              color: '#ffffff',
+              lineHeight: 1.15,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            ARISTEA-PROCURE
+            <span style={{ display: 'block', fontSize: '1.45rem', fontWeight: 600, color: '#a5b4fc', marginTop: '6px' }}>
+              Autonomous Indian Standards Intelligence & Tender Surveillance
+            </span>
           </h1>
-          <p style={{ margin: '0 0 20px 0', fontSize: '0.94rem', color: '#c7d2fe', lineHeight: 1.5 }}>
-            Automate Indian Standards compliance, audit draft tender RFPs for outdated citations, track green sustainability footprints, and generate GFR-compliant procurement specifications.
+
+          <p style={{ margin: '0 0 24px 0', fontSize: '1rem', color: '#cbd5e1', lineHeight: 1.6, maxWidth: '820px' }}>
+            Transforming public procurement for Indian government bodies. Eliminating obsolete standard citations, enforcing statutory Quality Control Orders (QCOs), safeguarding against AI hallucinations, and reading complex engineering tables with precision Vision AI.
           </p>
 
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          {/* Primary Action Buttons */}
+          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
             <button
-              onClick={() => onSelectTab('autopilot')}
+              onClick={() => {
+                onSelectTab('autopilot');
+                onToast('Launching Autopilot RFP Engine...', 'info');
+              }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '10px 20px',
-                borderRadius: '8px',
-                background: '#6366f1',
+                padding: '12px 24px',
+                borderRadius: '10px',
+                background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
                 color: '#ffffff',
-                fontWeight: 700,
-                fontSize: '0.88rem',
+                fontWeight: 800,
+                fontSize: '0.92rem',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)',
+                boxShadow: '0 4px 18px rgba(99, 102, 241, 0.45)',
+                transition: 'transform 0.15s ease',
               }}
             >
               <span>🚀 Launch Autopilot</span>
             </button>
 
             <button
-              onClick={() => onSelectTab('tender')}
+              onClick={() => {
+                onSelectTab('tender');
+                onToast('Opening Redline Document Auditor...', 'info');
+              }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '10px 20px',
-                borderRadius: '8px',
-                background: 'rgba(255, 255, 255, 0.12)',
-                color: '#ffffff',
-                fontWeight: 700,
-                fontSize: '0.88rem',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
+                padding: '12px 22px',
+                borderRadius: '10px',
+                background: 'rgba(239, 68, 68, 0.15)',
+                color: '#fca5a5',
+                fontWeight: 800,
+                fontSize: '0.92rem',
+                border: '1px solid rgba(239, 68, 68, 0.4)',
                 cursor: 'pointer',
+                backdropFilter: 'blur(6px)',
               }}
             >
-              <span>🔴 Open Redline Document Auditor</span>
+              <span>🔴 Open Redline Auditor</span>
+            </button>
+
+            <button
+              onClick={() => {
+                onSelectTab('analytics');
+                onToast('Loading Architecture & Analytics...', 'info');
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 22px',
+                borderRadius: '10px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#ffffff',
+                fontWeight: 700,
+                fontSize: '0.92rem',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                cursor: 'pointer',
+                backdropFilter: 'blur(6px)',
+              }}
+            >
+              <span>📈 View Architecture & Diagram</span>
             </button>
           </div>
         </div>
       </motion.div>
 
-      {/* KPI Cards Grid */}
+      {/* 2. Key Operational Metrics Strip */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
         {kpis.map((kpi, idx) => (
           <motion.div
@@ -202,42 +308,42 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
             transition={{ duration: 0.25, delay: idx * 0.05 }}
             onClick={() => onSelectTab(kpi.tab)}
             style={{
-              padding: '20px',
+              padding: '20px 22px',
               background: '#ffffff',
-              borderRadius: 'var(--radius-lg, 12px)',
+              borderRadius: '12px',
               border: '1px solid #e2e8f0',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)',
               cursor: 'pointer',
-              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+              transition: 'all 0.15s ease',
             }}
             whileHover={{ y: -3, boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)' }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <span style={{ fontSize: '0.76rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   {kpi.label}
                 </span>
-                <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#0f172a', marginTop: '4px', lineHeight: 1.1 }}>
+                <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#0f172a', marginTop: '4px', lineHeight: 1.1 }}>
                   {kpi.value}
                 </div>
               </div>
               <div
                 style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '10px',
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '12px',
                   background: kpi.bg,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '1.25rem',
+                  fontSize: '1.35rem',
                 }}
               >
                 {kpi.icon}
               </div>
             </div>
 
-            <div style={{ marginTop: '12px', fontSize: '0.76rem', color: kpi.color, fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div style={{ marginTop: '12px', fontSize: '0.76rem', color: kpi.color, fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
               <span>✓</span>
               <span>{kpi.trend}</span>
             </div>
@@ -245,88 +351,577 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
         ))}
       </div>
 
-      {/* Quick Launchpad Grid */}
+      {/* 3. The 3 Breakthrough Competitive Innovations Showcase */}
       <div>
-        <div style={{ marginBottom: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#0f172a' }}>
-              ⚡ Core Intelligence Modules
+        <div style={{ marginBottom: '18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1.2rem' }}>🏆</span>
+            <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.01em' }}>
+              Why ARISTEA Wins: The 3 Core Tech Differentiators
             </h2>
-            <p style={{ margin: '2px 0 0 0', fontSize: '0.82rem', color: '#64748b' }}>
-              Jump straight into any step of the procurement and standards analysis lifecycle.
-            </p>
           </div>
+          <p style={{ margin: '4px 0 0 0', fontSize: '0.88rem', color: '#64748b' }}>
+            Engineered specifically to solve the fatal flaws of generic LLMs in public procurement.
+          </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
-          {quickActions.map((action, idx) => (
-            <motion.div
-              key={action.title}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25, delay: idx * 0.05 }}
-              onClick={() => onSelectTab(action.tab)}
-              style={{
-                padding: '22px',
-                borderRadius: 'var(--radius-lg, 12px)',
-                background: '#ffffff',
-                border: '1px solid #e2e8f0',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)',
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-              whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(0, 0, 0, 0.07)' }}
-            >
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '1.6rem' }}>{action.icon}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
+          
+          {/* Card 1: The Redline Document Editor */}
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              border: '1px solid #fed7aa',
+              boxShadow: '0 4px 16px rgba(234, 88, 12, 0.06)',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '1.8rem' }}>🖋️</span>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 800,
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    background: '#ffedd5',
+                    color: '#c2410c',
+                  }}
+                >
+                  Visual Wow Factor
+                </span>
+              </div>
+
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '1.12rem', fontWeight: 800, color: '#0f172a' }}>
+                The &ldquo;Redline&rdquo; Document Editor
+              </h3>
+              <p style={{ margin: '0 0 14px 0', fontSize: '0.84rem', color: '#64748b', lineHeight: 1.5 }}>
+                Instead of dumping a boring table of rules, show procurement officers their actual document on screen with high-visibility visual highlights:
+              </p>
+
+              {/* Interactive Visual Redline Preview Widget */}
+              <div
+                style={{
+                  background: '#f8fafc',
+                  borderRadius: '10px',
+                  border: '1px solid #e2e8f0',
+                  padding: '14px',
+                  marginBottom: '16px',
+                  fontSize: '0.8rem',
+                  lineHeight: 1.6,
+                }}
+              >
+                <div style={{ marginBottom: '8px', color: '#334155' }}>
+                  Clause 4.1:{' '}
                   <span
                     style={{
-                      fontSize: '0.68rem',
+                      background: 'rgba(34, 197, 94, 0.18)',
+                      color: '#15803d',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
                       fontWeight: 700,
-                      padding: '2px 8px',
-                      borderRadius: '999px',
-                      background: '#f1f5f9',
-                      color: '#475569',
+                      border: '1px solid rgba(34, 197, 94, 0.3)',
                     }}
                   >
-                    {action.badge}
+                    🟢 Matches Active IS 1786:2008 (High-Strength Rebars)
                   </span>
                 </div>
+                <div style={{ color: '#334155' }}>
+                  Clause 4.2:{' '}
+                  {redlineSimFixed ? (
+                    <span
+                      style={{
+                        background: 'rgba(34, 197, 94, 0.22)',
+                        color: '#166534',
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        fontWeight: 700,
+                        border: '1px solid #86efac',
+                      }}
+                    >
+                      🟢 FIXED: IS 12615:2018 (IE3 Premium Energy Efficiency)
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.18)',
+                        color: '#b91c1c',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontWeight: 700,
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                      }}
+                    >
+                      🔴 EXPIRED: IS 325:1996 (Superseded & Non-Compliant)
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
 
-                <h3 style={{ margin: '0 0 6px 0', fontSize: '1rem', fontWeight: 800, color: '#0f172a' }}>
-                  {action.title}
-                </h3>
-                <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b', lineHeight: 1.45 }}>
-                  {action.description}
-                </p>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button
+                onClick={() => setRedlineSimFixed(!redlineSimFixed)}
+                style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  background: redlineSimFixed ? '#f1f5f9' : '#fee2e2',
+                  color: redlineSimFixed ? '#475569' : '#dc2626',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {redlineSimFixed ? '↺ Reset Simulation' : '⚡ 1-Click Auto-Fix to IS 12615'}
+              </button>
+              <button
+                onClick={() => onSelectTab('tender')}
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: '6px',
+                  background: '#c2410c',
+                  color: '#ffffff',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Open Auditor ➔
+              </button>
+            </div>
+          </div>
+
+          {/* Card 2: Vision AI for Complex Tables */}
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              border: '1px solid #bae6fd',
+              boxShadow: '0 4px 16px rgba(2, 132, 199, 0.06)',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '1.8rem' }}>👁️</span>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 800,
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    background: '#e0f2fe',
+                    color: '#0284c7',
+                  }}
+                >
+                  The Tech Winner
+                </span>
               </div>
 
-              <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 700, color: '#4f46e5' }}>
-                <span>Launch Workflow</span>
-                <span>➔</span>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '1.12rem', fontWeight: 800, color: '#0f172a' }}>
+                Reading Complex Tables & Engineering Charts
+              </h3>
+              <p style={{ margin: '0 0 14px 0', fontSize: '0.84rem', color: '#64748b', lineHeight: 1.5 }}>
+                Bureau of Indian Standards publications are loaded with multi-column power curves, tolerance matrices, and mathematical formulas:
+              </p>
+
+              <div
+                style={{
+                  background: '#f8fafc',
+                  borderRadius: '10px',
+                  border: '1px solid #e2e8f0',
+                  padding: '12px 14px',
+                  marginBottom: '16px',
+                }}
+              >
+                <div style={{ fontSize: '0.74rem', color: '#ef4444', fontWeight: 700, marginBottom: '6px' }}>
+                  ❌ Generic AI: Fails when columns wrap or split across pages.
+                </div>
+                <div style={{ fontSize: '0.74rem', color: '#059669', fontWeight: 700 }}>
+                  ✓ ARISTEA Vision AI: Treats tables visually as spatial matrices, preserving exact kW values, efficiency tiers, and test norms.
+                </div>
               </div>
-            </motion.div>
-          ))}
+            </div>
+
+            <button
+              onClick={() => onSelectTab('tender')}
+              style={{
+                width: '100%',
+                padding: '9px 14px',
+                borderRadius: '6px',
+                background: '#0284c7',
+                color: '#ffffff',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              Inspect Table Extraction in Auditor ➔
+            </button>
+          </div>
+
+          {/* Card 3: The Adversarial AI Double-Check */}
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              border: '1px solid #bbf7d0',
+              boxShadow: '0 4px 16px rgba(22, 163, 74, 0.06)',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '1.8rem' }}>🛡️</span>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 800,
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    background: '#dcfce7',
+                    color: '#15803d',
+                  }}
+                >
+                  The Safety Winner
+                </span>
+              </div>
+
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '1.12rem', fontWeight: 800, color: '#0f172a' }}>
+                The &ldquo;Adversarial&rdquo; AI Double-Check
+              </h3>
+              <p style={{ margin: '0 0 14px 0', fontSize: '0.84rem', color: '#64748b', lineHeight: 1.5 }}>
+                AI hallucination is catastrophic in government procurement. Citing non-existent rules like &ldquo;IS 9999&rdquo; can stall a ₹100 Crore public tender:
+              </p>
+
+              <div
+                style={{
+                  background: '#f8fafc',
+                  borderRadius: '10px',
+                  border: '1px solid #e2e8f0',
+                  padding: '12px 14px',
+                  marginBottom: '16px',
+                }}
+              >
+                <div style={{ fontSize: '0.74rem', color: '#0f172a', fontWeight: 700, marginBottom: '4px' }}>
+                  Independent Auditor Agent Guarantee:
+                </div>
+                <div style={{ fontSize: '0.74rem', color: '#64748b', fontStyle: 'italic', lineHeight: 1.4 }}>
+                  &ldquo;If a standard citation cannot be verified deterministically against the BIS database, ARISTEA immediately halts and prompts: &lsquo;I am not 100% sure, please check manually.&rsquo;&rdquo;
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onSelectTab('autopilot')}
+              style={{
+                width: '100%',
+                padding: '9px 14px',
+                borderRadius: '6px',
+                background: '#15803d',
+                color: '#ffffff',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              Test Adversarial Guard in Autopilot ➔
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Recent Audits & Live Surveillance Feed */}
+      {/* 4. Interactive System Architecture Pipeline Diagram (Embedded Widget) */}
       <div
         style={{
           background: '#ffffff',
-          borderRadius: 'var(--radius-lg, 12px)',
+          borderRadius: '16px',
           border: '1px solid #e2e8f0',
-          padding: '20px',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+          padding: '28px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)',
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1.25rem' }}>📊</span>
+              <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900, color: '#0f172a' }}>
+                End-to-End System Architecture Pipeline
+              </h2>
+            </div>
+            <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: '#64748b' }}>
+              Click any stage below to inspect the underlying technological components, algorithms, and validation metrics.
+            </p>
+          </div>
+
+          <button
+            onClick={() => onSelectTab('analytics')}
+            style={{
+              padding: '8px 18px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)',
+              color: '#ffffff',
+              fontSize: '0.84rem',
+              fontWeight: 800,
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(79, 70, 229, 0.3)',
+            }}
+          >
+            Open Full Analytics & Charts Page ➔
+          </button>
+        </div>
+
+        {/* 6-Stage Process Flow Ribbon */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+            gap: '12px',
+            marginBottom: '20px',
+          }}
+        >
+          {archStages.map((stage) => {
+            const isSelected = selectedArchStage === stage.step;
+            return (
+              <div
+                key={stage.step}
+                onClick={() => setSelectedArchStage(stage.step)}
+                style={{
+                  padding: '14px',
+                  borderRadius: '10px',
+                  background: isSelected ? 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)' : '#f8fafc',
+                  color: isSelected ? '#ffffff' : '#1e293b',
+                  border: isSelected ? '1px solid #4338ca' : '1px solid #e2e8f0',
+                  cursor: 'pointer',
+                  transition: 'all 0.18s ease',
+                  boxShadow: isSelected ? '0 4px 14px rgba(79, 70, 229, 0.3)' : 'none',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '1.2rem' }}>{stage.icon}</span>
+                  <span
+                    style={{
+                      fontSize: '0.62rem',
+                      fontWeight: 800,
+                      padding: '1px 6px',
+                      borderRadius: '999px',
+                      background: isSelected ? 'rgba(255, 255, 255, 0.25)' : '#e2e8f0',
+                      color: isSelected ? '#ffffff' : '#475569',
+                    }}
+                  >
+                    Step {stage.step}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.86rem', fontWeight: 800 }}>
+                  {stage.title}
+                </div>
+                <div
+                  style={{
+                    fontSize: '0.7rem',
+                    color: isSelected ? '#e0e7ff' : '#64748b',
+                    marginTop: '2px',
+                  }}
+                >
+                  {stage.badge}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Selected Architecture Node Detail Card */}
+        {(() => {
+          const activeNode = archStages.find((s) => s.step === selectedArchStage) || archStages[3];
+          return (
+            <div
+              style={{
+                background: '#f8fafc',
+                borderRadius: '12px',
+                border: '1px solid #cbd5e1',
+                padding: '20px 24px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '16px',
+              }}
+            >
+              <div style={{ flex: 1, minWidth: '280px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '1.25rem' }}>{activeNode.icon}</span>
+                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+                    Stage {activeNode.step}: {activeNode.title}
+                  </span>
+                </div>
+                <p style={{ margin: '0 0 8px 0', fontSize: '0.86rem', color: '#475569', lineHeight: 1.5 }}>
+                  {activeNode.description}
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#4f46e5', fontWeight: 700 }}>
+                  <span>Tech Stack:</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', background: 'rgba(79, 70, 229, 0.08)', padding: '2px 8px', borderRadius: '4px' }}>
+                    {activeNode.tech}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => onSelectTab('analytics')}
+                style={{
+                  padding: '9px 16px',
+                  borderRadius: '8px',
+                  background: '#0f172a',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  border: 'none',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                }}
+              >
+                Inspect Live Payloads & Telemetry ➔
+              </button>
+            </div>
+          );
+        })()}
+      </div>
+
+      {/* 5. Document Auditor 4-Pillar Feature Overview */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+          borderRadius: '16px',
+          border: '1px solid #e2e8f0',
+          padding: '28px',
+        }}
+      >
+        <div style={{ marginBottom: '18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1.2rem' }}>📑</span>
+            <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900, color: '#0f172a' }}>
+              The 4 Core Pillars of Document Auditor
+            </h2>
+          </div>
+          <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: '#64748b' }}>
+            Built specifically to answer the RFP compliance and green sustainability requirements requested by government departments.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+          <div
+            onClick={() => onSelectTab('tender')}
+            style={{
+              padding: '18px',
+              borderRadius: '12px',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              cursor: 'pointer',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+            }}
+          >
+            <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>📐</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+              Overview & Measurements
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.45 }}>
+              Automatic extraction of motor kW ratings, pump head meters, pipe schedules, and cement compressive strength.
+            </div>
+          </div>
+
+          <div
+            onClick={() => onSelectTab('tender')}
+            style={{
+              padding: '18px',
+              borderRadius: '12px',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              cursor: 'pointer',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+            }}
+          >
+            <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>📊</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+              Comparison Matrix & Audit
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.45 }}>
+              Side-by-side verification comparing tender draft requirements against active Bureau of Indian Standards clauses.
+            </div>
+          </div>
+
+          <div
+            onClick={() => onSelectTab('tender')}
+            style={{
+              padding: '18px',
+              borderRadius: '12px',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              cursor: 'pointer',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+            }}
+          >
+            <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>🌿</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+              Eco Track & Energy ROI
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.45 }}>
+              Calculates annual kWh energy savings, ₹ monetary cost benefits, and metric tons of CO2 averted via IE3/IE4 motors.
+            </div>
+          </div>
+
+          <div
+            onClick={() => onSelectTab('tender')}
+            style={{
+              padding: '18px',
+              borderRadius: '12px',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              cursor: 'pointer',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+            }}
+          >
+            <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>👥</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+              Bidder Requirement Summary
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.45 }}>
+              Parses financial turnover thresholds, similar work credentials, and DPIIT Make-in-India Class-I minimum local content.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 6. Recent Audits & Live Departmental Surveillance Feed */}
+      <div
+        style={{
+          background: '#ffffff',
+          borderRadius: '14px',
+          border: '1px solid #e2e8f0',
+          padding: '24px',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
-              📋 Recent Procurement Audits & Standards Surveillance
+            <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>
+              📋 Active Departmental Surveillance & Audit Records
             </h3>
             <p style={{ margin: '2px 0 0 0', fontSize: '0.8rem', color: '#64748b' }}>
               Real-time records of audited tenders with auto-supersession fixes and compliance ratings.

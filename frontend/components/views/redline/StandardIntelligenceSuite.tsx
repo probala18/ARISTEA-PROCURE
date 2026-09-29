@@ -377,7 +377,7 @@ Rated Output (kW) | 2-Pole Eff (%) | 4-Pole Eff (%) | 6-Pole Eff (%) | Tolerance
         }}
       >
         {[
-          { key: 'redline' as const, icon: '🔴', label: 'Redline Document', badge: 'Visual Wow' },
+          
           { key: 'overview' as const, icon: '📐', label: 'Overview & Measurements', badge: 'Specs' },
           { key: 'comparison' as const, icon: '📊', label: 'Comparison Matrix', badge: 'Audit' },
           { key: 'eco' as const, icon: '🌿', label: 'Eco Track', badge: 'Green' },

@@ -16,6 +16,7 @@ import { HistoryView } from '@/components/views/HistoryView';
 import { ServiceHubView } from '@/components/views/ServiceHubView';
 import { SimplifyView } from '@/components/views/SimplifyView';
 import { AutopilotView } from '@/components/views/AutopilotView';
+import { AnalyticsDiagramView } from '@/components/views/AnalyticsDiagramView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 import { animateHeroText } from '@/lib/gsap-animations';
 import { checkHealth } from '@/lib/api';
@@ -211,6 +212,18 @@ export default function Home() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <DashboardView onSelectTab={setActiveTab} onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'analytics' && (
+                <motion.div
+                  key="analytics"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <AnalyticsDiagramView onSelectTab={setActiveTab} onToast={addToast} />
                 </motion.div>
               )}
 

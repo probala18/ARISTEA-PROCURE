@@ -519,7 +519,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
               { key: 'eco' as const, icon: '🌿', label: 'Eco Track', badge: 'Green' },
               { key: 'bidder' as const, icon: '👥', label: 'Bidder Criteria', badge: 'Criteria' },
               { key: 'gaps' as const, icon: '📋', label: 'Clause Findings & Gaps', badge: 'GFR' },
-              { key: 'redline' as const, icon: '🔴', label: 'Redline Document', badge: 'Visual Wow' },
+              { key: 'redline' as const, icon: '📝', label: 'Interactive Document Markup', badge: 'Color-Coded' },
               { key: 'auditor' as const, icon: '🛡️', label: 'Adversarial AI Shield', badge: 'Double-Check' },
               { key: 'vision' as const, icon: '👁️', label: 'Vision AI Tables', badge: 'OCR' },
               { key: 'cost' as const, icon: '💰', label: 'AI Cost Estimate', badge: 'Budget' },
@@ -572,13 +572,13 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
 
           {/* Feature Contents */}
           <AnimatePresence mode="wait">
-            {/* 1. REDLINE DOCUMENT EDITOR (VISUAL WOW FACTOR) */}
+            {/* 1. INTERACTIVE DOCUMENT COMPLIANCE INSPECTOR */}
             {activeFeature === 'redline' && (
               <motion.div key="redline" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                 <Panel
-                  title="The Redline Document Editor"
-                  subtitle="Your actual document displayed on screen with inline color-coded intelligence: Green = perfect match with current Indian Standard; Red = warning, outdated/expired standard (click to auto-fix)."
-                  badge="Visual Wow Factor"
+                  title="Interactive Document Compliance Inspector"
+                  subtitle="Full draft tender document rendered with inline statutory verification: Green confirms alignment with active Indian Standards; Red flags outdated or superseded specifications with 1-click legal auto-fixes."
+                  badge="Live Compliance Markup"
                   action={
                     redlineResult && redlineResult.summary.auto_fixes_available > 0 ? (
                       <button onClick={handleAutoFixAll} disabled={isFixing} className="btn-accent" style={{ fontSize: '0.82rem' }}>

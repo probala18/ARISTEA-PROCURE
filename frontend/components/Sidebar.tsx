@@ -38,6 +38,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: 'New',
     },
     {
+      key: 'tender',
+      label: 'Document Auditor',
+      sublabel: 'Visual Redline, Measurements & Audit',
+      icon: '📋',
+      badge: 'Audit',
+    },
+    {
       key: 'recommend',
       label: 'Semantic Matcher',
       sublabel: 'Grounded IS Discovery',
@@ -70,13 +77,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       sublabel: 'Statutory Orders & Schemes',
       icon: '🛡️',
       badge: 'GFR',
-    },
-    {
-      key: 'tender',
-      label: 'Document Auditor',
-      sublabel: 'Visual Redline, Measurements & Audit',
-      icon: '📋',
-      badge: 'Audit',
     },
     {
       key: 'spec',

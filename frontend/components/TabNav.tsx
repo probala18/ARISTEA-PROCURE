@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 
 export type TabKey =
   | 'dashboard'
+  | 'analytics'
   | 'autopilot'
   | 'recommend'
   | 'standard'
@@ -30,6 +31,7 @@ interface TabItem {
 
 const TABS: TabItem[] = [
   { key: 'dashboard', label: 'Dashboard', badge: 'Live', icon: '📊' },
+  { key: 'analytics', label: 'Analytics & Diagram', badge: 'Arch', icon: '📈' },
   { key: 'autopilot', label: 'Autopilot', badge: 'New', icon: '🚀' },
   { key: 'recommend', label: 'Semantic Matcher', icon: '⚡' },
   { key: 'standard', label: 'Standards Directory', icon: '📚' },
