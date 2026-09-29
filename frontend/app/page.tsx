@@ -7,7 +7,7 @@ import { Header } from '@/components/Header';
 import { TabKey } from '@/components/TabNav';
 import { RecommendView } from '@/components/views/RecommendView';
 import { StandardView } from '@/components/views/StandardView';
-import { GraphView } from '@/components/views/GraphView';
+import { DashboardView } from '@/components/views/DashboardView';
 import { ComplianceView } from '@/components/views/ComplianceView';
 import { TenderView } from '@/components/views/TenderView';
 import { SpecView } from '@/components/views/SpecView';
@@ -16,13 +16,12 @@ import { HistoryView } from '@/components/views/HistoryView';
 import { ServiceHubView } from '@/components/views/ServiceHubView';
 import { SimplifyView } from '@/components/views/SimplifyView';
 import { AutopilotView } from '@/components/views/AutopilotView';
-import { RedlineView } from '@/components/views/RedlineView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 import { animateHeroText } from '@/lib/gsap-animations';
 import { checkHealth } from '@/lib/api';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabKey>('autopilot');
+  const [activeTab, setActiveTab] = useState<TabKey>('dashboard');
   const [explorerStandardId, setExplorerStandardId] = useState<string>('IS 12615:2018');
   const [activeQuery, setActiveQuery] = useState<string>('');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -78,8 +77,8 @@ export default function Home() {
 
   const handleOpenGraph = (stdId: string) => {
     setExplorerStandardId(stdId);
-    setActiveTab('graph');
-    addToast(`Opened topology graph for ${stdId}`, 'info');
+    setActiveTab('standard');
+    addToast(`Opened standards explorer for ${stdId}`, 'info');
   };
 
   const handleOpenCompliance = (stdId: string) => {
@@ -203,6 +202,18 @@ export default function Home() {
           {/* Animated Dynamic Workspace Container */}
           <div style={{ marginTop: '16px' }}>
             <AnimatePresence mode="wait">
+              {activeTab === 'dashboard' && (
+                <motion.div
+                  key="dashboard"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <DashboardView onSelectTab={setActiveTab} onToast={addToast} />
+                </motion.div>
+              )}
+
               {activeTab === 'autopilot' && (
                 <motion.div
                   key="autopilot"
@@ -245,22 +256,6 @@ export default function Home() {
                 </motion.div>
               )}
 
-              {activeTab === 'graph' && (
-                <motion.div
-                  key="graph"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                >
-                  <GraphView
-                    initialStandardId={explorerStandardId}
-                    onExploreStandard={handleExploreStandard}
-                    onToast={addToast}
-                  />
-                </motion.div>
-              )}
-
               {activeTab === 'compliance' && (
                 <motion.div
                   key="compliance"
@@ -286,18 +281,6 @@ export default function Home() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <TenderView onToast={addToast} />
-                </motion.div>
-              )}
-
-              {activeTab === 'redline' && (
-                <motion.div
-                  key="redline"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                >
-                  <RedlineView onToast={addToast} />
                 </motion.div>
               )}
 

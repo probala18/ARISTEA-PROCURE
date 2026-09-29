@@ -54,6 +54,111 @@ class RedlineAnalysisRequest(BaseModel):
     auto_fix_all: bool = Field(False, description="If true, return the fully auto-corrected document text")
 
 
+class MeasurementItem(BaseModel):
+    """Extracted physical or engineering measurement from tender."""
+    parameter: str
+    value: str
+    unit: str
+    tolerance: Optional[str] = None
+    standard_ref: Optional[str] = None
+    category: str = "General"
+
+
+class TenderOverview(BaseModel):
+    """Executive tender overview with extracted measurements."""
+    title: str
+    department: str
+    nit_number: str
+    scope_summary: str
+    estimated_timeline: str
+    measurements: List[MeasurementItem] = Field(default_factory=list)
+
+
+class ComparisonRow(BaseModel):
+    """Single row in the tender vs IS standard vs benchmark comparison matrix."""
+    parameter: str
+    clause: str
+    specified_value: str
+    is_standard_mandate: str
+    industry_benchmark: str
+    status: str  # COMPLIANT, OUTDATED, DEFICIENT, EXCEEDS
+    delta: str
+    chart_value_specified: Optional[float] = None
+    chart_value_required: Optional[float] = None
+    chart_unit: Optional[str] = None
+
+
+class EcoTrack(BaseModel):
+    """Green procurement and sustainability footprint analytics."""
+    eco_score: int = Field(85, ge=0, le=100)
+    grade: str = "Tier-A Green Procurement"
+    energy_efficiency_class: str = "IE3 / BEE 5-Star"
+    annual_kwh_savings: float = 14200.0
+    annual_co2_reduction_tons: float = 11.6
+    lifecycle_cost_savings_inr: float = 340800.0
+    compliance_tags: List[str] = Field(default_factory=list)
+    sustainability_insights: List[str] = Field(default_factory=list)
+
+
+class BidderRequirements(BaseModel):
+    """Summary of bidder qualification criteria."""
+    technical_criteria: List[str] = Field(default_factory=list)
+    financial_criteria: List[str] = Field(default_factory=list)
+    statutory_declarations: List[str] = Field(default_factory=list)
+    required_documents: List[str] = Field(default_factory=list)
+
+
+class StandardRedlineMapping(BaseModel):
+    """Check old standard (marked red) -> get new standard with official reference."""
+    old_standard: str
+    old_status: str
+    old_title: str
+    new_standard: str
+    new_status: str
+    new_title: str
+    bis_reference: str
+    circular_number: str
+    reason: str
+    clause_impact: str
+
+
+class PrimarySourceItem(BaseModel):
+    """Authoritative primary source link."""
+    name: str
+    category: str
+    url: str
+    description: str
+
+
+class ComplianceTaskItem(BaseModel):
+    """Actionable compliance task that can be tracked in the app."""
+    id: str
+    title: str
+    description: str
+    primary_source_name: str
+    primary_source_url: str
+    priority: str = "High"  # High, Medium, Low
+    status: str = "PENDING"  # PENDING, IN_PROGRESS, COMPLETED
+    due_stage: str = "Pre-Tender Technical Vetting"
+
+
+class CostLineItem(BaseModel):
+    category: str
+    amount: float
+    percentage: float
+    basis: str
+
+
+class AiCostEstimation(BaseModel):
+    """AI cost & expenditure recommendation for the project."""
+    estimated_total_inr: float
+    estimated_range_inr: str
+    rates_basis: str
+    line_items: List[CostLineItem] = Field(default_factory=list)
+    potential_savings_inr: float = 0.0
+    cost_optimizations: List[str] = Field(default_factory=list)
+
+
 class RedlineSummary(BaseModel):
     """Summary statistics for the redline analysis."""
     total_segments: int = 0
@@ -71,9 +176,21 @@ class RedlineAnalysisResponse(BaseModel):
     summary: RedlineSummary = Field(default_factory=RedlineSummary)
     corrected_text: Optional[str] = Field(None, description="Auto-corrected full text (if auto_fix_all=True)")
     auto_fixes: List[AutoFixAction] = Field(default_factory=list, description="All available auto-fix actions")
+    
+    # 7 New Powerful Capabilities
+    tender_overview: Optional[TenderOverview] = None
+    comparison_matrix: List[ComparisonRow] = Field(default_factory=list)
+    eco_track: Optional[EcoTrack] = None
+    bidder_requirements: Optional[BidderRequirements] = None
+    standards_redline_mappings: List[StandardRedlineMapping] = Field(default_factory=list)
+    primary_sources: List[PrimarySourceItem] = Field(default_factory=list)
+    compliance_tasks: List[ComplianceTaskItem] = Field(default_factory=list)
+    cost_estimation: Optional[AiCostEstimation] = None
+
     disclaimer: str = Field(
         "Redline analysis is grounded in the verified BIS dataset. "
         "Auto-fix suggestions replace superseded standards with their known successors. "
         "All corrections should be reviewed by a qualified procurement officer before adoption.",
         description="Trust model disclaimer"
     )
+

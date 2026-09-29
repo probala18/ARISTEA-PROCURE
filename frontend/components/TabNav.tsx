@@ -4,13 +4,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export type TabKey =
+  | 'dashboard'
   | 'autopilot'
   | 'recommend'
   | 'standard'
-  | 'graph'
   | 'compliance'
   | 'tender'
-  | 'redline'
   | 'spec'
   | 'services'
   | 'simplify'
@@ -30,15 +29,14 @@ interface TabItem {
 }
 
 const TABS: TabItem[] = [
+  { key: 'dashboard', label: 'Dashboard', badge: 'Live', icon: '📊' },
   { key: 'autopilot', label: 'Autopilot', badge: 'New', icon: '🚀' },
   { key: 'recommend', label: 'Semantic Matcher', icon: '⚡' },
   { key: 'standard', label: 'Standards Directory', icon: '📚' },
   { key: 'services', label: 'BIS Service Hub', badge: 'Hub', icon: '🏛️' },
   { key: 'simplify', label: 'Clause Explainer', icon: '📖' },
-  { key: 'graph', label: 'Knowledge Graph', icon: '🕸️' },
   { key: 'compliance', label: 'QCO Compliance', badge: 'GFR', icon: '🛡️' },
-  { key: 'tender', label: 'Document Auditor', badge: 'Audit', icon: '📋' },
-  { key: 'redline', label: 'Redline Editor', badge: 'New', icon: '🔴' },
+  { key: 'tender', label: 'Document Auditor & Redline', badge: 'Audit', icon: '📋' },
   { key: 'spec', label: 'Spec Workspace', icon: '📝' },
   { key: 'voice', label: 'Voice AI', badge: 'Speech', icon: '🎙️' },
   { key: 'history', label: 'Session History', icon: '🕒' },

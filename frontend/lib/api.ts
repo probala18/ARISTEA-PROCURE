@@ -1207,11 +1207,115 @@ export interface RedlineSummary {
   compliance_score: number;
 }
 
+export interface MeasurementItem {
+  parameter: string;
+  value: string;
+  unit: string;
+  tolerance?: string;
+  standard_ref?: string;
+  category: string;
+}
+
+export interface TenderOverview {
+  title: string;
+  department: string;
+  nit_number: string;
+  scope_summary: string;
+  estimated_timeline: string;
+  measurements: MeasurementItem[];
+}
+
+export interface ComparisonRow {
+  parameter: string;
+  clause: string;
+  specified_value: string;
+  is_standard_mandate: string;
+  industry_benchmark: string;
+  status: 'COMPLIANT' | 'OUTDATED' | 'AMENDED' | 'DEFICIENT' | string;
+  delta: string;
+  chart_value_specified?: number;
+  chart_value_required?: number;
+  chart_unit?: string;
+}
+
+export interface EcoTrack {
+  eco_score: number;
+  grade: string;
+  energy_efficiency_class: string;
+  annual_kwh_savings: number;
+  annual_co2_reduction_tons: number;
+  lifecycle_cost_savings_inr: number;
+  compliance_tags: string[];
+  sustainability_insights: string[];
+}
+
+export interface BidderRequirements {
+  technical_criteria: string[];
+  financial_criteria: string[];
+  statutory_declarations: string[];
+  required_documents: string[];
+}
+
+export interface StandardRedlineMapping {
+  old_standard: string;
+  old_status: string;
+  old_title: string;
+  new_standard: string;
+  new_status: string;
+  new_title: string;
+  bis_reference: string;
+  circular_number: string;
+  reason: string;
+  clause_impact: string;
+}
+
+export interface PrimarySourceItem {
+  name: string;
+  category: string;
+  url: string;
+  description: string;
+}
+
+export interface ComplianceTaskItem {
+  id: string;
+  title: string;
+  description: string;
+  primary_source_name: string;
+  primary_source_url: string;
+  priority: 'High' | 'Medium' | 'Low' | string;
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | string;
+  due_stage: string;
+}
+
+export interface CostLineItem {
+  category: string;
+  amount: number;
+  percentage: number;
+  basis: string;
+}
+
+export interface AiCostEstimation {
+  estimated_total_inr: number;
+  estimated_range_inr: string;
+  rates_basis: string;
+  line_items: CostLineItem[];
+  potential_savings_inr: number;
+  cost_optimizations: string[];
+}
+
 export interface RedlineAnalysisResponse {
   segments: RedlineSegment[];
   summary: RedlineSummary;
   corrected_text?: string;
   auto_fixes: RedlineAutoFix[];
+  tender_overview?: TenderOverview;
+  comparison_matrix?: ComparisonRow[];
+  eco_track?: EcoTrack;
+  bidder_requirements?: BidderRequirements;
+  standards_redline_mappings?: StandardRedlineMapping[];
+  primary_sources?: PrimarySourceItem[];
+  compliance_tasks?: ComplianceTaskItem[];
+  cost_estimation?: AiCostEstimation;
   disclaimer: string;
 }
 

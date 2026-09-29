@@ -24,6 +24,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navItems: NavItem[] = [
     {
+      key: 'dashboard',
+      label: 'Dashboard',
+      sublabel: 'Procurement Command Center',
+      icon: '📊',
+      badge: 'Live',
+    },
+    {
       key: 'autopilot',
       label: 'Autopilot',
       sublabel: 'Need → Cited Tender',
@@ -56,13 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       sublabel: 'Plain Language Translator',
       icon: '📖',
     },
-    {
-      key: 'graph',
-      label: 'Knowledge Graph',
-      sublabel: 'Topology & Linked Testing',
-      icon: '🕸️',
-      badge: 'Graph',
-    },
+
     {
       key: 'compliance',
       label: 'Compliance & QCO',
@@ -72,17 +73,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       key: 'tender',
-      label: 'Document Auditor',
-      sublabel: 'RFP Parsing & Gap Audit',
+      label: 'Document Auditor & Redline',
+      sublabel: 'Visual Redline, Measurements & Audit',
       icon: '📋',
       badge: 'Audit',
-    },
-    {
-      key: 'redline',
-      label: 'Redline & AI Shield',
-      sublabel: 'Visual Editor + Hallucination Guard',
-      icon: '🔴',
-      badge: 'New',
     },
     {
       key: 'spec',

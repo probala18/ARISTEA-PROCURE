@@ -17,6 +17,13 @@ import {
 } from '@/lib/api';
 import { Panel } from '@/components/ui/Panel';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
+import { StandardsMigrationCard } from './redline/StandardsMigrationCard';
+import { TenderOverviewSection } from './redline/TenderOverviewSection';
+import { ComparisonMatrixSection } from './redline/ComparisonMatrixSection';
+import { EcoTrackSection } from './redline/EcoTrackSection';
+import { BidderRequirementsSection } from './redline/BidderRequirementsSection';
+import { PrimarySourceTrackerSection } from './redline/PrimarySourceTrackerSection';
+import { CostEstimationSection } from './redline/CostEstimationSection';
 
 interface RedlineViewProps {
   onToast: (message: string, type?: 'success' | 'error' | 'info') => void;
@@ -90,7 +97,9 @@ export const RedlineView: React.FC<RedlineViewProps> = ({ onToast }) => {
   const visionInputRef = useRef<HTMLInputElement>(null);
 
   // Active sub-tab
-  const [activeSection, setActiveSection] = useState<'redline' | 'auditor' | 'vision'>('redline');
+  const [activeSection, setActiveSection] = useState<
+    'redline' | 'overview' | 'comparison' | 'eco' | 'bidder' | 'tracker' | 'cost' | 'auditor' | 'vision'
+  >('redline');
 
   /* ─── Redline Actions ─────────────────────────────────── */
   const handleLoadSample = () => {
@@ -222,6 +231,45 @@ export const RedlineView: React.FC<RedlineViewProps> = ({ onToast }) => {
     }
   };
 
+  const renderEmptyState = (title: string, desc: string) => (
+    <div
+      style={{
+        padding: '48px 24px',
+        textAlign: 'center',
+        background: '#ffffff',
+        borderRadius: 'var(--radius-lg, 12px)',
+        border: '1px solid #e2e8f0',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+      }}
+    >
+      <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>📊</div>
+      <h3 style={{ margin: '0 0 6px 0', fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>{title}</h3>
+      <p style={{ margin: '0 0 20px 0', fontSize: '0.86rem', color: '#64748b', maxWidth: '540px', marginInline: 'auto' }}>
+        {desc}
+      </p>
+      <button
+        onClick={async () => {
+          setDocumentText(SAMPLE_DOCUMENT);
+          setIsAnalyzing(true);
+          try {
+            const res = await analyzeRedline(SAMPLE_DOCUMENT);
+            setRedlineResult(res);
+            onToast('Sample tender analyzed! All intelligence dashboards unlocked.', 'success');
+          } catch (e: any) {
+            onToast(e.message || 'Analysis failed', 'error');
+          } finally {
+            setIsAnalyzing(false);
+          }
+        }}
+        disabled={isAnalyzing}
+        className="btn-primary"
+        style={{ padding: '10px 24px', fontSize: '0.9rem', fontWeight: 700 }}
+      >
+        {isAnalyzing ? '🔍 Analyzing Sample...' : '📋 Analyze Sample Tender (Instant Demo)'}
+      </button>
+    </div>
+  );
+
   /* ═══════════════════════════════════════════════════════
      RENDER
      ═══════════════════════════════════════════════════ */
@@ -234,16 +282,24 @@ export const RedlineView: React.FC<RedlineViewProps> = ({ onToast }) => {
           gap: '6px',
           marginBottom: '20px',
           background: '#ffffff',
-          padding: '5px',
+          padding: '6px',
           borderRadius: 'var(--radius-full)',
           border: '1px solid var(--border-subtle)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
         }}
       >
         {[
-          { key: 'redline' as const, icon: '📝', label: 'Redline Editor', badge: 'Visual' },
-          { key: 'auditor' as const, icon: '🛡️', label: 'Adversarial Auditor', badge: 'Safety' },
-          { key: 'vision' as const, icon: '👁️', label: 'Vision Table Reader', badge: 'Tech' },
+          { key: 'redline' as const, icon: '🔴', label: 'Redline & Migration', badge: 'Visual' },
+          { key: 'overview' as const, icon: '📐', label: 'Overview & Measurements', badge: 'Specs' },
+          { key: 'comparison' as const, icon: '📊', label: 'Comparison Matrix', badge: 'Audit' },
+          { key: 'eco' as const, icon: '🌿', label: 'Eco Track', badge: 'Green' },
+          { key: 'bidder' as const, icon: '👥', label: 'Bidder Criteria', badge: 'Criteria' },
+          { key: 'tracker' as const, icon: '🎯', label: 'Sources & Tasks', badge: 'Tracker' },
+          { key: 'cost' as const, icon: '💰', label: 'AI Cost Estimate', badge: 'Budget' },
+          { key: 'auditor' as const, icon: '🛡️', label: 'AI Safety Shield', badge: 'Guard' },
+          { key: 'vision' as const, icon: '👁️', label: 'Vision Table Reader', badge: 'OCR' },
         ].map((tab) => {
           const isActive = activeSection === tab.key;
           return (
@@ -255,17 +311,16 @@ export const RedlineView: React.FC<RedlineViewProps> = ({ onToast }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '10px 20px',
+                padding: '9px 16px',
                 borderRadius: 'var(--radius-full)',
                 border: 'none',
                 background: isActive ? 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)' : 'transparent',
                 color: isActive ? '#ffffff' : 'var(--text-secondary)',
                 fontWeight: isActive ? 700 : 600,
-                fontSize: '0.88rem',
+                fontSize: '0.84rem',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                flex: 1,
-                justifyContent: 'center',
+                whiteSpace: 'nowrap',
                 boxShadow: isActive ? '0 4px 14px rgba(79, 70, 229, 0.3)' : 'none',
               }}
             >
@@ -579,7 +634,99 @@ export const RedlineView: React.FC<RedlineViewProps> = ({ onToast }) => {
                     </div>
                   </Panel>
                 )}
+
+                {/* Standards Migration: Check Old Standard in Red -> Get New Standard with Official Reference */}
+                {redlineResult.standards_redline_mappings && redlineResult.standards_redline_mappings.length > 0 && (
+                  <StandardsMigrationCard
+                    mappings={redlineResult.standards_redline_mappings}
+                    onApplyFix={(oldStd, newStd) => {
+                      setDocumentText((prev) => prev.replace(oldStd, newStd));
+                      onToast(`Replaced ${oldStd} with current standard ${newStd}. Click Analyze to re-evaluate.`, 'success');
+                    }}
+                  />
+                )}
               </motion.div>
+            )}
+          </motion.div>
+        )}
+
+        {/* ─── TENDER OVERVIEW & MEASUREMENTS TAB ─────────── */}
+        {activeSection === 'overview' && (
+          <motion.div key="overview" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+            {redlineResult?.tender_overview ? (
+              <TenderOverviewSection overview={redlineResult.tender_overview} />
+            ) : (
+              renderEmptyState(
+                'Tender Overview & Technical Measurements',
+                'Extract operational voltages, pump flow rates, motor power ratings, cable parameters, and statutory Indian Standards from your tender document.'
+              )
+            )}
+          </motion.div>
+        )}
+
+        {/* ─── COMPARISON MATRIX & CHARTS TAB ─────────────── */}
+        {activeSection === 'comparison' && (
+          <motion.div key="comparison" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+            {redlineResult?.comparison_matrix && redlineResult.comparison_matrix.length > 0 ? (
+              <ComparisonMatrixSection rows={redlineResult.comparison_matrix} />
+            ) : (
+              renderEmptyState(
+                'Tender vs Standard Comparison Matrix',
+                'Benchmark draft tender clauses against current BIS Indian Standard mandates and best-practice industry engineering thresholds.'
+              )
+            )}
+          </motion.div>
+        )}
+
+        {/* ─── ECO TRACK & SUSTAINABILITY TAB ─────────────── */}
+        {activeSection === 'eco' && (
+          <motion.div key="eco" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+            {redlineResult?.eco_track ? (
+              <EcoTrackSection ecoTrack={redlineResult.eco_track} />
+            ) : (
+              renderEmptyState(
+                'Eco Track & Green Procurement Analytics',
+                'Track BEE Star energy ratings, carbon footprint reduction (CO2 tons/year), and life-cycle electricity cost savings.'
+              )
+            )}
+          </motion.div>
+        )}
+
+        {/* ─── BIDDER REQUIREMENTS CRITERIA TAB ───────────── */}
+        {activeSection === 'bidder' && (
+          <motion.div key="bidder" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+            {redlineResult?.bidder_requirements ? (
+              <BidderRequirementsSection requirements={redlineResult.bidder_requirements} />
+            ) : (
+              renderEmptyState(
+                'Tender Bidder Eligibility & Qualification Criteria',
+                'Summarize technical qualifications, financial solvency certificates, and statutory Make-in-India / GFR Rule 144 declarations.'
+              )
+            )}
+          </motion.div>
+        )}
+
+        {/* ─── PRIMARY SOURCE & TASK TRACKER TAB ──────────── */}
+        {activeSection === 'tracker' && (
+          <motion.div key="tracker" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+            <PrimarySourceTrackerSection
+              primarySources={redlineResult?.primary_sources}
+              initialTasks={redlineResult?.compliance_tasks}
+              onToast={onToast}
+            />
+          </motion.div>
+        )}
+
+        {/* ─── AI PROJECT COST ESTIMATION TAB ─────────────── */}
+        {activeSection === 'cost' && (
+          <motion.div key="cost" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+            {redlineResult?.cost_estimation ? (
+              <CostEstimationSection estimation={redlineResult.cost_estimation} />
+            ) : (
+              renderEmptyState(
+                'AI Project Cost & Budget Estimation',
+                'Generate estimated project expenditures based on CPWD Delhi Schedule of Rates (DSR), line-item schedules, and value engineering savings.'
+              )
             )}
           </motion.div>
         )}

@@ -12,6 +12,10 @@ interface HeaderProps {
 }
 
 const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
+  dashboard: {
+    title: 'Procurement Command Center',
+    desc: 'National public procurement intelligence dashboard, active KPI surveillance, and standard analytics',
+  },
   autopilot: {
     title: 'ARISTEA Autopilot',
     desc: 'Describe a need in any language — get a compliant, cited, red-teamed tender in minutes',
@@ -32,17 +36,13 @@ const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
     title: 'Clause Explainer & Simplifier',
     desc: 'Plain-language procurement translation grounded in verified standard scope & metadata',
   },
-  graph: {
-    title: 'Knowledge Graph Topology',
-    desc: 'Interactive radial node visualization of direct, allied, and testing relationships',
-  },
   compliance: {
     title: 'Compliance & Quality Control Orders',
     desc: 'Quality Control Orders (QCO), mandatory vs voluntary schemes, and regulatory divergences',
   },
   tender: {
-    title: 'Tender Document Auditor',
-    desc: 'Multi-format RFP parsing (PDF, DOCX, TXT), clause detection, and gap analysis',
+    title: 'Tender Document Auditor & Redline',
+    desc: 'Multi-format RFP parsing, visual redline markup, measurements, comparison matrix & gap analysis',
   },
   spec: {
     title: 'Specification Drafting Workspace',
