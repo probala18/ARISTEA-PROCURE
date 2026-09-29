@@ -8,13 +8,10 @@ import { TabKey } from '@/components/TabNav';
 import { RecommendView } from '@/components/views/RecommendView';
 import { StandardView } from '@/components/views/StandardView';
 import { DashboardView } from '@/components/views/DashboardView';
-import { ComplianceView } from '@/components/views/ComplianceView';
 import { TenderView } from '@/components/views/TenderView';
-import { SpecView } from '@/components/views/SpecView';
 import { VoiceView } from '@/components/views/VoiceView';
 import { HistoryView } from '@/components/views/HistoryView';
 import { ServiceHubView } from '@/components/views/ServiceHubView';
-import { SimplifyView } from '@/components/views/SimplifyView';
 import { AutopilotView } from '@/components/views/AutopilotView';
 import { AnalyticsDiagramView } from '@/components/views/AnalyticsDiagramView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
@@ -82,12 +79,6 @@ export default function Home() {
     addToast(`Opened standards explorer for ${stdId}`, 'info');
   };
 
-  const handleOpenCompliance = (stdId: string) => {
-    setExplorerStandardId(stdId);
-    setActiveTab('compliance');
-    addToast(`Opened QCO matrix for ${stdId}`, 'info');
-  };
-
   const handleSelectQueryFromHistory = (query: string) => {
     setActiveQuery(query);
     setActiveTab('recommend');
@@ -138,7 +129,7 @@ export default function Home() {
               }}
             >
               <span style={{ fontSize: '0.78rem', color: 'var(--accent-primary-dark)', fontWeight: 700 }}>
-                ⚡ PS 26108 · Indian Standards Intelligence Platform
+                ⚡Indian Standards Intelligence Platform
               </span>
             </div>
 
@@ -290,7 +281,6 @@ export default function Home() {
                     initialQuery={activeQuery || undefined}
                     onExploreStandard={handleExploreStandard}
                     onOpenGraph={handleOpenGraph}
-                    onOpenCompliance={handleOpenCompliance}
                     onToast={addToast}
                   />
                 </motion.div>
@@ -305,22 +295,6 @@ export default function Home() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <StandardView initialStandardId={explorerStandardId} onToast={addToast} />
-                </motion.div>
-              )}
-
-              {activeTab === 'compliance' && (
-                <motion.div
-                  key="compliance"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                >
-                  <ComplianceView
-                    initialStandardId={explorerStandardId}
-                    onExploreStandard={handleExploreStandard}
-                    onToast={addToast}
-                  />
                 </motion.div>
               )}
 
@@ -349,39 +323,6 @@ export default function Home() {
                     onSelectQuery={handleSelectQueryFromHistory}
                     onToast={addToast}
                   />
-                </motion.div>
-              )}
-
-              {activeTab === 'simplify' && (
-                <motion.div
-                  key="simplify"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                >
-                  <SimplifyView
-                    initialStandardId={explorerStandardId}
-                    onExploreStandard={handleExploreStandard}
-                    onGenerateSpec={(stdId) => {
-                      setExplorerStandardId(stdId);
-                      setActiveTab('spec');
-                      addToast(`Drafting procurement spec for ${stdId}`, 'info');
-                    }}
-                    onToast={addToast}
-                  />
-                </motion.div>
-              )}
-
-              {activeTab === 'spec' && (
-                <motion.div
-                  key="spec"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                >
-                  <SpecView onToast={addToast} />
                 </motion.div>
               )}
 

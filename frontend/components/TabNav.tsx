@@ -9,11 +9,8 @@ export type TabKey =
   | 'autopilot'
   | 'recommend'
   | 'standard'
-  | 'compliance'
   | 'tender'
-  | 'spec'
   | 'services'
-  | 'simplify'
   | 'voice'
   | 'history';
 
@@ -35,11 +32,8 @@ const TABS: TabItem[] = [
   { key: 'autopilot', label: 'Autopilot', badge: 'New', icon: '🚀' },
   { key: 'recommend', label: 'Semantic Matcher', icon: '⚡' },
   { key: 'standard', label: 'Standards Directory', icon: '📚' },
-  { key: 'services', label: 'BIS Service Hub', badge: 'Hub', icon: '🏛️' },
-  { key: 'simplify', label: 'Clause Explainer', icon: '📖' },
-  { key: 'compliance', label: 'QCO Compliance', badge: 'GFR', icon: '🛡️' },
   { key: 'tender', label: 'Document Auditor', badge: 'Audit', icon: '📋' },
-  { key: 'spec', label: 'Spec Workspace', icon: '📝' },
+  { key: 'services', label: 'BIS Service Hub', badge: 'Hub', icon: '🏛️' },
   { key: 'voice', label: 'Voice AI', badge: 'Speech', icon: '🎙️' },
   { key: 'history', label: 'Session History', icon: '🕒' },
 ];

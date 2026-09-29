@@ -31,7 +31,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
       icon: '🛡️',
       color: '#059669',
       bg: 'rgba(5, 150, 105, 0.08)',
-      tab: 'compliance' as TabKey,
+      tab: 'standard' as TabKey,
     },
     {
       label: 'Tenders & RFPs Audited',
@@ -123,7 +123,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
       statusColor: '#0284c7',
       score: '100%',
       badge: 'Verified',
-      tab: 'compliance' as TabKey,
+      tab: 'tender' as TabKey,
     },
     {
       nit: 'NHAI/PIU/2026/CONC-088',

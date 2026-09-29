@@ -12,7 +12,6 @@ interface RecommendViewProps {
   initialQuery?: string;
   onExploreStandard?: (standardId: string) => void;
   onOpenGraph?: (standardId: string) => void;
-  onOpenCompliance?: (standardId: string) => void;
   onToast: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
@@ -27,7 +26,6 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
   initialQuery,
   onExploreStandard,
   onOpenGraph,
-  onOpenCompliance,
   onToast,
 }) => {
   const [queryText, setQueryText] = useState(initialQuery || SAMPLE_QUERIES[0].query);
@@ -371,15 +369,6 @@ export const RecommendView: React.FC<RecommendViewProps> = ({
                       style={{ fontSize: '0.8rem', padding: '7px 14px' }}
                     >
                       Topology Graph 🕸️
-                    </button>
-                  )}
-                  {onOpenCompliance && (
-                    <button
-                      onClick={() => onOpenCompliance(results.primary_standard!.standard_id)}
-                      className="btn-secondary"
-                      style={{ fontSize: '0.8rem', padding: '7px 14px' }}
-                    >
-                      QCO Matrix 🛡️
                     </button>
                   )}
                 </div>

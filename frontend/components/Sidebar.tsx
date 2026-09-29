@@ -31,6 +31,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: 'Live',
     },
     {
+      key: 'analytics',
+      label: 'Analytics & Diagram',
+      sublabel: 'Pipeline Architecture & Telemetry',
+      icon: '📈',
+      badge: 'Arch',
+    },
+    {
       key: 'autopilot',
       label: 'Autopilot',
       sublabel: 'Need → Cited Tender',
@@ -63,26 +70,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       sublabel: 'Licences & Ministries',
       icon: '🏛️',
       badge: 'Hub',
-    },
-    {
-      key: 'simplify',
-      label: 'Clause Explainer',
-      sublabel: 'Plain Language Translator',
-      icon: '📖',
-    },
-
-    {
-      key: 'compliance',
-      label: 'Compliance & QCO',
-      sublabel: 'Statutory Orders & Schemes',
-      icon: '🛡️',
-      badge: 'GFR',
-    },
-    {
-      key: 'spec',
-      label: 'Spec Workspace',
-      sublabel: 'Grounded Clause Drafting',
-      icon: '📝',
     },
     {
       key: 'voice',
@@ -164,7 +151,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </span>
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-            PS 26108 · Indian Standards Hub
+            Indian Standards Hub
           </div>
         </div>
       </div>

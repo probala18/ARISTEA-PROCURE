@@ -36,21 +36,9 @@ const TAB_TITLES: Record<TabKey, { title: string; desc: string }> = {
     title: 'BIS Service Hub & Regulatory Directory',
     desc: 'Verified product licences, ministry alignments, and conformity assessment schemes',
   },
-  simplify: {
-    title: 'Clause Explainer & Simplifier',
-    desc: 'Plain-language procurement translation grounded in verified standard scope & metadata',
-  },
-  compliance: {
-    title: 'Compliance & Quality Control Orders',
-    desc: 'Quality Control Orders (QCO), mandatory vs voluntary schemes, and regulatory divergences',
-  },
   tender: {
     title: 'Tender Document Auditor',
     desc: 'Multi-format RFP parsing, visual redline markup, measurements, comparison matrix & gap analysis',
-  },
-  spec: {
-    title: 'Specification Drafting Workspace',
-    desc: 'Formulate, edit, and export legally grounded technical clauses and inspection plans',
   },
   voice: {
     title: 'Voice Procurement Assistant',
