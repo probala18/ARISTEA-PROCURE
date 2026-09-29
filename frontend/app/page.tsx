@@ -8,12 +8,14 @@ import { TabKey } from '@/components/TabNav';
 import { RecommendView } from '@/components/views/RecommendView';
 import { StandardView } from '@/components/views/StandardView';
 import { DashboardView } from '@/components/views/DashboardView';
+import { ComplianceView } from '@/components/views/ComplianceView';
 import { TenderView } from '@/components/views/TenderView';
+import { SpecView } from '@/components/views/SpecView';
 import { VoiceView } from '@/components/views/VoiceView';
 import { HistoryView } from '@/components/views/HistoryView';
 import { ServiceHubView } from '@/components/views/ServiceHubView';
+import { SimplifyView } from '@/components/views/SimplifyView';
 import { AutopilotView } from '@/components/views/AutopilotView';
-import { AnalyticsDiagramView } from '@/components/views/AnalyticsDiagramView';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 import { animateHeroText } from '@/lib/gsap-animations';
 import { checkHealth } from '@/lib/api';
@@ -79,6 +81,12 @@ export default function Home() {
     addToast(`Opened standards explorer for ${stdId}`, 'info');
   };
 
+  const handleOpenCompliance = (stdId: string) => {
+    setExplorerStandardId(stdId);
+    setActiveTab('compliance');
+    addToast(`Opened QCO matrix for ${stdId}`, 'info');
+  };
+
   const handleSelectQueryFromHistory = (query: string) => {
     setActiveQuery(query);
     setActiveTab('recommend');
@@ -135,12 +143,12 @@ export default function Home() {
 
             <div
               style={{
-                display: 'inline-flex',
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '20px',
+                flexWrap: 'wrap',
                 marginBottom: '12px',
-                maxWidth: '100%',
               }}
             >
               <h1
@@ -158,34 +166,18 @@ export default function Home() {
               >
                 Intelligent Indian Standards Reasoning for Public Procurement
               </h1>
-
-              <div
+              {/* BIS Official Insignia */}
+              <img
+                src="/bis_logo.png"
+                alt="Bureau of Indian Standards"
                 style={{
-                  width: '74px',
-                  height: '74px',
-                  borderRadius: '14px',
-                  background: '#ffffff',
-                  padding: '6px',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  height: '60px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.06))',
                   flexShrink: 0,
                 }}
-                title="Bureau of Indian Standards (BIS)"
-              >
-                <img
-                  src="/bis_logo.png"
-                  alt="Bureau of Indian Standards (BIS) Logo"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    display: 'block',
-                  }}
-                />
-              </div>
+              />
             </div>
 
             <p
@@ -245,18 +237,6 @@ export default function Home() {
                 </motion.div>
               )}
 
-              {activeTab === 'analytics' && (
-                <motion.div
-                  key="analytics"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                >
-                  <AnalyticsDiagramView onSelectTab={setActiveTab} onToast={addToast} />
-                </motion.div>
-              )}
-
               {activeTab === 'autopilot' && (
                 <motion.div
                   key="autopilot"
@@ -281,6 +261,7 @@ export default function Home() {
                     initialQuery={activeQuery || undefined}
                     onExploreStandard={handleExploreStandard}
                     onOpenGraph={handleOpenGraph}
+                    onOpenCompliance={handleOpenCompliance}
                     onToast={addToast}
                   />
                 </motion.div>
@@ -295,6 +276,22 @@ export default function Home() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <StandardView initialStandardId={explorerStandardId} onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'compliance' && (
+                <motion.div
+                  key="compliance"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <ComplianceView
+                    initialStandardId={explorerStandardId}
+                    onExploreStandard={handleExploreStandard}
+                    onToast={addToast}
+                  />
                 </motion.div>
               )}
 
@@ -323,6 +320,39 @@ export default function Home() {
                     onSelectQuery={handleSelectQueryFromHistory}
                     onToast={addToast}
                   />
+                </motion.div>
+              )}
+
+              {activeTab === 'simplify' && (
+                <motion.div
+                  key="simplify"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <SimplifyView
+                    initialStandardId={explorerStandardId}
+                    onExploreStandard={handleExploreStandard}
+                    onGenerateSpec={(stdId) => {
+                      setExplorerStandardId(stdId);
+                      setActiveTab('spec');
+                      addToast(`Drafting procurement spec for ${stdId}`, 'info');
+                    }}
+                    onToast={addToast}
+                  />
+                </motion.div>
+              )}
+
+              {activeTab === 'spec' && (
+                <motion.div
+                  key="spec"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <SpecView onToast={addToast} />
                 </motion.div>
               )}
 
