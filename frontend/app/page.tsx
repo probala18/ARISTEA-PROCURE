@@ -142,21 +142,60 @@ export default function Home() {
               </span>
             </div>
 
-            <h1
-              ref={heroHeadlineRef}
+            <div
               style={{
-                fontSize: 'clamp(1.85rem, 3.6vw, 2.8rem)',
-                fontWeight: 800,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.18,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '20px',
                 marginBottom: '12px',
-                background: 'linear-gradient(135deg, #0f172a 20%, #312e81 60%, #4338ca 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                maxWidth: '100%',
               }}
             >
-              Intelligent Indian Standards Reasoning for Public Procurement
-            </h1>
+              <h1
+                ref={heroHeadlineRef}
+                style={{
+                  fontSize: 'clamp(1.85rem, 3.6vw, 2.8rem)',
+                  fontWeight: 800,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.18,
+                  margin: 0,
+                  background: 'linear-gradient(135deg, #0f172a 20%, #312e81 60%, #4338ca 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Intelligent Indian Standards Reasoning for Public Procurement
+              </h1>
+
+              <div
+                style={{
+                  width: '74px',
+                  height: '74px',
+                  borderRadius: '14px',
+                  background: '#ffffff',
+                  padding: '6px',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+                title="Bureau of Indian Standards (BIS)"
+              >
+                <img
+                  src="/bis_logo.png"
+                  alt="Bureau of Indian Standards (BIS) Logo"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                  }}
+                />
+              </div>
+            </div>
 
             <p
               ref={heroSubtitleRef}

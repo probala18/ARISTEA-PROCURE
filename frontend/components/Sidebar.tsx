@@ -113,26 +113,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div
           style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '10px',
+            width: '42px',
+            height: '42px',
+            borderRadius: '50%',
             overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             background: '#ffffff',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+            border: '2px solid rgba(14, 165, 233, 0.3)',
+            boxShadow: '0 2px 10px rgba(14, 165, 233, 0.25)',
             flexShrink: 0,
           }}
         >
           <img
             src="/logo.png"
-            alt="The BOLD Si6X Logo"
+            alt="ARISTEA-PROCURE Logo"
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'contain',
+              objectFit: 'cover',
               display: 'block',
             }}
           />
