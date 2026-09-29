@@ -84,26 +84,66 @@ class TenderEngineService:
         t_num = tender_number or f"TND-{uuid.uuid4().hex[:8].upper()}"
 
         # 5. Persist to Database if session available
-        tender_doc = TenderDocument(
-            tender_number=t_num,
-            filename=filename,
-            title=title or parse_result.metadata.get("title") or filename,
-            organization=organization or "General Procurement",
-            file_type=parse_result.file_type,
-            file_size=len(file_content),
-            raw_text=parse_result.raw_text,
-            parsed_metadata={
-                "total_pages": parse_result.total_pages,
-                "total_sections": len(sections),
-                "total_standards_detected": len(standard_refs),
-                "metadata": parse_result.metadata,
-            },
-            status=TenderProcessingStatus.COMPLETED.value,
-        )
-
         if self.db:
-            self.db.add(tender_doc)
-            self.db.flush()  # populate tender_doc.id
+            existing = self.db.query(TenderDocument).filter(TenderDocument.tender_number == t_num).first()
+            if existing:
+                # Clean up existing child relations to allow fresh re-parsing / re-auditing
+                self.db.query(TenderStandardReference).filter(TenderStandardReference.tender_id == existing.id).delete()
+                self.db.query(TenderRequirement).filter(TenderRequirement.tender_id == existing.id).delete()
+                self.db.query(TenderSection).filter(TenderSection.tender_id == existing.id).delete()
+
+                # Refresh existing document record
+                existing.filename = filename
+                existing.title = title or parse_result.metadata.get("title") or filename
+                existing.organization = organization or "General Procurement"
+                existing.file_type = parse_result.file_type
+                existing.file_size = len(file_content)
+                existing.raw_text = parse_result.raw_text
+                existing.parsed_metadata = {
+                    "total_pages": parse_result.total_pages,
+                    "total_sections": len(sections),
+                    "total_standards_detected": len(standard_refs),
+                    "metadata": parse_result.metadata,
+                }
+                existing.status = TenderProcessingStatus.COMPLETED.value
+                tender_doc = existing
+                self.db.flush()
+            else:
+                tender_doc = TenderDocument(
+                    tender_number=t_num,
+                    filename=filename,
+                    title=title or parse_result.metadata.get("title") or filename,
+                    organization=organization or "General Procurement",
+                    file_type=parse_result.file_type,
+                    file_size=len(file_content),
+                    raw_text=parse_result.raw_text,
+                    parsed_metadata={
+                        "total_pages": parse_result.total_pages,
+                        "total_sections": len(sections),
+                        "total_standards_detected": len(standard_refs),
+                        "metadata": parse_result.metadata,
+                    },
+                    status=TenderProcessingStatus.COMPLETED.value,
+                )
+                self.db.add(tender_doc)
+                self.db.flush()  # populate tender_doc.id
+        else:
+            tender_doc = TenderDocument(
+                tender_number=t_num,
+                filename=filename,
+                title=title or parse_result.metadata.get("title") or filename,
+                organization=organization or "General Procurement",
+                file_type=parse_result.file_type,
+                file_size=len(file_content),
+                raw_text=parse_result.raw_text,
+                parsed_metadata={
+                    "total_pages": parse_result.total_pages,
+                    "total_sections": len(sections),
+                    "total_standards_detected": len(standard_refs),
+                    "metadata": parse_result.metadata,
+                },
+                status=TenderProcessingStatus.COMPLETED.value,
+            )
 
             # Save sections & clauses
             for sec in sections:

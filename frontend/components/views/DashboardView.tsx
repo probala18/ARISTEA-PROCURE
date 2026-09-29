@@ -113,7 +113,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
       statusColor: '#16a34a',
       score: '94%',
       badge: 'Eco Tier-A',
-      tab: 'redline' as TabKey,
+      tab: 'tender' as TabKey,
     },
   ];
 
@@ -171,7 +171,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
             </button>
 
             <button
-              onClick={() => onSelectTab('redline')}
+              onClick={() => onSelectTab('tender')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -186,7 +186,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
                 cursor: 'pointer',
               }}
             >
-              <span>🔴 Open Redline & Intelligence</span>
+              <span>🔴 Open Redline Document Auditor</span>
             </button>
           </div>
         </div>
@@ -334,7 +334,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
           </div>
 
           <button
-            onClick={() => onSelectTab('redline')}
+            onClick={() => onSelectTab('tender')}
             style={{
               padding: '6px 14px',
               borderRadius: '6px',
