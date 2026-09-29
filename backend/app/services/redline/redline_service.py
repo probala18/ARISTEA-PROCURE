@@ -58,6 +58,17 @@ class RedlineService:
         surrounding plain text is preserved as PLAIN segments.
         """
         text = request.document_text
+        if text and (text.startswith("%PDF-") or "\x00" in text[:100] or "stream" in text[:300]):
+            try:
+                import fitz
+                pdf_bytes = text.encode("latin-1", errors="ignore")
+                doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+                pages = [page.get_text("text").strip() for page in doc if page.get_text("text").strip()]
+                if pages:
+                    text = "\n\n".join(pages)
+            except Exception as e:
+                logger.warning("Could not auto-recover text from raw PDF stream: %s", e)
+
         # Find all standard mentions with character positions
         mentions = self._find_all_mentions(text)
 

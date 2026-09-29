@@ -79,6 +79,7 @@ class TenderUploadResponse(BaseModel):
     total_sections: int = Field(0, description="Total number of sections identified")
     total_clauses: int = Field(0, description="Total number of clauses identified")
     total_standards_detected: int = Field(0, description="Total explicit standard references detected")
+    extracted_text: Optional[str] = Field(None, description="Clean extracted plain text from document parser")
     created_at: Optional[datetime] = None
 
 

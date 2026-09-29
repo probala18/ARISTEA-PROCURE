@@ -107,6 +107,29 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
   const [visionText, setVisionText] = useState('');
   const visionInputRef = useRef<HTMLInputElement>(null);
 
+  const isBinaryDoc = (filename: string) => {
+    const ext = filename.split('.').pop()?.toLowerCase();
+    return ext === 'pdf' || ext === 'docx' || ext === 'doc';
+  };
+
+  const handleFileSelection = async (file: File) => {
+    setSelectedFile(file);
+    if (!isBinaryDoc(file.name)) {
+      try {
+        const text = await file.text();
+        setDocumentContent(text);
+      } catch {
+        setDocumentContent('');
+      }
+    } else {
+      // PDF or DOCX: Do not load raw binary stream into documentContent!
+      setDocumentContent(
+        `📄 [${file.name} (${(file.size / 1024).toFixed(1)} KB) selected.\nClick 'Upload & Audit Tender' below to parse and extract clauses with PyMuPDF Engine.]`
+      );
+    }
+    onToast(`Selected file: ${file.name}`, 'info');
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     if (dropzoneRef.current) springDropzone(dropzoneRef.current);
@@ -115,13 +138,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      setSelectedFile(file);
-      try {
-        const text = await file.text();
-        setDocumentContent(text);
-      } catch {}
-      onToast(`Selected file: ${file.name}`, 'info');
+      await handleFileSelection(e.dataTransfer.files[0]);
     }
   };
 
@@ -160,7 +177,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
         setSelectedFile(fileToUpload);
       }
 
-      // 1. Upload & Parse
+      // 1. Upload & Parse via Backend Engine (PyMuPDF for PDF, python-docx for Word)
       const uploadRes = await uploadTenderDocument(
         fileToUpload,
         tenderNumber || undefined,
@@ -169,11 +186,17 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
       );
       setUploadResult(uploadRes);
 
-      // 2. Concurrently Audit & Run Redline Intelligence
+      // If backend returned clean extracted text from PDF/DOCX, update documentContent
+      const cleanText = uploadRes.extracted_text || (!isBinaryDoc(fileToUpload.name) ? documentContent : '') || SAMPLE_TENDER_TEXT;
+      if (uploadRes.extracted_text) {
+        setDocumentContent(uploadRes.extracted_text);
+      }
+
+      // 2. Concurrently Audit & Run Redline Intelligence on clean text
       setIsAuditing(true);
       const [auditRes, redlineRes] = await Promise.allSettled([
         getTenderAudit(uploadRes.tender_id),
-        analyzeRedline(documentContent || SAMPLE_TENDER_TEXT),
+        analyzeRedline(cleanText),
       ]);
 
       if (auditRes.status === 'fulfilled') setAuditReport(auditRes.value);
@@ -364,12 +387,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
             style={{ display: 'none' }}
             onChange={async (e) => {
               if (e.target.files && e.target.files[0]) {
-                const f = e.target.files[0];
-                setSelectedFile(f);
-                try {
-                  const t = await f.text();
-                  setDocumentContent(t);
-                } catch {}
+                await handleFileSelection(e.target.files[0]);
               }
             }}
           />

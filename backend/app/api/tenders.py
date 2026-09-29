@@ -92,6 +92,7 @@ async def upload_tender_document(
             total_sections=parsed_meta.get("total_sections", len(tender_doc.sections)),
             total_clauses=len(tender_doc.requirements),
             total_standards_detected=parsed_meta.get("total_standards_detected", 0),
+            extracted_text=tender_doc.raw_text,
             created_at=tender_doc.created_at,
         )
     except ValueError as e:

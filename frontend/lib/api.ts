@@ -564,6 +564,7 @@ export interface TenderUploadResponse {
   total_sections: number;
   total_clauses: number;
   total_standards_detected: number;
+  extracted_text?: string;
   created_at?: string;
 }
 
