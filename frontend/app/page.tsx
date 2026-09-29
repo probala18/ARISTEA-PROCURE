@@ -8,6 +8,7 @@ import { TabKey } from '@/components/TabNav';
 import { RecommendView } from '@/components/views/RecommendView';
 import { StandardView } from '@/components/views/StandardView';
 import { DashboardView } from '@/components/views/DashboardView';
+import { AnalyticsDiagramView } from '@/components/views/AnalyticsDiagramView';
 import { ComplianceView } from '@/components/views/ComplianceView';
 import { TenderView } from '@/components/views/TenderView';
 import { SpecView } from '@/components/views/SpecView';
@@ -234,6 +235,18 @@ export default function Home() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <DashboardView onSelectTab={setActiveTab} onToast={addToast} />
+                </motion.div>
+              )}
+
+              {activeTab === 'analytics' && (
+                <motion.div
+                  key="analytics"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <AnalyticsDiagramView onSelectTab={setActiveTab} onToast={addToast} />
                 </motion.div>
               )}
 
