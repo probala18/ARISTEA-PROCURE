@@ -30,14 +30,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: '📊',
       badge: 'Live',
     },
-    {
-      key: 'analytics',
-      label: 'Analytics & Diagram',
-      sublabel: 'Pipeline Architecture & Telemetry',
-      icon: '📈',
-      badge: 'Arch',
+        {
+      key: 'tender',
+      label: 'Document Auditor',
+      sublabel: 'Interactive Markup, Measurements & Audit',
+      icon: '📋',
+      badge: 'Audit',
     },
-    {
+        {
       key: 'autopilot',
       label: 'Autopilot',
       sublabel: 'Need → Cited Tender',
@@ -45,11 +45,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: 'New',
     },
     {
-      key: 'tender',
-      label: 'Document Auditor',
-      sublabel: 'Interactive Markup, Measurements & Audit',
-      icon: '📋',
-      badge: 'Audit',
+      key: 'analytics',
+      label: 'Analytics',
+      sublabel: 'Pipeline Architecture & Telemetry',
+      icon: '📈',
+      badge: 'Arch',
     },
     {
       key: 'recommend',
