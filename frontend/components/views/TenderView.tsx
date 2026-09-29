@@ -89,8 +89,8 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
 
   // Active feature mode inside Document Auditor
   const [activeFeature, setActiveFeature] = useState<
-    'redline' | 'overview' | 'comparison' | 'eco' | 'bidder' | 'gaps' | 'auditor' | 'vision' | 'cost'
-  >('redline');
+    'overview' | 'comparison' | 'eco' | 'bidder' | 'gaps' | 'auditor' | 'vision' | 'cost' | 'redline'
+  >('overview');
 
   // Redline hover state
   const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
@@ -500,27 +500,26 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
             </div>
           </div>
 
-          {/* Interactive Feature Mode Switcher Bar */}
+          {/* Direct-View Feature Navigation Bar */}
           <div
             style={{
-              display: 'flex',
-              gap: '6px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '8px',
               background: '#ffffff',
-              padding: '6px',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid var(--border-subtle)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-              overflowX: 'auto',
-              scrollbarWidth: 'none',
+              padding: '10px',
+              borderRadius: 'var(--radius-lg, 12px)',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)',
             }}
           >
             {[
-              
               { key: 'overview' as const, icon: '📐', label: 'Overview & Measurements', badge: 'Specs' },
               { key: 'comparison' as const, icon: '📊', label: 'Comparison Matrix', badge: 'Audit' },
               { key: 'eco' as const, icon: '🌿', label: 'Eco Track', badge: 'Green' },
               { key: 'bidder' as const, icon: '👥', label: 'Bidder Criteria', badge: 'Criteria' },
               { key: 'gaps' as const, icon: '📋', label: 'Clause Findings & Gaps', badge: 'GFR' },
+              { key: 'redline' as const, icon: '🔴', label: 'Redline Document', badge: 'Visual Wow' },
               { key: 'auditor' as const, icon: '🛡️', label: 'Adversarial AI Shield', badge: 'Double-Check' },
               { key: 'vision' as const, icon: '👁️', label: 'Vision AI Tables', badge: 'OCR' },
               { key: 'cost' as const, icon: '💰', label: 'AI Cost Estimate', badge: 'Budget' },
@@ -533,30 +532,35 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 14px',
-                    borderRadius: 'var(--radius-full)',
-                    border: 'none',
-                    background: isActive ? 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)' : 'transparent',
-                    color: isActive ? '#ffffff' : 'var(--text-secondary)',
+                    justifyContent: 'space-between',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: isActive ? '1px solid #4338ca' : '1px solid #e2e8f0',
+                    background: isActive
+                      ? 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)'
+                      : '#f8fafc',
+                    color: isActive ? '#ffffff' : '#1e293b',
                     fontWeight: isActive ? 700 : 600,
                     fontSize: '0.82rem',
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    whiteSpace: 'nowrap',
+                    transition: 'all 0.15s ease',
                     boxShadow: isActive ? '0 4px 12px rgba(79, 70, 229, 0.25)' : 'none',
                   }}
                 >
-                  <span>{tab.icon}</span>
-                  <span>{tab.label}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.1rem' }}>{tab.icon}</span>
+                    <span style={{ fontWeight: isActive ? 800 : 600 }}>{tab.label}</span>
+                  </div>
                   <span
                     style={{
-                      fontSize: '0.62rem',
-                      padding: '1px 6px',
+                      fontSize: '0.66rem',
+                      padding: '2px 7px',
                       borderRadius: '999px',
-                      background: isActive ? 'rgba(255,255,255,0.25)' : 'rgba(79,70,229,0.08)',
-                      color: isActive ? '#fff' : 'var(--accent-primary)',
-                      fontWeight: 700,
+                      background: isActive ? 'rgba(255, 255, 255, 0.22)' : 'rgba(79, 70, 229, 0.08)',
+                      color: isActive ? '#ffffff' : '#4338ca',
+                      fontWeight: 800,
+                      letterSpacing: '0.02em',
+                      flexShrink: 0,
                     }}
                   >
                     {tab.badge}
