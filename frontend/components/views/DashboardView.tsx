@@ -80,9 +80,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
     },
     {
       step: 4,
-      title: 'Redline Editor',
+      title: 'Document Inspector',
       icon: '🖋️',
-      badge: 'Visual UI',
+      badge: 'Live Markup',
       description: 'Green for active standards; Red for expired rules with 1-click legal auto-fixes.',
       tech: 'Dynamic Regex Parser + Real-time DOM Diffing',
     },
@@ -252,7 +252,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
             <button
               onClick={() => {
                 onSelectTab('tender');
-                onToast('Opening Redline Document Auditor...', 'info');
+                onToast('Opening Document Compliance Inspector...', 'info');
               }}
               style={{
                 display: 'flex',
@@ -269,7 +269,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
                 backdropFilter: 'blur(6px)',
               }}
             >
-              <span>🔴 Open Redline Auditor</span>
+              <span>📝 Open Document Inspector</span>
             </button>
 
             <button
@@ -367,7 +367,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
           
-          {/* Card 1: The Redline Document Editor */}
+          {/* Card 1: Interactive Document Compliance Inspector */}
           <div
             style={{
               background: '#ffffff',
@@ -393,18 +393,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
                     color: '#c2410c',
                   }}
                 >
-                  Visual Wow Factor
+                  Live Clause Intelligence
                 </span>
               </div>
 
               <h3 style={{ margin: '0 0 8px 0', fontSize: '1.12rem', fontWeight: 800, color: '#0f172a' }}>
-                The &ldquo;Redline&rdquo; Document Editor
+                Interactive Document Compliance Inspector
               </h3>
               <p style={{ margin: '0 0 14px 0', fontSize: '0.84rem', color: '#64748b', lineHeight: 1.5 }}>
-                Instead of dumping a boring table of rules, show procurement officers their actual document on screen with high-visibility visual highlights:
+                Displaying the procurement officer&apos;s actual draft tender on screen with immediate color-coded statutory verification:
               </p>
 
-              {/* Interactive Visual Redline Preview Widget */}
+              {/* Interactive Visual Preview Widget */}
               <div
                 style={{
                   background: '#f8fafc',
@@ -494,7 +494,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
                   cursor: 'pointer',
                 }}
               >
-                Open Auditor ➔
+                Open Inspector ➔
               </button>
             </div>
           </div>
