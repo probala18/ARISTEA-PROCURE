@@ -922,7 +922,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                   >
                     <div style={{ padding: '12px 14px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.25)' }}>
                       <strong style={{ color: '#b91c1c', fontSize: '0.82rem', display: 'block', marginBottom: '2px' }}>
-                        ❌ The Competition's Mistake:
+                        ❌ Issues:Others
                       </strong>
                       <span style={{ fontSize: '0.8rem', color: '#7f1d1d', lineHeight: 1.45 }}>
                         Their AI will only read plain text. When it hits an engineering table, it gets confused and fails.

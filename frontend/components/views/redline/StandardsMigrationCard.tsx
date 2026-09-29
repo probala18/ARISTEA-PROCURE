@@ -33,9 +33,6 @@ export const StandardsMigrationCard: React.FC<StandardsMigrationCardProps> = ({
             <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: '#0f172a' }}>
               Standard Supersession & Migration Roadmap
             </h3>
-            <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b' }}>
-              Expired Indian Standards marked in <strong style={{ color: '#dc2626' }}>RED</strong> mapped to current statutory successors in <strong style={{ color: '#059669' }}>GREEN</strong> with official BIS Gazette references.
-            </p>
           </div>
         </div>
         <span
