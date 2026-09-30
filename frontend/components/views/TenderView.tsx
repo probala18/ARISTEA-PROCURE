@@ -114,6 +114,21 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
 
   const handleFileSelection = async (file: File) => {
     setSelectedFile(file);
+    setUploadResult(null);
+    setAuditReport(null);
+    setRedlineResult(null);
+    setGeneratedSpec(null);
+
+    // Auto-update tender reference number and organization from filename if blank or sample
+    const cleanBase = file.name.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, ' ').trim();
+    if (!tenderNumber || tenderNumber === 'CPWD/EE/2026/PUMP-042') {
+      const slug = cleanBase.replace(/\s+/g, '-').slice(0, 20).toUpperCase();
+      setTenderNumber(`TND-${slug || 'DOC-2026'}`);
+    }
+    if (orgName === 'Central Public Works Department (CPWD)') {
+      setOrgName('');
+    }
+
     if (!isBinaryDoc(file.name)) {
       try {
         const text = await file.text();
@@ -148,12 +163,14 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
     setSelectedFile(file);
     setDocumentContent(SAMPLE_TENDER_TEXT);
     setTenderNumber('CPWD/EE/2026/PUMP-042');
+    setOrgName('Central Public Works Department (CPWD)');
     onToast('Loaded sample tender document for Pumping Machinery.', 'info');
 
     // Automatically run redline analysis so all features populate immediately
     try {
       const redline = await analyzeRedline(SAMPLE_TENDER_TEXT);
       setRedlineResult(redline);
+      setActiveFeature('redline');
     } catch {}
   };
 
@@ -181,26 +198,36 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
       const uploadRes = await uploadTenderDocument(
         fileToUpload,
         tenderNumber || undefined,
-        'Procurement Tender',
+        fileToUpload.name.replace(/\.[^/.]+$/, '') || 'Procurement Tender',
         orgName || undefined
       );
       setUploadResult(uploadRes);
 
-      // If backend returned clean extracted text from PDF/DOCX, update documentContent
-      const cleanText = uploadRes.extracted_text || (!isBinaryDoc(fileToUpload.name) ? documentContent : '') || SAMPLE_TENDER_TEXT;
-      if (uploadRes.extracted_text) {
+      // Clean extracted text from document
+      let cleanText = '';
+      if (uploadRes.extracted_text && uploadRes.extracted_text.trim()) {
+        cleanText = uploadRes.extracted_text;
         setDocumentContent(uploadRes.extracted_text);
+      } else if (!isBinaryDoc(fileToUpload.name) && documentContent.trim() && !documentContent.startsWith('📄 [')) {
+        cleanText = documentContent;
+      }
+
+      if (!cleanText.trim()) {
+        cleanText = (!isBinaryDoc(fileToUpload.name) ? documentContent : '') || SAMPLE_TENDER_TEXT;
       }
 
       // 2. Concurrently Audit & Run Redline Intelligence on clean text
       setIsAuditing(true);
       const [auditRes, redlineRes] = await Promise.allSettled([
-        getTenderAudit(uploadRes.tender_id),
+        getTenderAudit(uploadRes.tender_id, true),
         analyzeRedline(cleanText),
       ]);
 
       if (auditRes.status === 'fulfilled') setAuditReport(auditRes.value);
-      if (redlineRes.status === 'fulfilled') setRedlineResult(redlineRes.value);
+      if (redlineRes.status === 'fulfilled') {
+        setRedlineResult(redlineRes.value);
+        setActiveFeature('redline');
+      }
 
       onToast('Tender successfully audited with Visual Redline & Grounded Compliance!', 'success');
     } catch (err: any) {
@@ -424,6 +451,28 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
             📋 Load Sample CPWD Pumping Machinery Tender
           </button>
 
+          {(selectedFile || documentContent) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedFile(null);
+                setDocumentContent('');
+                setTenderNumber('');
+                setOrgName('');
+                setUploadResult(null);
+                setAuditReport(null);
+                setRedlineResult(null);
+                setGeneratedSpec(null);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+                onToast('Cleared workspace. Ready to upload your tender document.', 'info');
+              }}
+              className="btn-secondary"
+              style={{ fontSize: '0.84rem', color: '#dc2626' }}
+            >
+              🗑️ Clear & Upload New Document
+            </button>
+          )}
+
           <button
             onClick={handleUploadAndAudit}
             disabled={(!selectedFile && !documentContent) || isUploading || isAuditing}
@@ -514,12 +563,12 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
             }}
           >
             {[
+              { key: 'redline' as const, icon: '📝', label: 'Redline Document Markup', badge: 'Redline' },
               { key: 'overview' as const, icon: '📐', label: 'Overview & Measurements', badge: 'Specs' },
               { key: 'comparison' as const, icon: '📊', label: 'Comparison Matrix', badge: 'Audit' },
               { key: 'eco' as const, icon: '🌿', label: 'Eco Track', badge: 'Green' },
               { key: 'bidder' as const, icon: '👥', label: 'Bidder Criteria', badge: 'Criteria' },
               { key: 'gaps' as const, icon: '📋', label: 'Clause Findings & Gaps', badge: 'GFR' },
-              { key: 'redline' as const, icon: '📝', label: 'Interactive Document Markup', badge: 'Color-Coded' },
               { key: 'auditor' as const, icon: '🛡️', label: 'Adversarial AI Shield', badge: 'Double-Check' },
               { key: 'vision' as const, icon: '👁️', label: 'Vision AI Tables', badge: 'OCR' },
               { key: 'cost' as const, icon: '💰', label: 'AI Cost Estimate', badge: 'Budget' },
@@ -576,9 +625,9 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
             {activeFeature === 'redline' && (
               <motion.div key="redline" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                 <Panel
-                  title="Interactive Document Compliance Inspector"
-                  subtitle="Full draft tender document rendered with inline statutory verification: Green confirms alignment with active Indian Standards; Red flags outdated or superseded specifications with 1-click legal auto-fixes."
-                  badge="Live Compliance Markup"
+                  title="Redline Document Compliance Inspector"
+                  subtitle="Full draft tender document rendered with inline statutory redlining: Green confirms alignment with active Indian Standards; Red flags outdated or superseded specifications with 1-click legal auto-fixes."
+                  badge="Redline Markup"
                   action={
                     redlineResult && redlineResult.summary.auto_fixes_available > 0 ? (
                       <button onClick={handleAutoFixAll} disabled={isFixing} className="btn-accent" style={{ fontSize: '0.82rem' }}>

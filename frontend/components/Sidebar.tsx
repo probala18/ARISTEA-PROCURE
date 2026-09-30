@@ -61,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       key: 'standard',
       label: 'Standards Directory',
-      sublabel: 'Official BIS Catalog & Meta',
+      sublabel: 'Official BIS Catalog & Amendments',
       icon: '📚',
     },
     {

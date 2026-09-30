@@ -279,6 +279,10 @@ export const StandardView: React.FC<StandardViewProps> = ({ initialStandardId = 
             standardId={detail?.standard_id || selectedStandard}
             standardTitle={detail?.title}
             isCurrent={versions ? versions.is_current : true}
+            detail={detail}
+            versions={versions}
+            compliance={compliance}
+            relationships={relationships}
             onToast={onToast}
             onNavigateStandard={handleSelectQuick}
           />

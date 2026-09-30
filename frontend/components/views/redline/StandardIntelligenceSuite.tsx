@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   StandardRedlineMapping,
@@ -12,6 +12,10 @@ import {
   AuditorVerificationResponse,
   extractTableFromText,
   VisionTableResponse,
+  StandardDetail,
+  VersionReport,
+  ComplianceReport,
+  RelationshipEdge,
 } from '@/lib/api';
 import { StandardsMigrationCard } from './StandardsMigrationCard';
 import { TenderOverviewSection } from './TenderOverviewSection';
@@ -23,6 +27,10 @@ interface StandardIntelligenceSuiteProps {
   standardId: string;
   standardTitle?: string;
   isCurrent?: boolean;
+  detail?: StandardDetail | null;
+  versions?: VersionReport | null;
+  compliance?: ComplianceReport | null;
+  relationships?: RelationshipEdge[];
   onToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   onNavigateStandard?: (targetStandardId: string) => void;
 }
@@ -31,6 +39,10 @@ export const StandardIntelligenceSuite: React.FC<StandardIntelligenceSuiteProps>
   standardId,
   standardTitle,
   isCurrent = true,
+  detail,
+  versions,
+  compliance,
+  relationships,
   onToast,
   onNavigateStandard,
 }) => {
@@ -43,11 +55,13 @@ export const StandardIntelligenceSuite: React.FC<StandardIntelligenceSuiteProps>
   const isCableRelated = standardId.includes('694') || standardId.includes('1554');
   const isEarthingRelated = standardId.includes('3043') || standardId.includes('732');
 
+  const cleanTitle = standardTitle || detail?.title || `Standard Specification ${standardId}`;
+
   const [documentFixed, setDocumentFixed] = useState(false);
   const [hoveredClause, setHoveredClause] = useState<'green' | 'red' | null>(null);
 
   // Adversarial AI Double-Check state
-  const [testStandardInput, setTestStandardInput] = useState('IS 12615:2018\nIS 325:1996\nIS 9999\nIS 694:2010');
+  const [testStandardInput, setTestStandardInput] = useState(`${standardId}\nIS 9999\nIS 12615:2018`);
   const [isCheckingAuditor, setIsCheckingAuditor] = useState(false);
   const [auditorResult, setAuditorResult] = useState<AuditorVerificationResponse | null>(null);
 
@@ -55,11 +69,24 @@ export const StandardIntelligenceSuite: React.FC<StandardIntelligenceSuiteProps>
   const [isVisionParsing, setIsVisionParsing] = useState(false);
   const [visionResult, setVisionResult] = useState<VisionTableResponse | null>(null);
 
+  useEffect(() => {
+    const list = [standardId];
+    if (versions?.successor_standard_id) list.push(versions.successor_standard_id);
+    if (versions?.predecessor_standard_id) list.push(versions.predecessor_standard_id);
+    (relationships || []).slice(0, 2).forEach(r => {
+      const tgt = r.target_standard_id || r.target;
+      if (tgt && !list.includes(tgt)) list.push(tgt);
+    });
+    list.push('IS 9999'); // Hallucination probe
+    setTestStandardInput(Array.from(new Set(list.filter(Boolean))).join('\n'));
+    setDocumentFixed(false);
+  }, [standardId, versions, relationships]);
+
   // 1. Redline clause generator
   const getInitialClause = () => {
     if (isMotorRelated) {
       return {
-        prefix: 'Clause 4.2: Motors supplied for the pumping installation shall be energy-efficient 3-phase squirrel cage induction motors conforming to ',
+        prefix: 'Clause 4.2: Motors supplied for the installation shall be energy-efficient 3-phase squirrel cage induction motors conforming to ',
         outdated: 'IS 325:1996',
         outdatedLaw: 'old, expired rule from 2010. The law changed in 2024 to mandatory IE3 efficiency.',
         fixTo: 'IS 12615:2018 (IE3 Premium Efficiency)',
@@ -69,7 +96,7 @@ export const StandardIntelligenceSuite: React.FC<StandardIntelligenceSuiteProps>
       };
     } else if (isCableRelated) {
       return {
-        prefix: 'Clause 3.1: Power cabling shall comprise heavy-duty PVC insulated copper conductors conforming to ',
+        prefix: 'Clause 3.1: Power cabling shall comprise heavy-duty insulated copper conductors conforming to ',
         outdated: 'IS 1554 (Part 1):1988',
         outdatedLaw: 'withdrawn rule from 2010. Replaced by IS 7098 / IS 694 with mandatory Flame Retardant Low Smoke (FRLS) sheath.',
         fixTo: 'IS 694:2010 (FRLS-H Class)',
@@ -77,15 +104,46 @@ export const StandardIntelligenceSuite: React.FC<StandardIntelligenceSuiteProps>
         compliant: 'IS 694:2010',
         end: ' for industrial distribution.',
       };
+    } else if (isEarthingRelated) {
+      return {
+        prefix: 'Clause 3.2: Substation and plant earthing installation shall strictly adhere to ',
+        outdated: 'IS 3043:1987',
+        outdatedLaw: 'superseded edition allowing up to 2.0 Ohm resistance. Modern CEA safety norms mandate <= 1.0 Ohm.',
+        fixTo: 'IS 3043:2018 (Maintenance-free Chemical Earthing)',
+        suffix: '. Earth grid resistance shall not exceed 1.0 Ohm and installation shall comply with ',
+        compliant: 'IS 3043:2018',
+        end: ' under statutory safety regulations.',
+      };
+    } else if (!isCurrent || detail?.status === 'WITHDRAWN' || detail?.status === 'SUPERSEDED') {
+      const successor = versions?.successor_standard_id || 'Current BIS Mandate';
+      return {
+        prefix: `Clause 1.4: Technical supplies and equipment for ${cleanTitle} were formerly cited under `,
+        outdated: standardId,
+        outdatedLaw: `withdrawn or superseded standard in official BIS records. Must be upgraded to ${successor}.`,
+        fixTo: successor,
+        suffix: '. Modern statutory quality and safety inspection shall strictly verify compliance with ',
+        compliant: successor,
+        end: ' without deviation.',
+      };
+    } else if (versions?.predecessor_standard_id) {
+      return {
+        prefix: `Clause 1.4: All materials and workmanship for ${cleanTitle} were previously specified under `,
+        outdated: versions.predecessor_standard_id,
+        outdatedLaw: `superseded edition in the BIS catalog. The authoritative active standard is now ${standardId}.`,
+        fixTo: `${standardId} (Current & Valid)`,
+        suffix: '. Technical inspection certificates shall strictly certify conformance to ',
+        compliant: standardId,
+        end: ' as published in the official BIS Gazette.',
+      };
     } else {
       return {
-        prefix: `Clause 1.4: All equipment installation shall adhere to the canonical engineering requirements of `,
-        outdated: isCurrent ? 'IS 325:1996' : standardId,
-        outdatedLaw: 'old rule superseded by the modern Gazette Quality Control Order.',
-        fixTo: isCurrent ? standardId : 'IS 12615:2018',
-        suffix: '. Field inspection and testing certification shall strictly verify adherence to ',
-        compliant: isCurrent ? standardId : 'IS 12615:2018',
-        end: ' without deviation.',
+        prefix: `Clause 1.4: All engineering deliverables, testing procedures, and quality requirements for ${cleanTitle} shall conform to `,
+        outdated: `${standardId} (Draft / Pre-Revision)`,
+        outdatedLaw: `historical uncertified reference. Mandatory compliance requires canonical ${standardId}.`,
+        fixTo: `${standardId} (Statutory Active Standard)`,
+        suffix: '. Pre-dispatch inspection and manufacturer warranty shall certify conformance to ',
+        compliant: standardId,
+        end: ' in accordance with Bureau of Indian Standards mandates.',
       };
     }
   };
@@ -120,23 +178,25 @@ export const StandardIntelligenceSuite: React.FC<StandardIntelligenceSuiteProps>
     } catch {
       // High quality fallback demonstration
       setAuditorResult({
-        overall_trust_score: 0.67,
+        overall_trust_score: 0.85,
         verified_count: 2,
         hallucination_count: 1,
         total_checked: 3,
         results: [
           {
-            input_reference: 'IS 12615:2018',
-            standard_id: 'IS 12615:2018',
-            verdict: 'VERIFIED_REAL',
-            reason: 'Active standard in BIS catalog with mandatory QCO enforcement.',
+            input_reference: standardId,
+            standard_id: standardId,
+            verdict: isCurrent ? 'VERIFIED_REAL' : 'SUPERSEDED',
+            reason: isCurrent
+              ? 'Active standard in BIS catalog with verified statutory enforcement.'
+              : `Official Indian Standard superseded by ${versions?.successor_standard_id || 'newer revision'}.`,
             is_hallucination: false,
           },
           {
-            input_reference: 'IS 325:1996',
-            standard_id: 'IS 325:1996',
-            verdict: 'SUPERSEDED',
-            reason: 'Official Indian Standard superseded by IS 12615:2018.',
+            input_reference: versions?.successor_standard_id || 'IS 12615:2018',
+            standard_id: versions?.successor_standard_id || 'IS 12615:2018',
+            verdict: 'VERIFIED_REAL',
+            reason: 'Active canonical standard in BIS repository.',
             is_hallucination: false,
           },
           {
@@ -158,14 +218,11 @@ export const StandardIntelligenceSuite: React.FC<StandardIntelligenceSuiteProps>
   const handleRunVisionDemo = async () => {
     setIsVisionParsing(true);
     try {
-      const sampleText = `Table 3: Minimum Energy Efficiency Values at 50 Hz (IS 12615:2018 / IEC 60034-30-1)
-Rated Output (kW) | 2-Pole Eff (%) | 4-Pole Eff (%) | 6-Pole Eff (%) | Tolerance Formula
-0.75              | 80.7%          | 82.5%          | 78.9%          | (100 - η)/7
-1.50              | 84.2%          | 85.3%          | 82.5%          | (100 - η)/7
-7.50              | 90.1%          | 90.4%          | 89.1%          | (100 - η)/7
-15.00             | 91.9%          | 92.1%          | 91.2%          | (100 - η)/7
-37.00             | 93.7%          | 93.9%          | 93.3%          | (100 - η)/7
-75.00             | 94.7%          | 94.7%          | 94.2%          | (100 - η)/7`;
+      const sampleText = `Table 1: Statutory Requirements & Test Limits (${standardId})
+Parameter | Specified Limit | Mandatory Tolerance | Test Protocol
+Primary Tolerance | 100% Conforming | Clause Specific | NABL Lab / BIS
+Safety Proof Test | Certified Pass | Zero Deviation | Routine In-Factory
+Operational Rating | Rated Standard | Statutory QCO | Bureau of Indian Standards`;
 
       const res = await extractTableFromText(sampleText, standardId);
       setVisionResult(res);
@@ -178,25 +235,22 @@ Rated Output (kW) | 2-Pole Eff (%) | 4-Pole Eff (%) | 6-Pole Eff (%) | Tolerance
         tables: [
           {
             table_id: 'TABLE-01',
-            title: `Table 3: Efficiency Values & Mathematical Tolerances (${standardId})`,
-            headers: ['Rated Output (kW)', '2-Pole Eff (%)', '4-Pole Eff (%)', '6-Pole Eff (%)', 'Tolerance Formula'],
+            title: `Table 1: Engineering Parameters & Verification Thresholds (${standardId})`,
+            headers: ['Parameter', 'Specified Value', 'Statutory Limit', 'Tolerance / Verification'],
             rows: [
-              ['0.75 kW', '80.7%', '82.5%', '78.9%', '± (100 - η)/7 %'],
-              ['1.50 kW', '84.2%', '85.3%', '82.5%', '± (100 - η)/7 %'],
-              ['7.50 kW', '90.1%', '90.4%', '89.1%', '± (100 - η)/7 %'],
-              ['15.00 kW', '91.9%', '92.1%', '91.2%', '± (100 - η)/7 %'],
-              ['37.00 kW', '93.7%', '93.9%', '93.3%', '± (100 - η)/7 %'],
-              ['75.00 kW', '94.7%', '94.7%', '94.2%', '± (100 - η)/7 %'],
+              ['Material / Component Grade', 'Class A / Grade 1', 'Mandatory BIS IS Specification', 'Full Compliance'],
+              ['Operational Proof Testing', 'Rated Design Limit', 'Statutory QCO Mandate', 'Zero Breakdown'],
+              ['Sampling & Acceptance', 'Batch Inspection', 'NABL Accredited Routine Testing', 'Clause Specific'],
             ],
-            notes: 'Tolerance calculation conforms to clause 7.2 of IS 12615:2018.',
+            notes: `Tolerance calculation and quality assurance conform to ${standardId} (${cleanTitle}).`,
           },
         ],
         formulas: [
           {
             formula_id: 'FORMULA-01',
-            expression: 'Tolerance = ± 0.15 * (1 - η) / 7',
-            latex: '\\Delta \\eta = \\pm 0.15 \\times \\frac{1 - \\eta}{7}',
-            context: 'Efficiency test tolerance boundary for electric motors under full load testing.',
+            expression: `Conformity Index = (Measured / Specified) * 100%`,
+            latex: `C_i = \\frac{V_{meas}}{V_{spec}} \\times 100\\%`,
+            context: `Verification formula for statutory compliance under ${standardId}.`,
           },
         ],
       });
@@ -206,159 +260,337 @@ Rated Output (kW) | 2-Pole Eff (%) | 4-Pole Eff (%) | 6-Pole Eff (%) | Tolerance
     }
   };
 
-  // Mock standard migration mapping
-  const migrationMappings: StandardRedlineMapping[] = [
-    {
-      old_standard: isMotorRelated ? 'IS 325:1996' : 'IS 1554 (Part 1):1988',
-      old_title: isMotorRelated
-        ? 'Three Phase Induction Motors (Superseded)'
-        : 'PVC Insulated (Heavy Duty) Electric Cables',
-      old_status: 'SUPERSEDED / WITHDRAWN',
-      new_standard: isMotorRelated ? 'IS 12615:2018' : 'IS 694:2010',
-      new_title: isMotorRelated
-        ? 'Line Operated Three-Phase Induction Motors (IE3 Class)'
-        : 'PVC Insulated Cables for Working Voltages up to 1100 V',
-      new_status: 'ACTIVE / MANDATORY QCO',
-      bis_reference: 'Gazette of India Extraordinary S.O. 421(E) / Quality Control Order 2024',
-      circular_number: 'CPWD Works Manual OM No. DGW/CON/312 (Mandatory IE3)',
-      clause_impact: 'Mandatory upgrade of specification clause from obsolete standard to current statutory mandate.',
-      reason:
-        'Bureau of Indian Standards transitioned all public procurement from obsolete efficiency grades to IE3/IE4 minimum energy performance to fulfill National Energy Mission.',
-    },
-  ];
+  // Dynamic Standard Migration Mapping
+  const migrationMappings: StandardRedlineMapping[] = (() => {
+    if (isMotorRelated) {
+      return [
+        {
+          old_standard: 'IS 325:1996',
+          old_title: 'Three Phase Induction Motors (Superseded)',
+          old_status: 'SUPERSEDED / WITHDRAWN',
+          new_standard: 'IS 12615:2018',
+          new_title: 'Line Operated Three-Phase Induction Motors (IE3 Class)',
+          new_status: 'ACTIVE / MANDATORY QCO',
+          bis_reference: 'Gazette of India Extraordinary S.O. 421(E) / Quality Control Order 2024',
+          circular_number: 'CPWD Works Manual OM No. DGW/CON/312 (Mandatory IE3)',
+          clause_impact: 'Mandatory upgrade of specification clause from obsolete standard to current statutory mandate.',
+          reason: 'Bureau of Indian Standards transitioned all public procurement from obsolete efficiency grades to IE3/IE4 minimum energy performance to fulfill National Energy Mission.',
+        },
+      ];
+    }
+    if (isCableRelated) {
+      return [
+        {
+          old_standard: 'IS 1554 (Part 1):1988',
+          old_title: 'PVC Insulated (Heavy Duty) Electric Cables',
+          old_status: 'SUPERSEDED / WITHDRAWN',
+          new_standard: 'IS 694:2010',
+          new_title: 'PVC Insulated Cables for Working Voltages up to 1100 V',
+          new_status: 'ACTIVE / MANDATORY QCO',
+          bis_reference: 'Gazette of India Extraordinary S.O. 421(E) / Quality Control Order',
+          circular_number: 'CPWD Works Manual (Mandatory FRLS Class)',
+          clause_impact: 'Mandatory upgrade of cabling specifications from old withdrawn standards to current fire-retardant standards.',
+          reason: 'Bureau of Indian Standards mandated Flame Retardant Low Smoke (FRLS) sheath for public safety.',
+        },
+      ];
+    }
+    if (isEarthingRelated) {
+      return [
+        {
+          old_standard: 'IS 3043:1987',
+          old_title: 'Code of Practice for Earthing (First Revision)',
+          old_status: 'SUPERSEDED EDITION',
+          new_standard: 'IS 3043:2018',
+          new_title: 'Code of Practice for Earthing (Second Revision)',
+          new_status: 'ACTIVE STATUTORY MANDATE',
+          bis_reference: 'Central Electricity Authority (CEA) / BIS Gazette',
+          circular_number: 'Safety Regulations Gazette 2023',
+          clause_impact: 'Mandates <= 1.0 Ohm substation earth resistance and maintenance-free chemical earthing.',
+          reason: 'Revises earth fault loop impedance, soil resistivity measurement, and maintenance-free electrodes.',
+        },
+      ];
+    }
 
-  // Mock Overview & Measurements
-  const sampleOverview: TenderOverview = {
-    nit_number: `${standardId}-SPEC-2026`,
-    department: 'Bureau of Indian Standards / CPWD Technical Directorate',
-    title: `${standardId}: Engineering Specifications & Tolerance Standards`,
-    scope_summary: `Authoritative engineering parameter measurements, statutory test limits, operating voltages, and environmental ratings codified under ${standardId}.`,
-    estimated_timeline: '4 to 6 Months Execution Window',
-    measurements: [
-      {
-        parameter: 'Operating Voltage & Frequency',
-        value: '415 V ± 10%, 50 Hz ± 5%',
-        unit: 'V / Hz',
-        tolerance: '± 10% Voltage, ± 5% Frequency',
-        standard_ref: standardId,
-        category: 'Electrical',
-      },
-      {
-        parameter: 'Efficiency Class (Full Load)',
-        value: 'IE3 Premium Efficiency (≥ 92.1% at 15 kW)',
-        unit: '%',
-        tolerance: 'Clause 7.2: ± (100 - η)/7',
-        standard_ref: 'IS 12615:2018',
-        category: 'Electro-Mechanical',
-      },
-      {
-        parameter: 'Insulation & Temperature Class',
-        value: 'Class F Insulation, Temp Rise Class B (80K)',
-        unit: 'Deg C / K',
-        tolerance: 'Max permissible rise 80 Kelvin',
-        standard_ref: 'IS 12615 / IS 12065',
-        category: 'Thermal',
-      },
-      {
-        parameter: 'Enclosure Protection Level',
-        value: 'IP 55 weatherproof dust-tight enclosure',
-        unit: 'IP Code',
-        tolerance: 'Standard ingress protection test',
-        standard_ref: 'IS/IEC 60529',
-        category: 'Safety & Earthing',
-      },
-      {
-        parameter: 'Vibration Severity Limit',
-        value: 'Grade A (≤ 1.6 mm/s RMS)',
-        unit: 'mm/s',
-        tolerance: 'Classified Grade A precision',
-        standard_ref: 'IS 12075',
-        category: 'General',
-      },
-    ],
-  };
+    if (!isCurrent || detail?.status === 'WITHDRAWN' || detail?.status === 'SUPERSEDED') {
+      const succ = versions?.successor_standard_id || 'Active Successor Standard';
+      return [
+        {
+          old_standard: standardId,
+          old_title: cleanTitle,
+          old_status: 'SUPERSEDED / WITHDRAWN',
+          new_standard: succ,
+          new_title: `Current Active Standard (${succ})`,
+          new_status: 'ACTIVE & MANDATORY',
+          bis_reference: 'Bureau of Indian Standards Gazette Notification',
+          circular_number: 'Public Procurement Compliance Order',
+          clause_impact: `Upgrades citation from withdrawn ${standardId} to mandatory active specification ${succ}.`,
+          reason: `Bureau of Indian Standards formally withdrew ${standardId} and replaced it with ${succ}.`,
+        },
+      ];
+    }
 
-  // Mock Comparison Matrix
-  const sampleComparison: ComparisonRow[] = [
-    {
-      parameter: 'Energy Efficiency Benchmark',
-      clause: 'Clause 4.2',
-      specified_value: 'High Efficiency Standard',
-      is_standard_mandate: 'IE3 Premium Class (IS 12615:2018)',
-      industry_benchmark: 'IEC 60034-30-1 Global Level',
-      status: 'COMPLIANT',
-      delta: '+4.8% vs Obsolete IS 325',
-      chart_value_specified: 92.1,
-      chart_value_required: 92.1,
-      chart_unit: '%',
-    },
-    {
-      parameter: 'Permissible Heat Run Limit',
-      clause: 'Clause 4.3',
-      specified_value: 'Class B (80K rise)',
-      is_standard_mandate: 'Class B limit with Class F insulation',
-      industry_benchmark: 'ISO 21940 / IEC 60085',
-      status: 'COMPLIANT',
-      delta: '0.0% variance (Optimal safety)',
-      chart_value_specified: 80,
-      chart_value_required: 80,
-      chart_unit: 'K',
-    },
-    {
-      parameter: 'Harmonic Distortion Immunity',
-      clause: 'Clause 4.5',
-      specified_value: 'THD ≤ 5%',
-      is_standard_mandate: 'IEEE 519 / IS 12615 VFD ready',
-      industry_benchmark: 'IEC 61800-3 Category C2',
-      status: 'COMPLIANT',
-      delta: '-2.1% lower distortion',
-      chart_value_specified: 5,
-      chart_value_required: 5,
-      chart_unit: '%',
-    },
-  ];
+    if (versions?.predecessor_standard_id) {
+      return [
+        {
+          old_standard: versions.predecessor_standard_id,
+          old_title: `Predecessor Edition to ${standardId}`,
+          old_status: 'SUPERSEDED IN BIS REGISTRY',
+          new_standard: standardId,
+          new_title: cleanTitle,
+          new_status: 'CURRENT ACTIVE STANDARD',
+          bis_reference: 'Official BIS Standards Repository',
+          circular_number: 'BIS Gazette Notification',
+          clause_impact: `Mandates current ${standardId} specification for all public procurement tenders.`,
+          reason: `${standardId} supersedes previous revision ${versions.predecessor_standard_id} with updated technical parameters.`,
+        },
+      ];
+    }
 
-  // Mock Eco Track
-  const sampleEco: EcoTrack = {
-    eco_score: 91,
-    grade: 'A+ Green Class',
-    energy_efficiency_class: 'BEE 5-STAR / IE3 PREMIUM',
-    annual_kwh_savings: 15400,
-    annual_co2_reduction_tons: 12.6,
-    lifecycle_cost_savings_inr: 185000,
-    compliance_tags: ['BEE 5-Star', 'QCO Mandatory 2024', 'Low Carbon Tier 1'],
-    sustainability_insights: [
-      'Statutory compliance with IS 12615:2018 ensures BEE Star-1 Mandatory qualification.',
-      '100% copper stator winding allows high end-of-life secondary metal recycling.',
-      'Reduces public procurement lifecycle carbon footprint by 12.6 metric tons CO2 equivalent annually.',
-    ],
-  };
+    return [
+      {
+        old_standard: `${standardId} (Prior Revision)`,
+        old_title: cleanTitle,
+        old_status: 'PRIOR REVISION',
+        new_standard: standardId,
+        new_title: cleanTitle,
+        new_status: 'CURRENT ACTIVE STANDARD',
+        bis_reference: 'Bureau of Indian Standards Official Catalog',
+        circular_number: 'GFR 2017 Rule 144 Statutory Mandate',
+        clause_impact: `Tenders and specifications must reference active edition of ${standardId}.`,
+        reason: `${standardId} is the active, verified Indian Standard establishing mandatory national quality baselines.`,
+      },
+    ];
+  })();
 
-  // Mock Bidder Criteria
-  const sampleBidder: BidderRequirements = {
-    technical_criteria: [
-      'Minimum 5 years demonstrated experience in manufacturing or supplying equipment under Indian Standards.',
-      'Valid Bureau of Indian Standards (BIS) ISI Mark License for IS 12615:2018.',
-      'Full Type Test Certificate from NABL Accredited Laboratory within the last 3 years.',
-      'ISO 9001:2015 Quality Management System Certification.',
-    ],
-    financial_criteria: [
-      'Minimum average annual turnover of ₹3.50 Crores over last 3 audited financial years.',
-      'Earnest Money Deposit (EMD) of ₹75,000 via Bank Guarantee or online GeM portal.',
-      'Solvency Certificate of at least ₹1.50 Crores from a Scheduled Commercial Bank.',
-    ],
-    statutory_declarations: [
-      'Class-I Local Supplier declaration under Public Procurement (Preference to Make in India) Order 2017 (Local Content ≥ 50%).',
-      'Compliance undertaking under Rule 144(xi) of General Financial Rules (GFR) 2017.',
-      'Non-blacklisting affidavit on non-judicial stamp paper.',
-    ],
-    required_documents: [
-      'BIS ISI Mark License valid on bid opening date',
-      'Audited balance sheets for FY 2023-24, 2024-25, 2025-26',
-      'Factory inspection and testing facility report',
-      'Client completion certificates from at least 3 Central/State Govt departments',
-    ],
-  };
+  // Dynamic Overview & Measurements
+  const sampleOverview: TenderOverview = (() => {
+    const titleUp = cleanTitle.toUpperCase();
+    const isWater = standardId.includes('10500') || titleUp.includes('WATER') || titleUp.includes('DRINKING');
+    const isCement = standardId.includes('269') || standardId.includes('456') || standardId.includes('1489') || titleUp.includes('CEMENT') || titleUp.includes('CONCRETE');
+    const isSteel = standardId.includes('1786') || standardId.includes('2062') || titleUp.includes('STEEL') || titleUp.includes('BAR');
+    const isMat = standardId.includes('15652') || titleUp.includes('MAT') || titleUp.includes('INSULATING');
+
+    let measurements: any[] = [];
+    if (isMotorRelated) {
+      measurements = [
+        { parameter: 'Operating Voltage & Frequency', value: '415 V ± 10%, 50 Hz ± 5%', unit: 'V / Hz', tolerance: '± 10% Voltage, ± 5% Frequency', standard_ref: standardId, category: 'Electrical' },
+        { parameter: 'Efficiency Class (Full Load)', value: 'IE3 Premium Efficiency (≥ 92.1% at 15 kW)', unit: '%', tolerance: 'Clause 7.2: ± (100 - η)/7', standard_ref: 'IS 12615:2018', category: 'Electro-Mechanical' },
+        { parameter: 'Insulation & Temperature Class', value: 'Class F Insulation, Temp Rise Class B (80K)', unit: 'Deg C / K', tolerance: 'Max permissible rise 80 Kelvin', standard_ref: 'IS 12615 / IS 12065', category: 'Thermal' },
+        { parameter: 'Enclosure Protection Level', value: 'IP 55 weatherproof dust-tight enclosure', unit: 'IP Code', tolerance: 'Standard ingress protection test', standard_ref: 'IS/IEC 60529', category: 'Safety & Earthing' },
+        { parameter: 'Vibration Severity Limit', value: 'Grade A (≤ 1.6 mm/s RMS)', unit: 'mm/s', tolerance: 'Classified Grade A precision', standard_ref: 'IS 12075', category: 'General' },
+      ];
+    } else if (isCableRelated) {
+      measurements = [
+        { parameter: 'Voltage Grade Rating', value: '1100 V Grade AC', unit: 'Volts', tolerance: 'Rated 1.1 kV working voltage', standard_ref: standardId, category: 'Electrical' },
+        { parameter: 'Conductor Resistance at 20°C', value: 'Conforming to Table 1 limits', unit: 'Ohm/km', tolerance: 'IS 8130 maximum limit', standard_ref: 'IS 8130', category: 'Electrical' },
+        { parameter: 'Insulation Resistance', value: 'Min 100 MΩ·km', unit: 'MΩ·km', tolerance: 'Minimum at rated temperature', standard_ref: standardId, category: 'Electrical' },
+        { parameter: 'Spark Test Voltage', value: '3.0 kV to 6.0 kV AC', unit: 'kV', tolerance: 'Zero breakdown permissible', standard_ref: standardId, category: 'Safety' },
+        { parameter: 'Flame Retardance & Smoke Index', value: 'FRLS-H Sheath Grade', unit: 'Rating', tolerance: 'IS 10810 Part 62 test pass', standard_ref: standardId, category: 'Safety' },
+      ];
+    } else if (isEarthingRelated) {
+      measurements = [
+        { parameter: 'Maximum Earth Resistance', value: '≤ 1.0 Ohm (Substation ≤ 0.5 Ohm)', unit: 'Ohm', tolerance: 'Max 1.0 Ohm measured across grid', standard_ref: standardId, category: 'Safety' },
+        { parameter: 'Electrode Conductor Size', value: 'Min 16 mm dia / 25x3 mm copper strip', unit: 'mm', tolerance: 'Zero negative tolerance on thickness', standard_ref: standardId, category: 'Materials' },
+        { parameter: 'Fault Current Withstand Capacity', value: '25 kA for 1.0 Second', unit: 'kA/sec', tolerance: 'Conforming to CEA safety mandate', standard_ref: standardId, category: 'Electrical' },
+        { parameter: 'Earth Enhancing Compound Resistivity', value: '≤ 0.12 Ohm-meter', unit: 'Ohm-m', tolerance: 'pH 7.0 – 9.0 neutral compound', standard_ref: standardId, category: 'Chemical' },
+      ];
+    } else if (isWater) {
+      measurements = [
+        { parameter: 'pH Value Range', value: '6.5 to 8.5', unit: 'pH', tolerance: 'Permissible limit without relaxation', standard_ref: standardId, category: 'Chemical' },
+        { parameter: 'Turbidity Limit', value: 'Max 1.0 NTU (Desirable) / 5.0 NTU', unit: 'NTU', tolerance: 'Nephelometric Turbidity Units', standard_ref: standardId, category: 'Physical' },
+        { parameter: 'Total Dissolved Solids (TDS)', value: 'Max 500 mg/L (Desirable) / 2000 mg/L', unit: 'mg/L', tolerance: 'Gravimetric determination', standard_ref: standardId, category: 'Chemical' },
+        { parameter: 'Total Hardness (as CaCO3)', value: 'Max 200 mg/L', unit: 'mg/L', tolerance: 'EDTA titrimetric method', standard_ref: standardId, category: 'Chemical' },
+        { parameter: 'Bacteriological Quality (E. coli)', value: 'Zero (Not detectable in 100 mL)', unit: 'MPN / 100 mL', tolerance: 'Zero tolerance pathogen threshold', standard_ref: standardId, category: 'Biological' },
+      ];
+    } else if (isCement) {
+      measurements = [
+        { parameter: '28-Day Compressive Strength', value: 'Min 43.0 MPa / 53.0 MPa', unit: 'MPa', tolerance: 'IS 4031 Part 6 mortar cube test', standard_ref: standardId, category: 'Mechanical' },
+        { parameter: 'Initial Setting Time', value: 'Min 30 minutes', unit: 'Minutes', tolerance: 'Vicat needle penetration test', standard_ref: standardId, category: 'Physical' },
+        { parameter: 'Final Setting Time', value: 'Max 600 minutes', unit: 'Minutes', tolerance: 'Vicat needle ring mark test', standard_ref: standardId, category: 'Physical' },
+        { parameter: 'Fineness (Specific Surface)', value: 'Min 225 m²/kg', unit: 'm²/kg', tolerance: 'Blaine air permeability method', standard_ref: standardId, category: 'Physical' },
+        { parameter: 'Soundness (Le Chatelier)', value: 'Max 10 mm expansion', unit: 'mm', tolerance: 'Autoclave expansion max 0.8%', standard_ref: standardId, category: 'Chemical' },
+      ];
+    } else if (isSteel) {
+      measurements = [
+        { parameter: '0.2% Proof Stress / Yield Strength', value: 'Min 500.0 N/mm² (Fe 500D)', unit: 'N/mm²', tolerance: 'Mandatory minimum yield strength', standard_ref: standardId, category: 'Mechanical' },
+        { parameter: 'Tensile Strength (TS)', value: 'Min 565.0 N/mm²', unit: 'N/mm²', tolerance: 'TS/YS ratio min 1.10', standard_ref: standardId, category: 'Mechanical' },
+        { parameter: 'Elongation at Fracture', value: 'Min 16.0%', unit: '%', tolerance: 'Gauge length 5.65√A', standard_ref: standardId, category: 'Mechanical' },
+        { parameter: 'Bend & Rebend Test', value: '180° Bend without surface cracks', unit: 'Degrees', tolerance: 'Mandatory bend mandrel diameter', standard_ref: standardId, category: 'Quality' },
+      ];
+    } else if (isMat) {
+      measurements = [
+        { parameter: 'Working Voltage Class', value: 'Class A (3.3 kV) / Class B (11 kV) / Class C (33 kV)', unit: 'kV', tolerance: 'Proof test voltage up to 36 kV', standard_ref: standardId, category: 'Electrical Safety' },
+        { parameter: 'Tensile Strength', value: 'Min 15.0 N/mm²', unit: 'N/mm²', tolerance: 'Elongation at break min 250%', standard_ref: standardId, category: 'Mechanical' },
+        { parameter: 'Dielectric Strength', value: 'Min 45 kV / mm', unit: 'kV/mm', tolerance: 'Tested in dry condition at 50 Hz', standard_ref: standardId, category: 'Electrical Safety' },
+        { parameter: 'Insulation Resistance', value: 'Min 1.0 x 10^6 MegaOhm', unit: 'MΩ', tolerance: 'Tested with 1000V DC Megger', standard_ref: standardId, category: 'Electrical Safety' },
+      ];
+    } else {
+      measurements = [
+        { parameter: 'Statutory Conformance Threshold', value: `Conforming to ${standardId}`, unit: 'IS Standard', tolerance: 'Zero deviation permitted', standard_ref: standardId, category: 'Compliance' },
+        { parameter: 'Quality & Sampling Protocol', value: 'Authoritative BIS Inspection Routine', unit: 'Testing Protocol', tolerance: 'NABL accredited test certs', standard_ref: standardId, category: 'Quality Control' },
+        { parameter: 'Manufacturing Certification', value: 'Mandatory BIS ISI Mark Product License', unit: 'License Endorsement', tolerance: 'Valid on contract award date', standard_ref: standardId, category: 'Regulatory' },
+        { parameter: 'Statutory Safety & Performance', value: 'Zero non-compliance tolerance', unit: 'Safety Class', tolerance: 'Mandatory QCO enforcement', standard_ref: standardId, category: 'Safety' },
+      ];
+    }
+
+    return {
+      nit_number: `${standardId}-SPEC-2026`,
+      department: detail?.technical_department || 'Bureau of Indian Standards / Technical Directorate',
+      title: `${standardId}: ${cleanTitle}`,
+      scope_summary: detail?.scope || `Authoritative engineering parameter measurements, statutory test limits, operating tolerances, and quality ratings codified under ${standardId}.`,
+      estimated_timeline: 'Execution schedule adhering to statutory procurement terms',
+      measurements,
+    };
+  })();
+
+  // Dynamic Comparison Matrix
+  const sampleComparison: ComparisonRow[] = (() => {
+    if (isMotorRelated) {
+      return [
+        {
+          parameter: 'Energy Efficiency Benchmark',
+          clause: 'Clause 4.2',
+          specified_value: 'High Efficiency Standard',
+          is_standard_mandate: 'IE3 Premium Class (IS 12615:2018)',
+          industry_benchmark: 'IEC 60034-30-1 Global Level',
+          status: 'COMPLIANT',
+          delta: '+4.8% vs Obsolete IS 325',
+          chart_value_specified: 92.1,
+          chart_value_required: 92.1,
+          chart_unit: '%',
+        },
+        {
+          parameter: 'Permissible Heat Run Limit',
+          clause: 'Clause 4.3',
+          specified_value: 'Class B (80K rise)',
+          is_standard_mandate: 'Class B limit with Class F insulation',
+          industry_benchmark: 'ISO 21940 / IEC 60085',
+          status: 'COMPLIANT',
+          delta: '0.0% variance (Optimal safety)',
+          chart_value_specified: 80,
+          chart_value_required: 80,
+          chart_unit: 'K',
+        },
+        {
+          parameter: 'Harmonic Distortion Immunity',
+          clause: 'Clause 4.5',
+          specified_value: 'THD ≤ 5%',
+          is_standard_mandate: 'IEEE 519 / IS 12615 VFD ready',
+          industry_benchmark: 'IEC 61800-3 Category C2',
+          status: 'COMPLIANT',
+          delta: '-2.1% lower distortion',
+          chart_value_specified: 5,
+          chart_value_required: 5,
+          chart_unit: '%',
+        },
+      ];
+    }
+    if (isCableRelated) {
+      return [
+        {
+          parameter: 'Insulation & Sheathing Class',
+          clause: 'Clause 3.1',
+          specified_value: 'Standard PVC Sheathing',
+          is_standard_mandate: 'FRLS-H Flame Retardant Low Smoke (IS 694/IS 7098)',
+          industry_benchmark: 'Halogen Free Low Smoke (ZHFR)',
+          status: 'COMPLIANT',
+          delta: 'Meets mandatory fire retardant safety standard under CPWD',
+          chart_value_specified: 70.0,
+          chart_value_required: 90.0,
+          chart_unit: '°C Temp Limit',
+        },
+        {
+          parameter: 'Dielectric Voltage Test',
+          clause: 'Clause 5.2',
+          specified_value: '3.0 kV AC for 5 minutes',
+          is_standard_mandate: 'Conforming to IS 694 Table 4 test parameters',
+          industry_benchmark: 'Zero breakdown under 5-minute spark testing',
+          status: 'COMPLIANT',
+          delta: 'Complies with mandatory high voltage withstand proof testing',
+          chart_value_specified: 3.0,
+          chart_value_required: 3.0,
+          chart_unit: 'kV AC',
+        },
+      ];
+    }
+    return [
+      {
+        parameter: `Statutory Quality Baseline (${standardId})`,
+        clause: 'Section 1: Technical Specifications',
+        specified_value: isCurrent ? `${standardId} (Current & Valid)` : `${standardId} (Superseded/Withdrawn)`,
+        is_standard_mandate: isCurrent ? `${standardId} Active Mandate` : `${versions?.successor_standard_id || 'Active Successor Standard'}`,
+        industry_benchmark: 'Authoritative BIS Quality Control Order (QCO)',
+        status: isCurrent ? 'COMPLIANT' : 'OUTDATED',
+        delta: isCurrent ? 'Fully compliant with Gazette notification and BIS registry' : `Non-compliant. Replaced by ${versions?.successor_standard_id || 'successor edition'}.`,
+        chart_value_specified: isCurrent ? 100 : 50,
+        chart_value_required: 100,
+        chart_unit: '% Compliance',
+      },
+      {
+        parameter: 'Quality Assurance & Sampling Frequency',
+        clause: 'Section 2: Testing & Inspection',
+        specified_value: 'NABL Accredited Third-Party Test Verification',
+        is_standard_mandate: `Mandatory routine & type test certificate under ${standardId}`,
+        industry_benchmark: 'BIS Scheme-I ISI Mark Product Certification',
+        status: 'COMPLIANT',
+        delta: 'Meets CPWD Works Manual and GeM public procurement benchmarks',
+        chart_value_specified: 100,
+        chart_value_required: 100,
+        chart_unit: '% Compliance',
+      },
+    ];
+  })();
+
+  // Dynamic Eco Track
+  const sampleEco: EcoTrack = (() => {
+    return {
+      eco_score: isCurrent ? 92 : 65,
+      grade: isCurrent ? 'A+ Green Class' : 'Tier-B Specification Upgrade Recommended',
+      energy_efficiency_class: isCurrent ? 'Statutory Energy & Environmental Compliant' : 'Superseded Specification',
+      annual_kwh_savings: 12500,
+      annual_co2_reduction_tons: 9.8,
+      lifecycle_cost_savings_inr: 160000,
+      compliance_tags: [
+        'BIS Mandatory Standards Compliance',
+        'Public Procurement (Green Principles)',
+        'Environment Protection Mandates',
+        'Life-Cycle Cost Optimization',
+      ],
+      sustainability_insights: [
+        `Specifying verified active standard ${standardId} ensures compliance with mandatory Bureau of Indian Standards baselines.`,
+        'Prevents premature failure and scrap replacement through rigorous material specification.',
+        `Reduces procurement carbon and lifecycle waste in public contracts.`,
+      ],
+    };
+  })();
+
+  // Dynamic Bidder Criteria
+  const sampleBidder: BidderRequirements = (() => {
+    return {
+      technical_criteria: [
+        `Minimum 3 to 5 years demonstrated experience in manufacturing or supplying equipment under ${standardId} (${cleanTitle}).`,
+        `Mandatory Bureau of Indian Standards (BIS) ISI Mark Product License for ${standardId}.`,
+        'Full Type Test Certificate from NABL Accredited Laboratory within the last 3 years.',
+        'ISO 9001:2015 Quality Management System Certification.',
+      ],
+      financial_criteria: [
+        'Average annual turnover of at least 30% of estimated tender value over last 3 audited financial years.',
+        'Earnest Money Deposit (EMD) via Bank Guarantee or online portal (MSME exempt).',
+        'Solvency Certificate from a Scheduled Commercial Bank.',
+      ],
+      statutory_declarations: [
+        'Class-I Local Supplier declaration under Public Procurement (Preference to Make in India) Order 2017.',
+        'Compliance undertaking under Rule 144(xi) of General Financial Rules (GFR) 2017.',
+        'Valid GSTIN registration and non-blacklisting affidavit on stamp paper.',
+      ],
+      required_documents: [
+        `BIS License copy for ${standardId} valid on bid opening date`,
+        'Audited financial statements for last 3 financial years',
+        'Manufacturer Authorization Form (MAF) from OEM on company letterhead',
+        'Client completion certificates from at least 2 Government or PSU contracts',
+      ],
+    };
+  })();
 
   return (
     <div style={{ marginBottom: '26px' }}>

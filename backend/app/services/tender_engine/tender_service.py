@@ -17,6 +17,7 @@ from backend.app.models.tender import (
     TenderSection,
     TenderRequirement,
     TenderStandardReference,
+    TenderAuditResult,
 )
 from backend.app.services.tender_engine.schemas import (
     TenderProcessingStatus,
@@ -88,6 +89,7 @@ class TenderEngineService:
             existing = self.db.query(TenderDocument).filter(TenderDocument.tender_number == t_num).first()
             if existing:
                 # Clean up existing child relations to allow fresh re-parsing / re-auditing
+                self.db.query(TenderAuditResult).filter(TenderAuditResult.tender_id == existing.id).delete()
                 self.db.query(TenderStandardReference).filter(TenderStandardReference.tender_id == existing.id).delete()
                 self.db.query(TenderRequirement).filter(TenderRequirement.tender_id == existing.id).delete()
                 self.db.query(TenderSection).filter(TenderSection.tender_id == existing.id).delete()
