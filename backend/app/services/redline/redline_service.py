@@ -906,8 +906,12 @@ class RedlineService:
     ) -> List[StandardRedlineMapping]:
         mappings: List[StandardRedlineMapping] = []
 
-        # 1. Ground from actual auto fixes in the document
+        # Ground strictly from actual auto fixes in the document
+        seen = set()
         for fix in auto_fixes:
+            if fix.old_standard_id in seen:
+                continue
+            seen.add(fix.old_standard_id)
             mappings.append(StandardRedlineMapping(
                 old_standard=fix.old_standard_id,
                 old_status="SUPERSEDED & WITHDRAWN",
@@ -919,41 +923,6 @@ class RedlineService:
                 circular_number="Public Procurement Standards Compliance Mandate",
                 reason=f"{fix.old_standard_id} was formally withdrawn and superseded by {fix.new_standard_id} in the official BIS repository.",
                 clause_impact=f"Replaces outdated citation '{fix.old_text}' with current statutory specification {fix.new_standard_id}.",
-            ))
-
-        # 2. Add compliant standards as active baseline
-        seen = set(fix.old_standard_id for fix in auto_fixes)
-        for seg in segments:
-            if seg.annotation_type == AnnotationType.COMPLIANT and seg.standard_id and seg.standard_id not in seen:
-                seen.add(seg.standard_id)
-                mappings.append(StandardRedlineMapping(
-                    old_standard=f"{seg.standard_id} (Prior Edition)",
-                    old_status="PREVIOUS REVISION",
-                    old_title=seg.standard_title or f"Indian Standard {seg.standard_id}",
-                    new_standard=seg.standard_id,
-                    new_status="CURRENT & ACTIVE",
-                    new_title=seg.standard_title or f"Active Specification {seg.standard_id}",
-                    bis_reference="BIS Authoritative Standards Registry",
-                    circular_number="Gazette Notification / QCO Mandate",
-                    reason=f"{seg.standard_id} is active and fully aligned with current statutory BIS specifications.",
-                    clause_impact=f"Compliant requirement adhering to active edition {seg.publication_year or ''}.",
-                ))
-            if len(mappings) >= 6:
-                break
-
-        if not mappings:
-            # If nothing detected at all
-            mappings.append(StandardRedlineMapping(
-                old_standard="No Outdated Standards",
-                old_status="ALL CLEAR",
-                old_title="All cited requirements adhere to active standards",
-                new_standard="Verified BIS Baseline",
-                new_status="COMPLIANT",
-                new_title="Current Indian Standards Catalog",
-                bis_reference="Bureau of Indian Standards",
-                circular_number="GFR 2017 Rule 144",
-                reason="No superseded standard citations were detected in the analyzed document.",
-                clause_impact="Technical specifications adhere to verified statutory baselines.",
             ))
 
         return mappings

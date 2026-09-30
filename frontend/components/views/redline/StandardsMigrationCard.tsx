@@ -12,7 +12,53 @@ export const StandardsMigrationCard: React.FC<StandardsMigrationCardProps> = ({
   mappings,
   onApplyFix,
 }) => {
-  if (!mappings || mappings.length === 0) return null;
+  // Filter out any dummy / placeholder entries
+  const validMappings = (mappings || []).filter(
+    (item) => item.old_standard !== 'No Outdated Standards' && item.old_status !== 'ALL CLEAR'
+  );
+
+  if (validMappings.length === 0) {
+    return (
+      <div
+        style={{
+          marginTop: '20px',
+          marginBottom: '24px',
+          padding: '18px 22px',
+          background: '#f0fdf4',
+          borderRadius: 'var(--radius-lg, 12px)',
+          border: '1px solid #bbf7d0',
+          boxShadow: '0 2px 8px rgba(16, 185, 129, 0.06)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '1.4rem' }}>✅</span>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 700, color: '#166534' }}>
+                Standard Supersession & Migration Roadmap
+              </h3>
+              <p style={{ margin: '2px 0 0', fontSize: '0.84rem', color: '#15803d' }}>
+                All cited technical requirements adhere to active Indian Standards. No superseded standards detected.
+              </p>
+            </div>
+          </div>
+          <span
+            style={{
+              padding: '4px 12px',
+              borderRadius: '999px',
+              background: '#dcfce7',
+              color: '#166534',
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              border: '1px solid #86efac',
+            }}
+          >
+            0 Outdated Standards • All Compliant
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -46,12 +92,12 @@ export const StandardsMigrationCard: React.FC<StandardsMigrationCardProps> = ({
             border: '1px solid rgba(220, 38, 38, 0.25)',
           }}
         >
-          {mappings.length} Outdated Standards Detected
+          {validMappings.length} Outdated Standard{validMappings.length > 1 ? 's' : ''} Requiring Migration
         </span>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {mappings.map((item, idx) => (
+        {validMappings.map((item, idx) => (
           <div
             key={idx}
             style={{

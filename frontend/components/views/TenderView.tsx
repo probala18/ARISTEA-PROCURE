@@ -306,10 +306,15 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
         return s;
       });
 
+      const remainingMappings = (redlineResult.standards_redline_mappings || []).filter(
+        (m) => m.old_standard !== fix.old_standard_id && m.old_standard !== fix.old_text
+      );
+
       setRedlineResult({
         ...redlineResult,
         segments: updatedSegments,
         auto_fixes: remainingFixes,
+        standards_redline_mappings: remainingMappings,
         summary: {
           ...redlineResult.summary,
           outdated_count: Math.max(0, redlineResult.summary.outdated_count - 1),
@@ -1156,9 +1161,28 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                     <StandardsMigrationCard
                       mappings={redlineResult.standards_redline_mappings}
                       onApplyFix={(oldStd, newStd) => {
-                        const updated = documentContent.replace(oldStd, newStd);
-                        setDocumentContent(updated);
-                        onToast(`Replaced ${oldStd} with ${newStd}.`, 'success');
+                        const matchingFix = redlineResult.auto_fixes?.find(
+                          (f) => f.old_standard_id === oldStd || f.old_text.includes(oldStd)
+                        );
+                        if (matchingFix) {
+                          handleSingleFix(matchingFix);
+                        } else {
+                          const updated = (documentContent || '').replace(oldStd, newStd);
+                          setDocumentContent(updated);
+                          const remainingMappings = (redlineResult.standards_redline_mappings || []).filter(
+                            (m) => m.old_standard !== oldStd
+                          );
+                          setRedlineResult({
+                            ...redlineResult,
+                            standards_redline_mappings: remainingMappings,
+                            summary: {
+                              ...redlineResult.summary,
+                              outdated_count: Math.max(0, redlineResult.summary.outdated_count - 1),
+                              compliant_count: redlineResult.summary.compliant_count + 1,
+                            },
+                          });
+                          onToast(`Replaced ${oldStd} with ${newStd}.`, 'success');
+                        }
                       }}
                     />
                   )}
