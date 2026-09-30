@@ -95,6 +95,20 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
   // Redline hover state
   const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
 
+  // Document Reader expansion & quick-filter controls
+  const [isDocExpanded, setIsDocExpanded] = useState(false);
+  const [filterOutdatedOnly, setFilterOutdatedOnly] = useState(false);
+  const docContainerRef = useRef<HTMLDivElement>(null);
+
+  const jumpToSegment = (idx: number) => {
+    const el = document.getElementById(`redline-segment-${idx}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setHoveredSegment(idx);
+      setTimeout(() => setHoveredSegment(null), 3000);
+    }
+  };
+
   // Adversarial Auditor state
   const [auditorRefs, setAuditorRefs] = useState('IS 12615:2018\nIS 325:1996\nIS 9999\nIS 694:2010\nIS 12345');
   const [isVerifying, setIsVerifying] = useState(false);
@@ -686,131 +700,453 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
                   subtitle="Full draft tender document rendered with inline statutory redlining: Green confirms alignment with active Indian Standards; Red flags outdated or superseded specifications with 1-click legal auto-fixes."
                   badge="Redline Markup"
                   action={
-                    redlineResult && redlineResult.summary.auto_fixes_available > 0 ? (
-                      <button onClick={handleAutoFixAll} disabled={isFixing} className="btn-accent" style={{ fontSize: '0.82rem' }}>
-                        ⚡ Auto-Fix Outdated Standards ({redlineResult.summary.auto_fixes_available})
-                      </button>
+                    redlineResult ? (
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          onClick={() => setFilterOutdatedOnly(!filterOutdatedOnly)}
+                          className="btn-outline"
+                          style={{
+                            fontSize: '0.8rem',
+                            padding: '6px 12px',
+                            background: filterOutdatedOnly ? 'var(--primary-subtle, #e0e7ff)' : '#ffffff',
+                            borderColor: filterOutdatedOnly ? 'var(--primary)' : 'var(--border-subtle)',
+                            fontWeight: filterOutdatedOnly ? 700 : 500,
+                          }}
+                        >
+                          {filterOutdatedOnly ? '📄 Show Full Text' : '🎯 View Outdated Clauses Only'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsDocExpanded(!isDocExpanded)}
+                          className="btn-outline"
+                          style={{ fontSize: '0.8rem', padding: '6px 12px', background: '#ffffff' }}
+                        >
+                          {isDocExpanded ? '🔼 Collapse View' : '📖 Expand Full Document'}
+                        </button>
+                        {redlineResult.summary.auto_fixes_available > 0 && (
+                          <button onClick={handleAutoFixAll} disabled={isFixing} className="btn-accent" style={{ fontSize: '0.82rem' }}>
+                            ⚡ Auto-Fix All Outdated ({redlineResult.summary.auto_fixes_available})
+                          </button>
+                        )}
+                      </div>
                     ) : undefined
                   }
                 >
                   {redlineResult ? (
+                    <div>
+                      {/* Quick-Jump Citation Navigator */}
+                      <div
+                        style={{
+                          marginBottom: '16px',
+                          padding: '12px 16px',
+                          background: '#f8fafc',
+                          borderRadius: 'var(--radius-md)',
+                          border: '1px solid var(--border-subtle)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '10px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span>🎯 Quick Citation Navigator:</span>
+                            <span style={{ background: '#e2e8f0', color: '#334155', padding: '2px 8px', borderRadius: '12px', fontSize: '0.74rem', fontWeight: 700 }}>
+                              {redlineResult.segments.filter(s => s.annotation_type !== 'PLAIN').length} citations detected
+                            </span>
+                            {redlineResult.summary.outdated_count > 0 && (
+                              <span style={{ background: '#fee2e2', color: '#991b1b', padding: '2px 8px', borderRadius: '12px', fontSize: '0.74rem', fontWeight: 700 }}>
+                                {redlineResult.summary.outdated_count} outdated
+                              </span>
+                            )}
+                            <span style={{ background: '#dcfce7', color: '#166534', padding: '2px 8px', borderRadius: '12px', fontSize: '0.74rem', fontWeight: 700 }}>
+                              {redlineResult.summary.compliant_count} compliant
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                            Click any citation badge below to jump directly to its clause in the document.
+                          </div>
+                        </div>
+
+                        {/* Citation Chips */}
+                        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px', maxWidth: '100%', scrollbarWidth: 'thin' }}>
+                          {redlineResult.segments.map((seg, idx) => {
+                            if (seg.annotation_type === 'PLAIN') return null;
+                            const isOutdated = seg.annotation_type === 'OUTDATED';
+                            const isCompliant = seg.annotation_type === 'COMPLIANT';
+
+                            return (
+                              <button
+                                key={idx}
+                                type="button"
+                                onClick={() => {
+                                  if (filterOutdatedOnly && !isOutdated) {
+                                    setFilterOutdatedOnly(false);
+                                  }
+                                  jumpToSegment(idx);
+                                }}
+                                title={`Click to jump to ${seg.text}`}
+                                style={{
+                                  flexShrink: 0,
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '5px',
+                                  padding: '4px 10px',
+                                  borderRadius: '16px',
+                                  fontSize: '0.76rem',
+                                  fontWeight: 700,
+                                  fontFamily: 'var(--font-mono)',
+                                  border: `1px solid ${isOutdated ? '#f87171' : isCompliant ? '#86efac' : '#cbd5e1'}`,
+                                  background: isOutdated ? '#fee2e2' : isCompliant ? '#dcfce7' : '#f1f5f9',
+                                  color: isOutdated ? '#991b1b' : isCompliant ? '#166534' : '#334155',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.15s ease',
+                                }}
+                              >
+                                <span>{isOutdated ? '🔴' : isCompliant ? '🟢' : '🟡'}</span>
+                                <span>{seg.text}</span>
+                                {isOutdated && seg.successor_id && (
+                                  <span style={{ fontSize: '0.7rem', color: '#047857' }}>➔ {seg.successor_id}</span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Outdated-Only Filtered View */}
+                      {filterOutdatedOnly ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '16px' }}>
+                          {redlineResult.segments.filter(s => s.annotation_type === 'OUTDATED').length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '36px 20px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🎉</div>
+                              <h4 style={{ color: '#166534', fontWeight: 700, margin: '0 0 6px' }}>No Outdated Standards Detected</h4>
+                              <p style={{ color: '#15803d', fontSize: '0.88rem', margin: '0 0 16px' }}>
+                                All standard citations in this document are aligned with active Gazette editions.
+                              </p>
+                              <button onClick={() => setFilterOutdatedOnly(false)} className="btn-primary" style={{ fontSize: '0.82rem' }}>
+                                View Full Document
+                              </button>
+                            </div>
+                          ) : (
+                            redlineResult.segments.map((seg, idx) => {
+                              if (seg.annotation_type !== 'OUTDATED') return null;
+                              const prevText = idx > 0 ? redlineResult.segments[idx - 1].text.slice(-160) : '';
+                              const nextText = idx < redlineResult.segments.length - 1 ? redlineResult.segments[idx + 1].text.slice(0, 160) : '';
+
+                              return (
+                                <div
+                                  key={idx}
+                                  id={`redline-segment-${idx}`}
+                                  style={{
+                                    padding: '16px 20px',
+                                    borderRadius: '8px',
+                                    border: '1px solid #fecaca',
+                                    background: '#fffbfb',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '12px',
+                                    boxShadow: hoveredSegment === idx ? '0 0 0 3px rgba(239, 68, 68, 0.35)' : '0 1px 3px rgba(0,0,0,0.05)',
+                                    transition: 'all 0.2s ease',
+                                  }}
+                                >
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                      <span style={{ background: '#ef4444', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.74rem', fontWeight: 800 }}>
+                                        OUTDATED CITATION
+                                      </span>
+                                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.92rem', color: '#991b1b' }}>
+                                        {seg.text}
+                                      </span>
+                                      {seg.successor_id && (
+                                        <span style={{ fontSize: '0.84rem', color: '#059669', fontWeight: 700 }}>
+                                          ➔ Active Successor: {seg.successor_id}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setFilterOutdatedOnly(false);
+                                          setTimeout(() => jumpToSegment(idx), 80);
+                                        }}
+                                        className="btn-outline"
+                                        style={{ fontSize: '0.78rem', padding: '5px 10px', background: '#fff' }}
+                                      >
+                                        📍 Locate in Full Text
+                                      </button>
+                                      {seg.auto_fix && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleSingleFix(seg.auto_fix!)}
+                                          className="btn-accent"
+                                          style={{ fontSize: '0.78rem', padding: '5px 12px' }}
+                                        >
+                                          ⚡ Auto-Fix Clause
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <div
+                                    style={{
+                                      fontSize: '0.88rem',
+                                      color: '#334155',
+                                      lineHeight: 1.65,
+                                      background: '#ffffff',
+                                      padding: '12px 16px',
+                                      borderRadius: '6px',
+                                      border: '1px solid #fed7aa',
+                                      fontFamily: 'Georgia, serif',
+                                    }}
+                                  >
+                                    <span style={{ opacity: 0.65 }}>...{prevText} </span>
+                                    <span
+                                      style={{
+                                        background: '#fee2e2',
+                                        borderBottom: '2px solid #ef4444',
+                                        color: '#991b1b',
+                                        fontWeight: 700,
+                                        padding: '2px 6px',
+                                        borderRadius: '3px',
+                                      }}
+                                    >
+                                      {seg.text}
+                                    </span>
+                                    <span style={{ opacity: 0.65 }}> {nextText}...</span>
+                                  </div>
+
+                                  <div style={{ fontSize: '0.78rem', color: '#64748b', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                                    <span><strong>Statutory Note:</strong> {seg.tooltip || 'Superseded by updated Indian Standard specification.'}</span>
+                                    {seg.publication_year && <span><strong>Year Cited:</strong> {seg.publication_year}</span>}
+                                  </div>
+                                </div>
+                              );
+                            })
+                          )}
+                        </div>
+                      ) : (
+                        /* Full Document View with Constrained Scroll / Expand */
+                        <div style={{ position: 'relative' }}>
+                          <div
+                            ref={docContainerRef}
+                            style={{
+                              padding: '24px',
+                              background: '#ffffff',
+                              borderRadius: 'var(--radius-md)',
+                              border: '1px solid var(--border-subtle)',
+                              lineHeight: 1.85,
+                              fontSize: '0.94rem',
+                              fontFamily: 'Georgia, serif',
+                              color: '#1e293b',
+                              whiteSpace: 'pre-wrap',
+                              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.03)',
+                              maxHeight: isDocExpanded ? 'none' : '480px',
+                              overflowY: isDocExpanded ? 'visible' : 'auto',
+                              scrollBehavior: 'smooth',
+                            }}
+                          >
+                            {redlineResult.segments.map((seg, idx) => {
+                              const style = ANNOTATION_COLORS[seg.annotation_type] || ANNOTATION_COLORS.PLAIN;
+                              const isOutdated = seg.annotation_type === 'OUTDATED';
+                              const isCompliant = seg.annotation_type === 'COMPLIANT';
+
+                              if (seg.annotation_type === 'PLAIN') {
+                                return (
+                                  <span key={idx} id={`redline-segment-${idx}`}>
+                                    {seg.text}
+                                  </span>
+                                );
+                              }
+
+                              return (
+                                <span
+                                  key={idx}
+                                  id={`redline-segment-${idx}`}
+                                  onMouseEnter={() => setHoveredSegment(idx)}
+                                  onMouseLeave={() => setHoveredSegment(null)}
+                                  style={{
+                                    position: 'relative',
+                                    display: 'inline-block',
+                                    padding: '2px 8px',
+                                    margin: '0 2px',
+                                    borderRadius: '4px',
+                                    background: style.bg,
+                                    borderBottom: `2px solid ${style.border}`,
+                                    color: style.text,
+                                    fontWeight: 700,
+                                    fontFamily: 'var(--font-mono)',
+                                    fontSize: '0.86rem',
+                                    cursor: 'pointer',
+                                    boxShadow: hoveredSegment === idx ? '0 0 0 3px rgba(239, 68, 68, 0.4)' : 'none',
+                                    transform: hoveredSegment === idx ? 'scale(1.04)' : 'none',
+                                    transition: 'all 0.15s ease',
+                                  }}
+                                >
+                                  <span>{style.icon} {seg.text}</span>
+
+                                  {/* Hover Tooltip */}
+                                  {hoveredSegment === idx && (
+                                    <div
+                                      style={{
+                                        position: 'absolute',
+                                        bottom: '100%',
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        marginBottom: '8px',
+                                        padding: '12px 16px',
+                                        background: '#0f172a',
+                                        color: '#ffffff',
+                                        borderRadius: '8px',
+                                        fontSize: '0.78rem',
+                                        fontFamily: 'var(--font-sans)',
+                                        lineHeight: 1.45,
+                                        width: '320px',
+                                        boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
+                                        zIndex: 100,
+                                        pointerEvents: 'auto',
+                                      }}
+                                    >
+                                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                        <span style={{ fontWeight: 800, color: isCompliant ? '#34d399' : '#f87171' }}>
+                                          {style.label}
+                                        </span>
+                                        {seg.publication_year && (
+                                          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+                                            Year: {seg.publication_year}
+                                          </span>
+                                        )}
+                                      </div>
+
+                                      <div style={{ color: '#e2e8f0', marginBottom: '6px' }}>
+                                        {seg.standard_title || seg.tooltip || 'Authoritative Indian Standard Specification'}
+                                      </div>
+
+                                      {isOutdated && seg.auto_fix && (
+                                        <div style={{ paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+                                          <div style={{ color: '#fca5a5', fontWeight: 700, marginBottom: '4px' }}>
+                                            Changed in Gazette! Successor: {seg.successor_id}
+                                          </div>
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleSingleFix(seg.auto_fix!);
+                                            }}
+                                            style={{
+                                              width: '100%',
+                                              padding: '5px 10px',
+                                              borderRadius: '4px',
+                                              background: '#059669',
+                                              color: '#ffffff',
+                                              border: 'none',
+                                              fontWeight: 700,
+                                              fontSize: '0.75rem',
+                                              cursor: 'pointer',
+                                            }}
+                                          >
+                                            ⚡ Click to Auto-Fix Clause
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </span>
+                              );
+                            })}
+                          </div>
+
+                          {/* Gradient Bottom Fade with Expand Button when Collapsed */}
+                          {!isDocExpanded ? (
+                            <div
+                              style={{
+                                position: 'sticky',
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                padding: '24px 16px 12px',
+                                background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.92) 50%, #ffffff 100%)',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginTop: '-42px',
+                                zIndex: 10,
+                              }}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => setIsDocExpanded(true)}
+                                className="btn-primary"
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '8px',
+                                  boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
+                                  fontSize: '0.84rem',
+                                  padding: '8px 18px',
+                                }}
+                              >
+                                <span>📖 Read Full Document (Expand View)</span>
+                                <span style={{ opacity: 0.8, fontSize: '0.76rem' }}>
+                                  ({redlineResult.segments.length} segments)
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setFilterOutdatedOnly(true)}
+                                className="btn-outline"
+                                style={{
+                                  fontSize: '0.84rem',
+                                  padding: '8px 14px',
+                                  background: '#ffffff',
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                                }}
+                              >
+                                🎯 Focus Outdated Only
+                              </button>
+                            </div>
+                          ) : (
+                            <div
+                              style={{
+                                marginTop: '16px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                gap: '12px',
+                                padding: '12px',
+                                borderTop: '1px solid var(--border-subtle)',
+                              }}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsDocExpanded(false);
+                                  docContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }}
+                                className="btn-secondary"
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem' }}
+                              >
+                                🔼 Collapse Document Preview
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
                     <div
                       style={{
                         padding: '24px',
-                        background: '#ffffff',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid var(--border-subtle)',
-                        lineHeight: 1.85,
-                        fontSize: '0.94rem',
-                        fontFamily: 'Georgia, serif',
-                        color: '#1e293b',
+                        background: '#f8fafc',
+                        borderRadius: '8px',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.86rem',
                         whiteSpace: 'pre-wrap',
-                        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.03)',
+                        maxHeight: '400px',
+                        overflowY: 'auto',
                       }}
                     >
-                      {redlineResult.segments.map((seg, idx) => {
-                        const style = ANNOTATION_COLORS[seg.annotation_type] || ANNOTATION_COLORS.PLAIN;
-                        const isOutdated = seg.annotation_type === 'OUTDATED';
-                        const isCompliant = seg.annotation_type === 'COMPLIANT';
-
-                        if (seg.annotation_type === 'PLAIN') {
-                          return <span key={idx}>{seg.text}</span>;
-                        }
-
-                        return (
-                          <span
-                            key={idx}
-                            onMouseEnter={() => setHoveredSegment(idx)}
-                            onMouseLeave={() => setHoveredSegment(null)}
-                            style={{
-                              position: 'relative',
-                              display: 'inline-block',
-                              padding: '2px 8px',
-                              margin: '0 2px',
-                              borderRadius: '4px',
-                              background: style.bg,
-                              borderBottom: `2px solid ${style.border}`,
-                              color: style.text,
-                              fontWeight: 700,
-                              fontFamily: 'var(--font-mono)',
-                              fontSize: '0.86rem',
-                              cursor: 'pointer',
-                              transition: 'all 0.15s ease',
-                            }}
-                          >
-                            <span>{style.icon} {seg.text}</span>
-
-                            {/* Hover Tooltip */}
-                            {hoveredSegment === idx && (
-                              <div
-                                style={{
-                                  position: 'absolute',
-                                  bottom: '100%',
-                                  left: '50%',
-                                  transform: 'translateX(-50%)',
-                                  marginBottom: '8px',
-                                  padding: '12px 16px',
-                                  background: '#0f172a',
-                                  color: '#ffffff',
-                                  borderRadius: '8px',
-                                  fontSize: '0.78rem',
-                                  fontFamily: 'var(--font-sans)',
-                                  lineHeight: 1.45,
-                                  width: '320px',
-                                  boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
-                                  zIndex: 100,
-                                  pointerEvents: 'auto',
-                                }}
-                              >
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                  <span style={{ fontWeight: 800, color: isCompliant ? '#34d399' : '#f87171' }}>
-                                    {style.label}
-                                  </span>
-                                  {seg.publication_year && (
-                                    <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
-                                      Year: {seg.publication_year}
-                                    </span>
-                                  )}
-                                </div>
-
-                                <div style={{ color: '#e2e8f0', marginBottom: '6px' }}>
-                                  {seg.standard_title || seg.tooltip || 'Authoritative Indian Standard Specification'}
-                                </div>
-
-                                {isOutdated && seg.auto_fix && (
-                                  <div style={{ paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-                                    <div style={{ color: '#fca5a5', fontWeight: 700, marginBottom: '4px' }}>
-                                      Changed in Gazette! Successor: {seg.successor_id}
-                                    </div>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleSingleFix(seg.auto_fix!);
-                                      }}
-                                      style={{
-                                        width: '100%',
-                                        padding: '5px 10px',
-                                        borderRadius: '4px',
-                                        background: '#059669',
-                                        color: '#ffffff',
-                                        border: 'none',
-                                        fontWeight: 700,
-                                        fontSize: '0.75rem',
-                                        cursor: 'pointer',
-                                      }}
-                                    >
-                                      ⚡ Click to Auto-Fix Clause
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div style={{ padding: '24px', background: '#f8fafc', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '0.86rem', whiteSpace: 'pre-wrap' }}>
                       {documentContent}
                     </div>
                   )}
