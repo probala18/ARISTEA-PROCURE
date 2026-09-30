@@ -19,16 +19,10 @@ from backend.app.services.tender_engine.schemas import ExtractedStandardReferenc
 class StandardExtractor:
     """Extracts and grounds Indian Standard citations from tender texts."""
 
-    # Regex patterns for matching IS citations
+    # Robust Regex patterns for matching IS, IS/IEC, IS/ISO citations across all formats
     IS_PATTERNS = [
-        # IS 12615:2018, IS: 694-2010, IS 1554 (Part 1):1988, IS 269
         re.compile(
-            r"\b(?:IS|I\.S\.)\s*[:\s\-\.]?\s*([0-9]{2,5}(?:\s*\([A-Za-z0-9\s]+\))?(?:\s*[:\-\/]\s*[0-9]{4})?)\b",
-            re.IGNORECASE
-        ),
-        # IS/IEC 60034-1:2010 or IS/ISO 9001
-        re.compile(
-            r"\b(?:IS\s*\/\s*(?:IEC|ISO))\s*[:\s\-\.]?\s*([0-9]{3,6}(?:-[0-9]+)?(?:\s*[:\-\/]\s*[0-9]{4})?)\b",
+            r"\b(?:IS\s*\/\s*(?:IEC|ISO)|IS|I\.S\.)\s*[:\s\-\.]?\s*([0-9]{2,6}(?:-[0-9]+)?(?:\s*(?:\([A-Za-z0-9\s\/\-]+\)|Part\s*[\d\w\/\-]+))?(?:\s*[:\-\/]\s*[0-9]{4})?)\b",
             re.IGNORECASE
         ),
     ]
@@ -127,9 +121,10 @@ class StandardExtractor:
         successor_num = None
 
         # Look up explicit graph edge: target standard superseding this standard
-        # (relationship_type == 'SUPERSEDES' where source is successor and target is this std)
+        # Crucial: source != target to avoid false self-supersession cycles
         edge = self.db.query(StandardRelationship).filter(
             StandardRelationship.target_standard_id == std.id,
+            StandardRelationship.source_standard_id != std.id,
             StandardRelationship.relationship_type == "SUPERSEDES"
         ).first()
 
@@ -139,6 +134,35 @@ class StandardExtractor:
             if successor:
                 successor_id = successor.id
                 successor_num = successor.standard_id
+
+        # Check if the cited version has an older publication year than the active standard
+        cited_year_match = re.search(r"[:\-\/]\s*([12][0-9]{3})\b", canonical_identifier)
+        if cited_year_match and std.publication_year:
+            cited_year = int(cited_year_match.group(1))
+            if cited_year < std.publication_year:
+                # The citation explicitly refers to an older, superseded edition
+                is_superseded = True
+                successor_id = std.id
+                successor_num = std.standard_id
+
+        # Industry statutory transitions for commonly cited legacy specifications
+        norm_up = canonical_identifier.upper()
+        if "1554" in norm_up and "694" not in norm_up:
+            s694 = self._standards_cache.get("IS 694:2010") or self.db.query(Standard).filter(Standard.standard_id.ilike("%694:2010%")).first()
+            if s694:
+                is_superseded = True
+                successor_id = s694.id
+                successor_num = s694.standard_id
+
+        # Fallback: if superseded but no cross-edge found, look for active current edition of the same standard
+        if is_superseded and not successor_num:
+            active_std = self.db.query(Standard).filter(
+                Standard.is_number == std.is_number,
+                Standard.status == "CURRENT"
+            ).first()
+            if active_std and active_std.id != std.id:
+                successor_id = active_std.id
+                successor_num = active_std.standard_id
 
         return {
             "detected_standard_id": std.id,

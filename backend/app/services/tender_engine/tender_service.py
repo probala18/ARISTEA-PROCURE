@@ -129,23 +129,6 @@ class TenderEngineService:
                 )
                 self.db.add(tender_doc)
                 self.db.flush()  # populate tender_doc.id
-        else:
-            tender_doc = TenderDocument(
-                tender_number=t_num,
-                filename=filename,
-                title=title or parse_result.metadata.get("title") or filename,
-                organization=organization or "General Procurement",
-                file_type=parse_result.file_type,
-                file_size=len(file_content),
-                raw_text=parse_result.raw_text,
-                parsed_metadata={
-                    "total_pages": parse_result.total_pages,
-                    "total_sections": len(sections),
-                    "total_standards_detected": len(standard_refs),
-                    "metadata": parse_result.metadata,
-                },
-                status=TenderProcessingStatus.COMPLETED.value,
-            )
 
             # Save sections & clauses
             for sec in sections:
@@ -188,6 +171,23 @@ class TenderEngineService:
 
             self.db.commit()
             self.db.refresh(tender_doc)
+        else:
+            tender_doc = TenderDocument(
+                tender_number=t_num,
+                filename=filename,
+                title=title or parse_result.metadata.get("title") or filename,
+                organization=organization or "General Procurement",
+                file_type=parse_result.file_type,
+                file_size=len(file_content),
+                raw_text=parse_result.raw_text,
+                parsed_metadata={
+                    "total_pages": parse_result.total_pages,
+                    "total_sections": len(sections),
+                    "total_standards_detected": len(standard_refs),
+                    "metadata": parse_result.metadata,
+                },
+                status=TenderProcessingStatus.COMPLETED.value,
+            )
 
         return tender_doc
 

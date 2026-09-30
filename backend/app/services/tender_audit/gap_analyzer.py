@@ -106,9 +106,9 @@ class TenderGapAnalyzer:
             std_num = std.standard_id or std.is_number
             std_title = std.title
 
-            # Check Currency & Supersession via Version Intelligence
+            # Check Currency & Supersession via Version Intelligence and Extracted Reference
             currency = self.version_service.check_currency(std.id)
-            is_outdated = (currency.status == "SUPERSEDED") or (not currency.is_current)
+            is_outdated = (currency.status == "SUPERSEDED") or (not currency.is_current) or bool(ref.is_superseded)
 
             successor_id = None
             successor_title = None
@@ -119,12 +119,18 @@ class TenderGapAnalyzer:
                         successor_id = succs[0].get("canonical_id") or str(succs[0].get("standard_id"))
                         successor_title = succs[0].get("title")
 
+            if not successor_id and ref.superseded_by_standard_id:
+                succ_std = self.db.query(Standard).filter(Standard.id == ref.superseded_by_standard_id).first()
+                if succ_std:
+                    successor_id = succ_std.standard_id
+                    successor_title = succ_std.title
+
             present_standards_data.append({
                 "standard_id": std.id,
-                "canonical_id": std_num,
+                "canonical_id": ref.standard_number_raw or std_num,
                 "title": std_title,
                 "is_resolved": True,
-                "status": currency.status,
+                "status": "SUPERSEDED" if is_outdated else currency.status,
                 "publication_year": currency.publication_year,
                 "latest_year": currency.latest_year,
                 "successor": successor_id,
@@ -133,7 +139,7 @@ class TenderGapAnalyzer:
 
             if is_outdated:
                 outdated_info = {
-                    "standard_id": std_num,
+                    "standard_id": ref.standard_number_raw or std_num,
                     "title": std_title,
                     "status": "SUPERSEDED",
                     "successor_id": successor_id,
@@ -146,22 +152,22 @@ class TenderGapAnalyzer:
                     gap_category=GapCategory.OUTDATED_REFERENCE,
                     severity=GapSeverity.CRITICAL,
                     trust_level=TrustLevel.KNOWN,
-                    standard_id=std_num,
+                    standard_id=ref.standard_number_raw or std_num,
                     title=std_title,
                     clause_reference=None,
                     clause_text=ref.detected_clause,
                     successor_standard_id=successor_id,
                     successor_title=successor_title,
                     issue_description=(
-                        f"Tender explicitly references outdated/superseded standard {std_num}. "
+                        f"Tender explicitly references outdated/superseded standard {ref.standard_number_raw or std_num}. "
                         f"This standard has been superseded by {successor_id or 'a current edition'}."
                     ),
                     recommendation=(
-                        f"Replace outdated reference {std_num} with current successor {successor_id or 'current standard'} "
+                        f"Replace outdated reference {ref.standard_number_raw or std_num} with current successor {successor_id or 'current standard'} "
                         f"({successor_title or 'current edition'})."
                     ),
                     evidence={
-                        "cited_status": std.status,
+                        "cited_status": "SUPERSEDED" if is_outdated else std.status,
                         "successor_chain": successor_id,
                         "source_provenance": "Module 4 Knowledge Graph explicit supersession",
                     }

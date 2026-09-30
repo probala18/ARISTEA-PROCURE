@@ -101,13 +101,18 @@ class RedlineService:
 
             # Build auto-fix if outdated
             if anno_segment.annotation_type == AnnotationType.OUTDATED and anno_segment.successor_id:
+                old_yr = anno_segment.publication_year
+                m_yr = re.search(r"[:\-\/]\s*([12][0-9]{3})\b", norm_id) or re.search(r"[:\-\/]\s*([12][0-9]{3})\b", text[start:end])
+                if m_yr:
+                    old_yr = int(m_yr.group(1))
+
                 fix = self._build_auto_fix(
                     raw_text=text[start:end],
                     old_std_id=norm_id,
                     successor_id=anno_segment.successor_id,
                     successor_title=anno_segment.successor_title,
                     successor_year=anno_segment.successor_year,
-                    old_year=anno_segment.publication_year,
+                    old_year=old_yr,
                 )
                 anno_segment.auto_fix = fix
                 auto_fixes.append(fix)

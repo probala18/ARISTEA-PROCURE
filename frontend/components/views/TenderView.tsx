@@ -71,9 +71,9 @@ const ANNOTATION_COLORS: Record<string, { bg: string; border: string; text: stri
 
 export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [documentContent, setDocumentContent] = useState<string>(SAMPLE_TENDER_TEXT);
-  const [tenderNumber, setTenderNumber] = useState('CPWD/EE/2026/PUMP-042');
-  const [orgName, setOrgName] = useState('Central Public Works Department (CPWD)');
+  const [documentContent, setDocumentContent] = useState<string>('');
+  const [tenderNumber, setTenderNumber] = useState('');
+  const [orgName, setOrgName] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isAuditing, setIsAuditing] = useState(false);
   const [isFixing, setIsFixing] = useState(false);
@@ -119,15 +119,11 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
     setRedlineResult(null);
     setGeneratedSpec(null);
 
-    // Auto-update tender reference number and organization from filename if blank or sample
+    // Auto-update tender reference number and organization from filename
     const cleanBase = file.name.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, ' ').trim();
-    if (!tenderNumber || tenderNumber === 'CPWD/EE/2026/PUMP-042') {
-      const slug = cleanBase.replace(/\s+/g, '-').slice(0, 20).toUpperCase();
-      setTenderNumber(`TND-${slug || 'DOC-2026'}`);
-    }
-    if (orgName === 'Central Public Works Department (CPWD)') {
-      setOrgName('');
-    }
+    const slug = cleanBase.replace(/\s+/g, '-').slice(0, 20).toUpperCase();
+    setTenderNumber(`TND-${slug || 'DOC-2026'}`);
+    setOrgName('');
 
     if (!isBinaryDoc(file.name)) {
       try {
@@ -137,7 +133,7 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
         setDocumentContent('');
       }
     } else {
-      // PDF or DOCX: Do not load raw binary stream into documentContent!
+      // PDF or DOCX: Clean notification in workspace
       setDocumentContent(
         `📄 [${file.name} (${(file.size / 1024).toFixed(1)} KB) selected.\nClick 'Upload & Audit Tender' below to parse and extract clauses with PyMuPDF Engine.]`
       );
@@ -213,7 +209,12 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
       }
 
       if (!cleanText.trim()) {
-        cleanText = (!isBinaryDoc(fileToUpload.name) ? documentContent : '') || SAMPLE_TENDER_TEXT;
+        cleanText = (!isBinaryDoc(fileToUpload.name) ? documentContent : '') || '';
+      }
+
+      if (!cleanText.trim()) {
+        onToast('Document uploaded, but no text could be extracted. Please check file formatting.', 'error');
+        return;
       }
 
       // 2. Concurrently Audit & Run Redline Intelligence on clean text
@@ -225,8 +226,18 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
 
       if (auditRes.status === 'fulfilled') setAuditReport(auditRes.value);
       if (redlineRes.status === 'fulfilled') {
-        setRedlineResult(redlineRes.value);
+        const redline = redlineRes.value;
+        setRedlineResult(redline);
         setActiveFeature('redline');
+
+        // Dynamically populate Adversarial AI double-check with detected standards from uploaded document
+        const detectedCodes = redline.segments
+          .filter((s) => s.standard_id)
+          .map((s) => s.standard_id!);
+        const uniqueCodes = Array.from(new Set(detectedCodes));
+        if (uniqueCodes.length > 0) {
+          setAuditorRefs([...uniqueCodes, 'IS 9999'].join('\n'));
+        }
       }
 
       onToast('Tender successfully audited with Visual Redline & Grounded Compliance!', 'success');
@@ -239,10 +250,14 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
   };
 
   const handleAutoFixAll = async () => {
-    if (!documentContent) return;
+    const currentText = documentContent && !documentContent.startsWith('📄 [')
+      ? documentContent
+      : (redlineResult ? redlineResult.segments.map((s) => s.text).join('') : '');
+
+    if (!currentText) return;
     setIsFixing(true);
     try {
-      const result = await applyAllRedlineFixes(documentContent);
+      const result = await applyAllRedlineFixes(currentText);
       if (result.corrected_text) {
         setDocumentContent(result.corrected_text);
         const reanalyzed = await analyzeRedline(result.corrected_text);
@@ -257,12 +272,29 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
   };
 
   const handleSingleFix = (fix: RedlineAutoFix) => {
-    const updated = documentContent.replace(fix.old_text, fix.new_text);
+    const updated = (documentContent || '').replace(fix.old_text, fix.new_text);
     setDocumentContent(updated);
     if (redlineResult) {
       const remainingFixes = redlineResult.auto_fixes.filter((f) => f.fix_id !== fix.fix_id);
+      const updatedSegments = redlineResult.segments.map((s) => {
+        if (s.auto_fix && s.auto_fix.fix_id === fix.fix_id) {
+          return {
+            ...s,
+            text: fix.new_text,
+            standard_id: fix.new_standard_id,
+            standard_title: fix.new_standard_title || s.successor_title,
+            status: 'CURRENT',
+            annotation_type: 'COMPLIANT' as const,
+            auto_fix: undefined,
+            tooltip: `✅ Fixed: Upgraded from ${fix.old_standard_id} to ${fix.new_standard_id}. Fully compliant.`,
+          };
+        }
+        return s;
+      });
+
       setRedlineResult({
         ...redlineResult,
+        segments: updatedSegments,
         auto_fixes: remainingFixes,
         summary: {
           ...redlineResult.summary,
@@ -438,6 +470,31 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
               </span>
             </div>
           )}
+        </div>
+
+        {/* Direct Text Preview / Editor */}
+        <div style={{ marginBottom: '16px' }}>
+          <details open={Boolean(documentContent && !documentContent.startsWith('📄 ['))} style={{ fontSize: '0.84rem', color: '#64748b' }}>
+            <summary style={{ cursor: 'pointer', fontWeight: 600, userSelect: 'none', marginBottom: '8px' }}>
+              ✍️ View, edit, or paste tender document text directly
+            </summary>
+            <textarea
+              value={documentContent}
+              onChange={(e) => setDocumentContent(e.target.value)}
+              placeholder="Paste tender document clauses here or review extracted text from uploaded PDF/Word file..."
+              rows={6}
+              style={{
+                width: '100%',
+                padding: '12px 14px',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.84rem',
+                lineHeight: 1.6,
+                borderRadius: '8px',
+                border: '1px solid #cbd5e1',
+                background: '#fafbfc',
+              }}
+            />
+          </details>
         </div>
 
         {/* Action Buttons */}
