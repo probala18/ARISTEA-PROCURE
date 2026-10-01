@@ -942,7 +942,7 @@ Operational Rating | Rated Standard | Statutory QCO | Bureau of Indian Standards
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ fontSize: '1.4rem' }}>👁️</span>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e3a8a' }}>
-                  Reading Complex Tables & Charts (The Tech Winner)
+                  Reading Complex Tables & Charts
                 </h3>
                 <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '999px', background: '#2563eb', color: '#fff', fontWeight: 800 }}>
                   Vision AI Powered
@@ -1128,7 +1128,7 @@ Operational Rating | Rated Standard | Statutory QCO | Bureau of Indian Standards
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ fontSize: '1.4rem' }}>🛡️</span>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#92400e' }}>
-                  The "Adversarial" AI Double-Check (The Safety Winner)
+                  The "Adversarial" AI Double-Check
                 </h3>
                 <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '999px', background: '#d97706', color: '#fff', fontWeight: 800 }}>
                   Zero Hallucination Shield

@@ -525,7 +525,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
                     color: '#0284c7',
                   }}
                 >
-                  The Tech Winner
+                  Vision AI Powered
                 </span>
               </div>
 
@@ -599,7 +599,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab, onToa
                     color: '#15803d',
                   }}
                 >
-                  The Safety Winner
+                 AI Safety System
                 </span>
               </div>
 

@@ -1278,10 +1278,10 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
             {activeFeature === 'auditor' && (
               <motion.div key="auditor" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                 <Panel
-                  title="The Adversarial AI Double-Check (The Safety Winner)"
+                  title="The Adversarial AI Double-Check"
                   subtitle="AI can sometimes hallucinate fake rule numbers (like 'IS 9999'). A second 'Auditor AI' aggressively double-checks the first AI. If a rule looks made up or uncertain, it blocks it and warns: 'I am not 100% sure, please check this manually.'"
-                  badge="Safety Winner"
-                >
+                  badge="AI Safety System"  
+                > 
                   {/* Safety Alert Banner */}
                   <div
                     style={{
@@ -1395,9 +1395,9 @@ export const TenderView: React.FC<TenderViewProps> = ({ onToast }) => {
             {activeFeature === 'vision' && (
               <motion.div key="vision" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                 <Panel
-                  title="Reading Complex Tables & Charts (The Tech Winner)"
+                  title="Reading Complex Tables"
                   subtitle="Indian Standard books are full of mathematical formulas, engineering charts, and tables. Vision AI processes them as pictures, reading columns and numbers without breaking them."
-                  badge="The Tech Winner"
+                  badge="Vision AI Powered"
                 >
                   {/* Competitive Advantage Card */}
                   <div
