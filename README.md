@@ -305,9 +305,42 @@ ARISTEA-PROCURE/
 
 ---
 
-## 🧩 Platform Modules (10 Mounted Workspaces)
+## 🧩 Platform Workspaces
 
-### 1. 🔍 Requirement Recommendation Engine
+The UI is organized into **9 primary tab-bar pages** and **3 navigation-accessible views** (Compliance, Clause Simplifier, Spec Drafter) reachable via in-app actions.
+
+### Tab-Bar Pages
+
+#### 1. 📊 Dashboard
+> **Frontend**: `DashboardView.tsx`
+
+The procurement command center — a live overview landing page with:
+- Real-time system health and database status
+- Quick-access cards to all workspaces
+- Dataset statistics (268 standards, 710 QCOs, 75 licences)
+- One-click navigation to any module
+
+---
+
+#### 2. 📈 Analytics & Diagram
+> **Frontend**: `AnalyticsDiagramView.tsx`
+
+Pipeline architecture visualization and system telemetry:
+- Interactive architecture diagrams of the ARISTEA platform
+- Data flow and service relationship visualizations
+- Knowledge graph topology embedded within analytics (115 verified relationship edges)
+- System performance telemetry and dataset coverage metrics
+
+---
+
+#### 3. 🚀 Autopilot
+> **API**: `POST /api/autopilot/run` (SSE) · `POST /api/autopilot/export`
+
+The flagship autonomous procurement agent — describe a need in text or voice (9 languages) and receive a complete, audited tender package *(see [Autopilot section](#-aristea-autopilot--flagship-feature) below for full details)*.
+
+---
+
+#### 4. ⚡ Semantic Matcher (Requirement Recommendation)
 > **API**: `POST /api/analyze` · `POST /api/recommend`
 
 Accepts a natural-language procurement requirement (e.g., *"We need to purchase 500 steel reinforcement bars for highway bridge construction"*) and returns semantically matched Indian Standards ranked by cosine similarity. Identifies **primary standards** and **allied/supporting standards** from the knowledge graph.
@@ -320,7 +353,7 @@ Accepts a natural-language procurement requirement (e.g., *"We need to purchase 
 
 ---
 
-### 2. 📚 Standards Explorer
+#### 5. 📚 Standards Directory
 > **API**: `GET /api/standards` · `GET /api/standards/{id}`
 
 A hierarchical, searchable directory of **269 Indian Standards** with:
@@ -331,74 +364,19 @@ A hierarchical, searchable directory of **269 Indian Standards** with:
 
 ---
 
-### 3. 🕸️ Knowledge Graph
-> **API**: `GET /api/graph/{id}` · `GET /api/graph/paths`
-
-An interactive, force-directed graph visualization of the **115 verified relationships** between Indian Standards. Features:
-- Radial node expansion for exploring dependency networks
-- Shortest-path tracing between any two standards
-- Relationship types: supersedes, references, complements, depends_on
-- SVG-based rendering with pan/zoom and node tooltips
-
----
-
-### 4. ✅ QCO & Compliance Intelligence
-> **API**: `GET /api/compliance/{id}` · `GET /api/standards/{id}/compliance`
-
-Deterministic compliance checking against:
-- **710 Quality Control Orders (QCOs)** — mandatory DPIIT/MeitY regulatory mandates
-- **1,573 certification records** — ISI (Scheme-I) and CRS (Scheme-II) status
-- **GFR 2017** rule engine — procurement regulation compliance
-- Divergence detection between standard versions and active QCO orders
-
----
-
-### 5. 📝 Tender Auditor
+#### 6. 📋 Document Auditor (Tender Auditor & Redline)
 > **API**: `POST /api/tender/upload` · `POST /api/tender/audit`
 
-Section-by-section gap analysis of uploaded tender/RFP documents:
+Section-by-section gap analysis of uploaded tender/RFP documents with interactive markup:
 - Multi-format parsing: **PDF**, **DOCX**, **TXT**
 - Outdated standard citation detection
-- Missing QCO mandate checks
-- Compliance gap identification with evidence-grounded suggestions
+- Missing QCO mandate checks and compliance gap identification
+- **Redline view** with standard intelligence suite, tender overview, comparison matrix, bidder requirements, cost estimation, eco-tracking, and primary source tracking
 - Generates structured audit reports with corrective recommendations
 
 ---
 
-### 6. 📐 Specification Drafter
-> **API**: `POST /api/specification/generate`
-
-Generates procurement specification clauses grounded in verified data:
-- Parameter tables with testing requirements
-- Inspection plans and acceptance criteria
-- Clause text citing specific IS standard sections
-- Export-ready format for incorporation into tender documents
-
----
-
-### 7. 🎙️ Multilingual Voice Interface
-> **API**: `POST /api/voice/process-query` · `POST /api/voice/transcribe`
-
-Speech-to-text procurement assistant supporting **9 languages**:
-- **English**, **Hindi**, **Tamil**, **Telugu**, **Kannada**, **Malayalam**, **Bengali**, **Marathi**, **Gujarati**
-- Whisper-based transcription pipeline
-- Automatic routing of transcribed text to the semantic recommendation engine
-- Voice-first design for accessibility in field procurement scenarios
-
----
-
-### 8. 📜 Audit Trail & Session History
-> **Frontend**: `HistoryView.tsx`
-
-Local session activity recording with:
-- Timestamped log of all user interactions
-- Query history with results
-- Zero synthetic/fabricated data — fresh sessions start empty
-- Exportable audit trail for procurement accountability
-
----
-
-### 9. 🏢 BIS Service Hub
+#### 7. 🏛️ BIS Service Hub
 > **API**: `GET /api/licences` · `GET /api/ministry-mappings`
 
 Directory of BIS services and government procurement mappings:
@@ -409,14 +387,56 @@ Directory of BIS services and government procurement mappings:
 
 ---
 
-### 10. 💡 Clause Explainer & Simplifier
+#### 8. 🎙️ Voice AI (Multilingual Voice Interface)
+> **API**: `POST /api/voice/process-query` · `POST /api/voice/transcribe`
+
+Speech-to-text procurement assistant supporting **9 languages**:
+- **English**, **Hindi**, **Tamil**, **Telugu**, **Kannada**, **Malayalam**, **Bengali**, **Marathi**, **Gujarati**
+- Whisper-based transcription pipeline
+- Automatic routing of transcribed text to the semantic recommendation engine
+- Voice-first design for accessibility in field procurement scenarios
+
+---
+
+#### 9. 🕒 Session History
+> **Frontend**: `HistoryView.tsx`
+
+Local session activity recording with:
+- Timestamped log of all user interactions
+- Query history with results — relaunch any past query into the Semantic Matcher
+- Zero synthetic/fabricated data — fresh sessions start empty
+- Exportable audit trail for procurement accountability
+
+---
+
+### Navigation-Accessible Views
+
+These views are not in the tab bar but are reached via in-app actions (e.g., clicking "View Compliance" on a standard, or "Simplify" on a scope):
+
+#### ✅ QCO & Compliance Intelligence
+> **API**: `GET /api/compliance/{id}` · `GET /api/standards/{id}/compliance`
+
+Deterministic compliance checking against:
+- **710 Quality Control Orders (QCOs)** — mandatory DPIIT/MeitY regulatory mandates
+- **1,573 certification records** — ISI (Scheme-I) and CRS (Scheme-II) status
+- **GFR 2017** rule engine — procurement regulation compliance
+- Divergence detection between standard versions and active QCO orders
+
+#### 💡 Clause Explainer & Simplifier
 > **API**: `GET /api/standards/{id}` (scope field)
 
 Plain-language translation of technical standard scopes:
 - Side-by-side **Technical** vs **Simplified** view
 - Procurement-context explanations for non-technical officers
 - Grounded in verified standard scopes and amendments
-- Explicit boundary marking when detailed clause text is unavailable
+
+#### 📐 Specification Drafter
+> **API**: `POST /api/specification/generate`
+
+Generates procurement specification clauses grounded in verified data:
+- Parameter tables with testing requirements
+- Inspection plans and acceptance criteria
+- Clause text citing specific IS standard sections
 
 ---
 
